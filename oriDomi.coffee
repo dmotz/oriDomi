@@ -84,7 +84,7 @@ class root.OriDomi
     @height = parseInt(elStyle.height, 10) +
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
-  
+
     @panelWidth = Math.floor(@width / @settings.panels) or 1
     @panels = []
     @leftShaders = []
@@ -119,7 +119,7 @@ class root.OriDomi
     panelProto.style.padding = '0'
     panelProto.style[transformProp] = "translate3d(#{@panelWidth}px, 0, 0) rotate3d(0, 1, 0, 0deg)"
     panelProto.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
-    panelProto.style[transformOriginProp] = '0'
+    panelProto.style[transformOriginProp] = 'left'
     panelProto.style[transformStyleProp] = 'preserve-3d'
     panelProto.style[backfaceProp] = 'hidden'
 
