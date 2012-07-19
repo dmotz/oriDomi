@@ -213,19 +213,20 @@ class root.OriDomi
       else
         deg = angle
 
-      if i is 0
-        x = 0
-      else
-        x = left
-        ++x if angle is 90
+      x = left
+      ++x if angle is 90
 
       if options.anchor
         if i is 0
+          x = 0
           deg = 0
         else if i > 1 or options.stairs
-          deg = deg * 2
-      else if i isnt 0
-        deg = deg * 2
+          deg *= 2
+      else
+        if i is 0
+          x = 0
+        else
+          deg *= 2
 
 
       if options.fracture
