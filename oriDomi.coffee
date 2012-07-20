@@ -24,10 +24,13 @@ testProp = (prop) ->
       return prefix + capProp
   false
 
-
+# one dimensional:
 extendObj = (target, source) ->
-  if not target?
-    return source
+  if source isnt Object source
+    !silent and console?.warn 'oriDomi: Must pass an object to extend with'
+    return target
+  if target isnt Object target
+    target = {}
   for prop of source
     if not target[prop]?
       target[prop] = source[prop]
