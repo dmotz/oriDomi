@@ -53,9 +53,8 @@ if !transformProp or !transitionProp or !perspectiveProp or
 
 
 defaults =
-  panels: 5
-  vPanels: 5
-  hPanels: 5
+  vPanels: 6
+  hPanels: 2
   perspective: 1000
   shading: true
   speed: .6
@@ -80,6 +79,7 @@ class root.OriDomi
 
     @$el = $ @el if $
     elStyle = root.getComputedStyle @el
+
     @width = parseInt(elStyle.width, 10) +
              parseInt(elStyle.paddingLeft, 10) +
              parseInt(elStyle.paddingRight, 10)
@@ -88,91 +88,127 @@ class root.OriDomi
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
 
-    @panelWidth = Math.floor(@width / @settings.panels) or 1
-    @panels = []
+    @panelWidth = Math.floor(@width / @settings.vPanels) or 1
+    @panelHeight = Math.floor(@height / @settings.hPanels) or 1
+    @vPanels = []
+    @hPanels = []
     @leftShaders = []
     @rightShaders = []
-
-    mask = document.createElement 'div'
-    mask.className = 'oriDomi-mask'
-    mask.style.position = 'absolute'
-    mask.style.overflow = 'hidden'
-    mask.style.width = @panelWidth + 'px'
+    @topShaders = []
+    @bottomShaders = []
     
     if @settings.shading
-      vShader = document.createElement 'div'
-      vShader.className = 'oriDomi-shader'
-      vShader.style[transitionProp] = "opacity #{@settings.speed}s"
-      vShader.style.position = 'absolute'
-      vShader.style.width = '100%'
-      vShader.style.height = '100%'
-      vShader.style.opacity = 0
-      vShader.style.top = 0
-      mask.appendChild vShader
-      mask.appendChild vShader.cloneNode()
-
-    holder = document.createElement 'div'
-    holder.className = @el.className += ' oriDomi-holder'
-    holder.style.margin = 0
-
-    panelProto = @el.cloneNode true
-    panelProto.removeAttribute 'id'
-    panelProto.style.width = @panelWidth + 'px'
-    panelProto.style.height = '100%'
-    panelProto.style.padding = '0'
-    panelProto.style[transformProp] = "translate3d(#{@panelWidth}px, 0, 0) rotate3d(0, 1, 0, 0deg)"
-    panelProto.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
-    panelProto.style[transformOriginProp] = 'left'
-    panelProto.style[transformStyleProp] = 'preserve-3d'
-    panelProto.style[backfaceProp] = 'hidden'
-
-    contents = panelProto.innerHTML
-    holder.innerHTML = contents
-    mask.innerHTML += holder.outerHTML
-    panelProto.innerHTML = mask.outerHTML
-
-    for i in [1..@settings.panels]
-      panel = panelProto.cloneNode true
-      panel.classList.add 'oriDomi-panel' + i
-      panelHolder = panel.getElementsByClassName('oriDomi-holder')[0]
-      panelHolder.style.marginLeft = parseInt((i - 1) * @panelWidth * -1, 10) + 'px'
-      
-      if @settings.shading
-        shaders = panel.getElementsByClassName 'oriDomi-shader'
-        leftShader = shaders[0]
-        rightShader = shaders[1]
-        leftShader.style.background =
-          '-webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
-        rightShader.style.background =
-          '-webkit-linear-gradient(right, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      shader = document.createElement 'div'
+      shader.style[transitionProp] = "opacity #{@settings.speed}s"
+      shader.style.position = 'absolute'
+      shader.style.width = '100%'
+      shader.style.height = '100%'
+      shader.style.opacity = 0
+      shader.style.top = 0
+    
+    contentHolder = @el.cloneNode true
+    contentHolder.classList.add 'oridomi-content'
+    contentHolder.margin = '0'
+    
+    hMask = document.createElement 'div'
+    hMask.className = 'oridomi-mask-h'
+    hMask.style.position = 'absolute'
+    hMask.style.overflow = 'hidden'
+    hMask.style.height = @panelHeight + 'px'
+    hMask.appendChild contentHolder
+    
+    if @settings.shading
+      topShader = shader.cloneNode()
+      topShader.className = 'oridomi-shader-top'
+      bottomShader = shader.cloneNode()
+      bottomShader.className = 'oridomi-shader-bottom'
+      hMask.appendChild topShader
+      hMask.appendChild bottomShader
+    
+    hPanel = document.createElement 'div'
+    hPanel.className = 'oridomi-panel-h'
+    hPanel.style.width = '100%'
+    hPanel.style.height = @panelHeight + 'px'
+    hPanel.style.padding = '0'
+    hPanel.style[transformProp] = "translate3d(0, #{@panelHeight}px, 0)"
+    hPanel.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
+    hPanel.style[transformOriginProp] = '0'
+    hPanel.style[transformStyleProp] = 'preserve-3d'
+    hPanel.style[backfaceProp] = 'hidden'
+    hPanel.appendChild hMask
+    
+    rowSet = document.createElement 'div'
+    rowSet.className = 'oridomi-row-set'
+    rows = []
+    
+    for i in [1..@settings.hPanels]
+      do =>
+        panel = hPanel.cloneNode true
+        content = panel.getElementsByClassName('oridomi-content')[0]
+        content.style.marginTop = parseInt((i - 1) * @panelHeight * -1, 10) + 'px'
+        rows.push panel
         
-        @leftShaders.push leftShader
-        @rightShaders.push rightShader
+        unless i is 1
+          rows[i - 2].appendChild panel
+        else
+          panel.style[transformProp] = 'translate3d(0, 0, 0)'
+    
+    rowSet.appendChild rows[0]
+    
+    vMask = hMask.cloneNode false
+    vMask.className = 'oridomi-mask-v'
+    vMask.style.width = @panelWidth + 'px'
+    vMask.style.height = '100%'
 
-      @panels.push panel
-      
-      unless i is 1
-        @panels[i - 2].appendChild panel
-      else
-        panel.style[transformProp] = 'translate3d(0, 0, 0)'
-      
-    #if @settings.smoothStart
-      #@accordion 0
-      #@settings.speed = originalSpeed
+    
+    if @settings.shading
+      leftShader = shader.cloneNode()
+      leftShader.className = 'oridomi-shader-left'
+      rightShader = shader.cloneNode()
+      rightShader.className = 'oridomi-shader-right'
+      vMask.appendChild leftShader
+      vMask.appendChild rightShader
+    
+    vMask.appendChild rowSet
+    
+    vPanel = hPanel.cloneNode()
+    vPanel.className = 'oridomi-panel-v'
+    vPanel.style.width = @panelWidth + 'px'
+    vPanel.style.height = '100%'
+    vPanel.style[transformProp] = "translate3d(#{@panelWidth}px, 0, 0)"
+    vPanel.appendChild vMask
+    
+    
+    for i in [1..@settings.vPanels]
+      do =>
+        panel = vPanel.cloneNode true
+        
+        if @settings.shading
+          @leftShaders.push panel.getElementsByClassName('oridomi-shader-left')[0]
+          @rightShaders.push panel.getElementsByClassName('oridomi-shader-right')[0]
+        
+        rows = panel.getElementsByClassName('oridomi-row-set')[0]
+        rows.style.marginLeft = parseInt((i - 1) * @panelWidth * -1, 10) + 'px'
+        
+        @hPanels.push panel.getElementsByClassName 'oridomi-panel-h'
+        @vPanels.push panel
 
-    if @settings.newClass?
-      @el.className = newClass
-
+        unless i is 1
+          @vPanels[i - 2].appendChild panel
+        else
+          panel.style[transformProp] = 'translate3d(0, 0, 0)'
+    
+    
     @el.classList.add @settings.oriDomiClass
     @el.style.padding = '0'
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
-    @el.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
+    #@el.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
     @el.style[perspectiveProp] = @settings.perspective
     @el.innerHTML = ''
-    @el.appendChild @panels[0]
-
+    @el.appendChild @vPanels[0]
+  
     @_callback @settings
 
 
@@ -205,43 +241,81 @@ class root.OriDomi
     twist: false
 
 
-  accordion: (angle, options) ->
+  _resetRow: (column) ->
+    for panel, i in @hPanels[column]
+      if i is 0
+        panel.style[transformProp] = 'translate3d(0, 0, 0)'
+      else
+        panel.style[transformProp] = 'translate3d(0, #{@panelHeight}px, 0)'
+
+
+  accordion: (angle, axis = 'h', options) ->
     options = extendObj options, @_accordionDefaults
     angle = @_normalizeAngle angle
     left = @panelWidth - 1
 
-    for panel, i in @panels
-      if i % 2 isnt 0 and !options.twist
-        deg = -angle
-      else
-        deg = angle
+    for panel, i in @vPanels
 
-      x = left
-      ++x if angle is 90
-
-      if options.anchor
-        if i is 0
-          x = 0
-          deg = 0
-        else if i > 1 or options.stairs
-          deg *= 2
+      if axis is 'h'
+  
+        @_resetRow i
+        
+        if i % 2 isnt 0 and !options.twist
+          deg = -angle
+        else
+          deg = angle
+  
+        x = left
+        ++x if angle is 90
+  
+        if options.anchor
+          if i is 0
+            x = 0
+            deg = 0
+          else if i > 1 or options.stairs
+            deg *= 2
+        else
+          if i is 0
+            x = 0
+          else
+            deg *= 2
+  
+        if options.fracture
+          rotation = "rotate3d(1, 1, 1, #{deg}deg)"
+        else
+          rotation = "rotate3d(0, 1, 0, #{deg}deg)"
+      
       else
+        deg = 0
+
         if i is 0
           x = 0
         else
-          deg *= 2
-
-
-      if options.fracture
-        rotation = "rotate3d(1, 1, 1, #{deg}deg)"
-      else
-        rotation = "rotate3d(0, 1, 0, #{deg}deg)"
+          x = @panelWidth
+        
+        for hPanel, j in @hPanels[i]
+          
+          if j % 2 isnt 0 and !options.twist
+            yDeg = -angle
+          else
+            yDeg = angle
+          
+          if j is 0
+            y = 0
+            yDeg = 0
+          else
+            y = @panelHeight
+            yDeg
+          
 
 
       panel.style[transformProp] = "translate3d(#{x}px, 0, 0) #{rotation}"
 
       if @settings.shading and !(i is 0 and options.anchor)
-        opacity = Math.abs(angle) / 90 * @settings.shadingIntensity * .4
+        if axis isnt 'h'
+          opacity = 0
+        else
+          opacity = Math.abs(angle) / 90 * @settings.shadingIntensity * .4
         
         if deg < 0
           @rightShaders[i].style.opacity = 0
@@ -257,37 +331,37 @@ class root.OriDomi
     @accordion 0
 
 
-  collapse: ->
-    @accordion -90, anchor: false
+  collapse: (axis) ->
+    @accordion -90, axis, anchor: false
 
 
   collapseAlt: ->
-    @accordion 90, anchor: false
+    @accordion 90, axis, anchor: false
 
 
-  reveal: (angle, options = {}) ->
+  reveal: (angle, axis, options = {}) ->
     options.anchor = true
-    @accordion angle, options
+    @accordion angle, axis, options
 
 
-  stairs: (angle, options = {}) ->
+  stairs: (angle, axis, options = {}) ->
     options.stairs = true
     options.anchor = true
-    @accordion angle, options
+    @accordion angle, axis, options
 
 
-  fracture: (angle, options = {}) ->
+  fracture: (angle, axis, options = {}) ->
     options.fracture = true
-    @accordion angle, options
+    @accordion angle, axis, options
 
 
-  twist: (angle, options = {}) ->
+  twist: (angle, axis, options = {}) ->
     options.fracture = true
     options.twist = true
-    @accordion angle / 10, options
+    @accordion angle / 10, axis, options
 
 
-  curl: (angle, options = {}) ->
+  curl: (angle, axis, options = {}) ->
     angle = @_normalizeAngle(angle) / @panelWidth * 10
 
     for panel, i in @panels
@@ -297,7 +371,7 @@ class root.OriDomi
     @_callback options
 
 
-  setAngles: (angles, options = {}) ->
+  setAngles: (angles, axis, options = {}) ->
     if !Array.isArray angles
       return !silent and console?.warn 'oriDomi: Argument must be an array of angles'
     
