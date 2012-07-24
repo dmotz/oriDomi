@@ -76,7 +76,8 @@ class root.OriDomi
     
     if !@el? or @el.nodeType isnt 1
       return !silent and console?.warn 'oriDomi: First argument must be a DOM element'
-
+    
+    {@shading, @vPanels, @hPanels} = @settings
     @$el = $ @el if $
     elStyle = root.getComputedStyle @el
 
@@ -88,14 +89,14 @@ class root.OriDomi
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
 
-    @panelWidth = Math.floor(@width / @settings.vPanels) or 1
-    @panelHeight = Math.floor(@height / @settings.hPanels) or 1
     @vPanels = []
     @hPanels = []
     @leftShaders = []
     @rightShaders = []
     @topShaders = []
     @bottomShaders = []
+    @panelWidth = Math.floor(@width / @vPanels) or 1
+    @panelHeight = Math.floor(@height / @hPanels) or 1
     
     if @settings.shading
       shader = document.createElement 'div'
@@ -116,8 +117,8 @@ class root.OriDomi
     hMask.style.overflow = 'hidden'
     hMask.style.height = @panelHeight + 'px'
     hMask.appendChild contentHolder
-    
-    if @settings.shading
+
+    if @shading
       topShader = shader.cloneNode()
       topShader.className = 'oridomi-shader-top'
       bottomShader = shader.cloneNode()
