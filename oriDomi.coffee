@@ -89,28 +89,52 @@ class root.OriDomi
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
 
-    @vPanels = []
-    @hPanels = []
-    @leftShaders = []
-    @rightShaders = []
-    @topShaders = []
-    @bottomShaders = []
+
     @panelWidth = Math.floor(@width / @vPanels) or 1
     @panelHeight = Math.floor(@height / @hPanels) or 1
     
-    if @settings.shading
+    @axes = ['left', 'right', 'top', 'bottom']
+    @lastAnchor = @axes[0]
+    @panels = {}
+    @stages = {}
+    stage = document.createElement 'div'
+    stage.style.display = 'none'
+    stage.style.width = @width + 'px'
+    stage.style.height = @height + 'px'
+    stage.style.position = 'absolute'
+    stage.style.padding = '0'
+    stage.style.margin = '0'
+
+
+    for axis in @axes
+      @panels[axis] = []
+      @stages[axis] = stage.cloneNode()
+      @stages[axis].className = 'oridomi-stage-' + axis
+
+    if @shading
+      @shaders = {}
+      for axis in @axes
+        @shaders[axis] = {}
+        if axis is 'left' or axis is 'right'
+          @shaders[axis].left = []
+          @shaders[axis].right = []
+        else
+          @shaders[axis].top = []
+          @shaders[axis].bottom = []
+
       shader = document.createElement 'div'
       shader.style[transitionProp] = "opacity #{@settings.speed}s"
       shader.style.position = 'absolute'
       shader.style.width = '100%'
       shader.style.height = '100%'
-      shader.style.opacity = 0
-      shader.style.top = 0
-    
+      shader.style.opacity = '0'
+      shader.style.top = '0'
+      shader.style.left = '0'
+
     contentHolder = @el.cloneNode true
     contentHolder.classList.add 'oridomi-content'
     contentHolder.margin = '0'
-    
+
     hMask = document.createElement 'div'
     hMask.className = 'oridomi-mask-h'
     hMask.style.position = 'absolute'
@@ -125,81 +149,101 @@ class root.OriDomi
       bottomShader.className = 'oridomi-shader-bottom'
       hMask.appendChild topShader
       hMask.appendChild bottomShader
-    
+
     hPanel = document.createElement 'div'
     hPanel.className = 'oridomi-panel-h'
     hPanel.style.width = '100%'
     hPanel.style.height = @panelHeight + 'px'
     hPanel.style.padding = '0'
-    hPanel.style[transformProp] = "translate3d(0, #{@panelHeight}px, 0)"
+    hPanel.style[transformProp] = @_transform [0, @panelHeight]
     hPanel.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
-    hPanel.style[transformOriginProp] = '0'
+    #hPanel.style[transformOriginProp] = '0'
     hPanel.style[transformStyleProp] = 'preserve-3d'
     hPanel.style[backfaceProp] = 'hidden'
     hPanel.appendChild hMask
-    
-    rowSet = document.createElement 'div'
-    rowSet.className = 'oridomi-row-set'
-    rows = []
-    
-    for i in [1..@settings.hPanels]
-      do =>
+
+
+    for anchor in ['top', 'bottom']
+      for i in [1..@hPanels]
         panel = hPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        content.style.marginTop = parseInt((i - 1) * @panelHeight * -1, 10) + 'px'
-        rows.push panel
-        
-        unless i is 1
-          rows[i - 2].appendChild panel
+
+        if anchor is 'top'
+          y = (i - 1) * @panelHeight * -1
+          if i is 1
+            panel.style[transformProp] = @_transform [0, 0]
         else
-          panel.style[transformProp] = 'translate3d(0, 0, 0)'
-    
-    rowSet.appendChild rows[0]
-    
-    vMask = hMask.cloneNode false
+          y = ((@hPanels * @panelHeight) - (@panelHeight * i)) * -1
+          if i is 1
+            panel.style[transformProp] = @_transform [0, @panelHeight * (@hPanels - 1)]
+          else
+            panel.style[transformProp] = @_transform [0, -@panelHeight]
+          
+        content.style[transformProp] = @_transform [0, y]
+
+        if @shading
+          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
+          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
+
+        @panels[anchor][i - 1] = panel
+
+        unless i is 1
+          @panels[anchor][i - 2].appendChild panel
+
+      @stages[anchor].appendChild @panels[anchor][0]
+
+
+    vMask = hMask.cloneNode true
     vMask.className = 'oridomi-mask-v'
     vMask.style.width = @panelWidth + 'px'
     vMask.style.height = '100%'
 
-    
-    if @settings.shading
+    if @shading
       leftShader = shader.cloneNode()
       leftShader.className = 'oridomi-shader-left'
       rightShader = shader.cloneNode()
       rightShader.className = 'oridomi-shader-right'
       vMask.appendChild leftShader
       vMask.appendChild rightShader
-    
-    vMask.appendChild rowSet
-    
+
     vPanel = hPanel.cloneNode()
     vPanel.className = 'oridomi-panel-v'
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
-    vPanel.style[transformProp] = "translate3d(#{@panelWidth}px, 0, 0)"
+    vPanel.style[transformProp] = @_transform [@panelWidth, 0]
     vPanel.appendChild vMask
-    
-    
-    for i in [1..@settings.vPanels]
-      do =>
+
+    for anchor in ['left', 'right']
+      for i in [1..@vPanels]
         panel = vPanel.cloneNode true
-        
-        if @settings.shading
-          @leftShaders.push panel.getElementsByClassName('oridomi-shader-left')[0]
-          @rightShaders.push panel.getElementsByClassName('oridomi-shader-right')[0]
-        
-        rows = panel.getElementsByClassName('oridomi-row-set')[0]
-        rows.style.marginLeft = parseInt((i - 1) * @panelWidth * -1, 10) + 'px'
-        
-        @hPanels.push panel.getElementsByClassName 'oridomi-panel-h'
-        @vPanels.push panel
+        content = panel.getElementsByClassName('oridomi-content')[0]
+
+        if anchor is 'left'
+          x = (i - 1) * @panelWidth * -1
+          if i is 1
+            panel.style[transformProp] = @_transform [0, 0]
+        else
+          x = ((@vPanels * @panelWidth) - (@panelWidth * i)) * -1
+          if i is 1
+            panel.style[transformProp] = @_transform [@panelWidth * (@vPanels - 1), 0]
+          else
+            panel.style[transformProp] = @_transform [-@panelWidth, 0]
+
+
+        content.style[transformProp] = @_transform [x, 0]
+
+        if @shading
+          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-left')[0]
+          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-right')[0]
+
+        @panels[anchor][i - 1] = panel
 
         unless i is 1
-          @vPanels[i - 2].appendChild panel
-        else
-          panel.style[transformProp] = 'translate3d(0, 0, 0)'
-    
-    
+          @panels[anchor][i - 2].appendChild panel
+
+      @stages[anchor].appendChild @panels[anchor][0]
+
+
     @el.classList.add @settings.oriDomiClass
     @el.style.padding = '0'
     @el.style.width = @width + 'px'
@@ -207,9 +251,12 @@ class root.OriDomi
     @el.style.backgroundColor = 'transparent'
     #@el.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
     @el.style[perspectiveProp] = @settings.perspective
+    @stages.left.style.display = 'block'
     @el.innerHTML = ''
-    @el.appendChild @vPanels[0]
-  
+
+    for axis in @axes
+      @el.appendChild @stages[axis]
+
     @_callback @settings
 
 
