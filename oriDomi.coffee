@@ -268,6 +268,15 @@ class root.OriDomi
       , true
 
 
+  _transform: (translation, rotation) ->
+    [x, y] = translation
+    if !rotation
+      "translate3d(#{ x }px, #{ y }px, 0)"
+    else
+      [rX, rY, rZ, deg] = rotation
+      "translate3d(#{ x }px, #{ y }px, 0) rotate3d(#{ rX }, #{ rY }, #{ rZ }, #{ deg }deg)"
+
+
   _normalizeAngle: (percent) ->
     percent = parseFloat percent, 10
     if isNaN percent
