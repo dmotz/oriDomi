@@ -203,12 +203,12 @@ class root.OriDomi
     vMask.style.height = '100%'
 
     if @shading
-      leftShader = shader.cloneNode()
+      leftShader = vMask.getElementsByClassName('oridomi-shader-top')[0]
       leftShader.className = 'oridomi-shader-left'
-      rightShader = shader.cloneNode()
+      leftShader.style.background = '-webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      rightShader = vMask.getElementsByClassName('oridomi-shader-bottom')[0]
       rightShader.className = 'oridomi-shader-right'
-      vMask.appendChild leftShader
-      vMask.appendChild rightShader
+      rightShader.style.background = '-webkit-linear-gradient(right, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
 
     vPanel = hPanel.cloneNode()
     vPanel.className = 'oridomi-panel-v'
