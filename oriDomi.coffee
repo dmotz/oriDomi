@@ -11,7 +11,7 @@ root = window
 $ = root.$ or false
 silent = false
 testEl = document.createElement 'div'
-prefixList = ['webkit', 'Moz', 'O', 'ms', 'Khtml']
+prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
 transitionEnd = 'webkitTransitionEnd transitionend oTransitionEnd MSTransitionEnd KhtmlTransitionEnd'
 oriDomiSupport = true
 
