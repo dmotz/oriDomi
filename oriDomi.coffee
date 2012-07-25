@@ -270,10 +270,15 @@ class root.OriDomi
 
   _callback: (options) ->
     if typeof options.callback is 'function'
-      @panels[0].addEventListener transitionEnd, =>
-        @panels[0].removeEventListener transitionEnd, true
+      # transitionend events are unreliable at the moment unfortunately
+      if @lastAngle is 0
+        delay = 0
+      else
+        delay = @settings.speed * 1000
+
+      setTimeout =>
         options.callback()
-      , true
+      , delay
 
 
   _transform: (translation, rotation) ->
