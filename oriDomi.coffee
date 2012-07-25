@@ -96,6 +96,7 @@ class root.OriDomi
     
     @axes = ['left', 'right', 'top', 'bottom']
     @lastAnchor = @axes[0]
+    @lastAngle = 0
     @panels = {}
     @stages = {}
     stage = document.createElement 'div'
