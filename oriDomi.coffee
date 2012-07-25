@@ -180,7 +180,7 @@ class root.OriDomi
           panel.style[transformOriginProp] = 'bottom'
           y = -((@hPanels * @panelHeight) - (@panelHeight * i))
           if i is 1
-            panel.style[transformProp] = @_transform [0, @panelHeight * (@hPanels - 1)]
+            panel.style[transformProp] = @_transform [0, @_getBottomAnchorCoord()]
           else
             panel.style[transformProp] = @_transform [0, -@panelHeight]
           
@@ -308,6 +308,10 @@ class root.OriDomi
 
   _getRightAnchorCoord: ->
     @panelWidth * (@vPanels - 1) - @vPanels + 1
+
+
+  _getBottomAnchorCoord: ->
+    @panelHeight * (@hPanels - 1) - @hPanels + 1
 
 
   _accordionDefaults:
