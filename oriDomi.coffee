@@ -232,7 +232,7 @@ class root.OriDomi
           panel.style[transformOriginProp] = 'right'
           x = -((@vPanels * @panelWidth) - (@panelWidth * i))
           if i is 1
-            panel.style[transformProp] = @_transform [@panelWidth * (@vPanels - 1), 0]
+            panel.style[transformProp] = @_transform [@_getRightAnchorCoord(), 0]
           else
             panel.style[transformProp] = @_transform [-@panelWidth, 0]
 
@@ -304,6 +304,10 @@ class root.OriDomi
       @vPanels
     else
       @hPanels
+
+
+  _getRightAnchorCoord: ->
+    @panelWidth * (@vPanels - 1) - @vPanels + 1
 
 
   _accordionDefaults:
