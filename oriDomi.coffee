@@ -145,8 +145,10 @@ class root.OriDomi
     if @shading
       topShader = shader.cloneNode()
       topShader.className = 'oridomi-shader-top'
+      topShader.style.background = '-webkit-linear-gradient(top, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
       bottomShader = shader.cloneNode()
       bottomShader.className = 'oridomi-shader-bottom'
+      bottomShader.style.background = '-webkit-linear-gradient(bottom, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
       hMask.appendChild topShader
       hMask.appendChild bottomShader
 
