@@ -335,6 +335,49 @@ class root.OriDomi
         panel.style[transformProp] = 'translate3d(0, #{@panelHeight}px, 0)'
 
 
+  reset: (callback) ->
+    for panel, i in @panels[@lastAnchor]
+      switch @lastAnchor
+        when 'left'
+          y = 0
+          if i is 0
+            x = 0
+          else
+            x = @panelWidth - 1
+        when 'right'
+          y = 0
+          if i is 0
+            x = @_getRightAnchorCoord()
+          else
+            x = -@panelWidth + 1
+        when 'top'
+          x = 0
+          if i is 0
+            y = 0
+          else
+            y = @panelHeight - 1
+        when 'bottom'
+          x = 0
+          if i is 0
+            y = @_getBottomAnchorCoord()
+          else
+            y = -@panelHeight + 1
+      
+      
+      panel.style[transformProp] = @_transform [x, y]
+      
+      if @shading
+        if @lastAnchor is 'left' or @lastAnchor is 'right'
+          @shaders[@lastAnchor].right[i].style.opacity = 0
+          @shaders[@lastAnchor].left[i].style.opacity = 0
+        else
+          @shaders[@lastAnchor].top[i].style.opacity = 0
+          @shaders[@lastAnchor].bottom[i].style.opacity = 0
+    
+    @_callback callback: callback
+
+
+
   accordion: (angle, options) ->
     options = extendObj options, @_accordionDefaults
     {anchor} = options
