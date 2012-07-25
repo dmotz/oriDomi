@@ -184,8 +184,8 @@ class root.OriDomi
         content.style[transformProp] = @_transform [0, y]
 
         if @shading
-          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
-          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
+          @shaders[anchor].top[i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
+          @shaders[anchor].bottom[i - 1] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
 
         @panels[anchor][i - 1] = panel
 
@@ -235,8 +235,8 @@ class root.OriDomi
         content.style[transformProp] = @_transform [x, 0]
 
         if @shading
-          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-left')[0]
-          @shaders[anchor][i - 1] = panel.getElementsByClassName('oridomi-shader-right')[0]
+          @shaders[anchor].left[i - 1] = panel.getElementsByClassName('oridomi-shader-left')[0]
+          @shaders[anchor].right[i - 1] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
         @panels[anchor][i - 1] = panel
 
