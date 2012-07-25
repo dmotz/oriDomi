@@ -77,7 +77,7 @@ class root.OriDomi
     if !@el? or @el.nodeType isnt 1
       return !silent and console?.warn 'oriDomi: First argument must be a DOM element'
     
-    {@shading, @vPanels, @hPanels} = @settings
+    {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     @$el = $ @el if $
     elStyle = root.getComputedStyle @el
 
