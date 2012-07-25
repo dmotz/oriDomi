@@ -298,6 +298,13 @@ class root.OriDomi
       percent
 
 
+  _getPanelType: (anchor) ->
+    if anchor is 'left' or anchor is 'right'
+      @vPanels
+    else
+      @hPanels
+
+
   _accordionDefaults:
     anchor: 'left'
     sticky: true
