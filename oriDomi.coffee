@@ -381,7 +381,18 @@ class root.OriDomi
   accordion: (angle, options) ->
     options = extendObj options, @_accordionDefaults
     {anchor} = options
-    angle = @_normalizeAngle angle
+
+    if anchor isnt @lastAnchor
+      return @reset =>
+        @stages[anchor].style.display = 'block'
+        @stages[@lastAnchor].style.display = 'none'
+        @lastAnchor = anchor
+        setTimeout =>
+          @accordion angle, options
+        , 0
+    
+
+    @lastAngle = angle = @_normalizeAngle angle
 
     for panel, i in @panels[anchor]
       
@@ -395,14 +406,29 @@ class root.OriDomi
         when 'right'
           y = 0
           if i is 0
-            x = @panelWidth * (@vPanels - 1)
+            x = @_getRightAnchorCoord()
           else
             x = -@panelWidth + 1
+        when 'top'
+          x = 0
+          if i is 0
+            y = 0
+          else
+            y = @panelHeight - 1
+        when 'bottom'
+          x = 0
+          if i is 0
+            y = @_getBottomAnchorCoord()
+          else
+            y = -@panelHeight + 1
 
       if i % 2 isnt 0 and !options.twist
         deg = -angle
       else
         deg = angle
+      
+      if anchor is 'right'
+        deg = -deg
       
       if options.sticky
         if i is 0
@@ -415,7 +441,10 @@ class root.OriDomi
       if options.fracture
         rotation = [1, 1, 1, deg]
       else
-        rotation = [0, 1, 0, deg]
+        if anchor is 'left' or anchor is 'right'
+          rotation = [0, 1, 0, deg]
+        else
+          rotation = [1, 0, 0, -deg]
       
       panel.style[transformProp] = @_transform [x, y], rotation
       
@@ -490,7 +519,7 @@ class root.OriDomi
         when 'right'
           y = 0
           if i is 0
-            x = @panelWidth * (@vPanels - 1)
+            x = @_getRightAnchorCoord()
           else
             x = -@panelWidth + 1
             
