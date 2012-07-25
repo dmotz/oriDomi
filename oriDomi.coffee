@@ -414,12 +414,27 @@ class root.OriDomi
     @accordion angle / 10, options
 
 
-  curl: (angle, axis, options = {}) ->
-    angle = @_normalizeAngle(angle) / @panelWidth * 10
+  curl: (angle, options = {}) ->
+    {anchor} = options
+    angle = @_normalizeAngle(angle) /  @_getPanelType anchor
 
-    for panel, i in @panels
-      x = if i is 0 then 0 else @panelWidth - 1
-      panel.style[transformProp] = "translate3d(#{x}px, 0, 0) rotate3d(0, 1, 0, #{angle}deg)"
+    for panel, i in @panels[anchor]
+      
+      switch anchor
+        when 'left'
+          y = 0
+          if i is 0
+            x = 0
+          else 
+            x = @panelWidth - 1
+        when 'right'
+          y = 0
+          if i is 0
+            x = @panelWidth * (@vPanels - 1)
+          else
+            x = -@panelWidth + 1
+            
+      panel.style[transformProp] = @_transform [x, y], [0, 1, 0, angle]
 
     @_callback options
 
