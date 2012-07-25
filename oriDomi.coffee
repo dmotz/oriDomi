@@ -124,7 +124,7 @@ class root.OriDomi
           @shaders[axis].bottom = []
 
       shader = document.createElement 'div'
-      shader.style[transitionProp] = "opacity #{@settings.speed}s"
+      shader.style[transitionProp] = "opacity #{@settings.speed}s #{@settings.easingMethod}"
       shader.style.position = 'absolute'
       shader.style.width = '100%'
       shader.style.height = '100%'
