@@ -159,7 +159,7 @@ class root.OriDomi
     hPanel.style.padding = '0'
     hPanel.style[transformProp] = @_transform [0, @panelHeight]
     hPanel.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
-    #hPanel.style[transformOriginProp] = '0'
+    hPanel.style[transformOriginProp] = 'top'
     hPanel.style[transformStyleProp] = 'preserve-3d'
     hPanel.style[backfaceProp] = 'hidden'
     hPanel.appendChild hMask
@@ -176,6 +176,7 @@ class root.OriDomi
             panel.style[transformProp] = @_transform [0, 0]
         else
           y = ((@hPanels * @panelHeight) - (@panelHeight * i)) * -1
+          panel.style[transformOriginProp] = 'bottom'
           if i is 1
             panel.style[transformProp] = @_transform [0, @panelHeight * (@hPanels - 1)]
           else
@@ -213,6 +214,7 @@ class root.OriDomi
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
     vPanel.style[transformProp] = @_transform [@panelWidth, 0]
+    vPanel.style[transformOriginProp] = 'left'
     vPanel.appendChild vMask
 
     for anchor in ['left', 'right']
@@ -226,6 +228,7 @@ class root.OriDomi
             panel.style[transformProp] = @_transform [0, 0]
         else
           x = ((@vPanels * @panelWidth) - (@panelWidth * i)) * -1
+          panel.style[transformOriginProp] = 'right'
           if i is 1
             panel.style[transformProp] = @_transform [@panelWidth * (@vPanels - 1), 0]
           else
