@@ -313,80 +313,66 @@ class root.OriDomi
         panel.style[transformProp] = 'translate3d(0, #{@panelHeight}px, 0)'
 
 
-  accordion: (angle, axis = 'h', options) ->
+  accordion: (angle, options) ->
     options = extendObj options, @_accordionDefaults
+    {anchor} = options
     angle = @_normalizeAngle angle
-    left = @panelWidth - 1
 
-    for panel, i in @vPanels
-
-      if axis is 'h'
-  
-        @_resetRow i
-        
-        if i % 2 isnt 0 and !options.twist
-          deg = -angle
-        else
-          deg = angle
-  
-        x = left
-        ++x if angle is 90
-  
-        if options.anchor
-          if i is 0
-            x = 0
-            deg = 0
-          else if i > 1 or options.stairs
-            deg *= 2
-        else
-          if i is 0
-            x = 0
-          else
-            deg *= 2
-  
-        if options.fracture
-          rotation = "rotate3d(1, 1, 1, #{deg}deg)"
-        else
-          rotation = "rotate3d(0, 1, 0, #{deg}deg)"
+    for panel, i in @panels[anchor]
       
+      switch anchor
+        when 'left'
+          y = 0
+          if i is 0
+            x = 0
+          else
+            x = @panelWidth - 1
+        when 'right'
+          y = 0
+          if i is 0
+            x = @panelWidth * (@vPanels - 1)
+          else
+            x = -@panelWidth + 1
+
+      if i % 2 isnt 0 and !options.twist
+        deg = -angle
       else
-        deg = 0
-
+        deg = angle
+      
+      if options.sticky
         if i is 0
-          x = 0
-        else
-          x = @panelWidth
+          deg = 0
+        else if i > 1 or options.stairs
+          deg *= 2
+      else
+        deg *= 2 unless i is 0
+      
+      if options.fracture
+        rotation = [1, 1, 1, deg]
+      else
+        rotation = [0, 1, 0, deg]
+      
+      panel.style[transformProp] = @_transform [x, y], rotation
+      
+      if @shading and !(i is 0 and options.anchor) and Math.abs(deg) isnt 180
         
-        for hPanel, j in @hPanels[i]
-          
-          if j % 2 isnt 0 and !options.twist
-            yDeg = -angle
-          else
-            yDeg = angle
-          
-          if j is 0
-            y = 0
-            yDeg = 0
-          else
-            y = @panelHeight
-            yDeg
-          
-
-
-      panel.style[transformProp] = "translate3d(#{x}px, 0, 0) #{rotation}"
-
-      if @settings.shading and !(i is 0 and options.anchor)
-        if axis isnt 'h'
-          opacity = 0
-        else
-          opacity = Math.abs(angle) / 90 * @settings.shadingIntensity * .4
+        opacity = Math.abs(deg) / 90 * @shadingIntensity * .4
         
-        if deg < 0
-          @rightShaders[i].style.opacity = 0
-          @leftShaders[i].style.opacity = opacity
+        if anchor is 'left' or anchor is 'right'
+          if deg < 0
+            @shaders[anchor].right[i].style.opacity = 0
+            @shaders[anchor].left[i].style.opacity = opacity
+          else
+            @shaders[anchor].left[i].style.opacity = 0
+            @shaders[anchor].right[i].style.opacity = opacity
         else
-          @leftShaders[i].style.opacity = 0
-          @rightShaders[i].style.opacity = opacity
+          if deg < 0
+            @shaders[anchor].bottom[i].style.opacity = 0
+            @shaders[anchor].top[i].style.opacity = opacity
+          else
+            @shaders[anchor].top[i].style.opacity = 0
+            @shaders[anchor].bottom[i].style.opacity = opacity
+
 
     @_callback options
 
