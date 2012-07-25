@@ -299,7 +299,8 @@ class root.OriDomi
 
 
   _accordionDefaults:
-    anchor: true
+    anchor: 'left'
+    sticky: true
     stairs: false
     fracture: false
     twist: false
