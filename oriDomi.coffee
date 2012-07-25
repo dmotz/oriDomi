@@ -382,34 +382,36 @@ class root.OriDomi
     @accordion 0
 
 
-  collapse: (axis) ->
-    @accordion -90, axis, anchor: false
+  collapse: (options = {}) ->
+    options.sticky = false
+    @accordion -90
 
 
-  collapseAlt: ->
-    @accordion 90, axis, anchor: false
+  collapseAlt: (options = {}) ->
+    options.sticky = false
+    @accordion 90
 
 
-  reveal: (angle, axis, options = {}) ->
-    options.anchor = true
-    @accordion angle, axis, options
+  reveal: (angle, options = {}) ->
+    options.sticky = true
+    @accordion angle, options
 
 
-  stairs: (angle, axis, options = {}) ->
+  stairs: (angle, options = {}) ->
     options.stairs = true
-    options.anchor = true
-    @accordion angle, axis, options
+    options.sticky = true
+    @accordion angle, options
 
 
-  fracture: (angle, axis, options = {}) ->
+  fracture: (angle, options = {}) ->
     options.fracture = true
-    @accordion angle, axis, options
+    @accordion angle, options
 
 
-  twist: (angle, axis, options = {}) ->
+  twist: (angle, options = {}) ->
     options.fracture = true
     options.twist = true
-    @accordion angle / 10, axis, options
+    @accordion angle / 10, options
 
 
   curl: (angle, axis, options = {}) ->
