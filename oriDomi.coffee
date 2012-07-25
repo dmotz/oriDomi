@@ -442,10 +442,6 @@ class root.OriDomi
     @_callback options
 
 
-  reset: ->
-    @accordion 0
-
-
   collapse: (options = {}) ->
     options.sticky = false
     @accordion -90
