@@ -172,12 +172,12 @@ class root.OriDomi
         content = panel.getElementsByClassName('oridomi-content')[0]
 
         if anchor is 'top'
-          y = (i - 1) * @panelHeight * -1
+          y = -((i - 1) * @panelHeight)
           if i is 1
             panel.style[transformProp] = @_transform [0, 0]
         else
-          y = ((@hPanels * @panelHeight) - (@panelHeight * i)) * -1
           panel.style[transformOriginProp] = 'bottom'
+          y = -((@hPanels * @panelHeight) - (@panelHeight * i))
           if i is 1
             panel.style[transformProp] = @_transform [0, @panelHeight * (@hPanels - 1)]
           else
@@ -224,12 +224,12 @@ class root.OriDomi
         content = panel.getElementsByClassName('oridomi-content')[0]
 
         if anchor is 'left'
-          x = (i - 1) * @panelWidth * -1
+          x = -((i - 1) * @panelWidth)
           if i is 1
             panel.style[transformProp] = @_transform [0, 0]
         else
-          x = ((@vPanels * @panelWidth) - (@panelWidth * i)) * -1
           panel.style[transformOriginProp] = 'right'
+          x = -((@vPanels * @panelWidth) - (@panelWidth * i))
           if i is 1
             panel.style[transformProp] = @_transform [@panelWidth * (@vPanels - 1), 0]
           else
