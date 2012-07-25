@@ -69,6 +69,7 @@ defaults =
 class root.OriDomi
 
   constructor: (@el, @settings = {}) ->
+    console.time 'oridomiConstruction'
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
     
@@ -263,6 +264,7 @@ class root.OriDomi
       @el.appendChild @stages[axis]
 
     @_callback @settings
+    console.timeEnd 'oridomiConstruction'
 
 
   _callback: (options) ->
