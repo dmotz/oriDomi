@@ -395,14 +395,6 @@ class root.OriDomi
     twist: false
 
 
-  _resetRow: (column) ->
-    for panel, i in @hPanels[column]
-      if i is 0
-        panel.style[transformProp] = 'translate3d(0, 0, 0)'
-      else
-        panel.style[transformProp] = 'translate3d(0, #{@panelHeight}px, 0)'
-
-
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
       panel.style[transformProp] = @_transform @_getXy i, @lastAnchor
