@@ -54,7 +54,7 @@ transformStyleProp = testProp 'transformStyle'
 transitionProp = testProp 'transition'
 perspectiveProp = testProp 'perspective'
 backfaceProp = testProp 'backfaceVisibility'
-gradientProp = testProp 'linearGradient'
+gradientPrefix = testGradient()
 
 if !transformProp or !transitionProp or !perspectiveProp or 
   !backfaceProp or !transformOriginProp or !transformStyleProp
