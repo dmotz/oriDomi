@@ -370,6 +370,18 @@ class root.OriDomi
     @lastAnchor = anchor
 
 
+  _getOppositeAnchor: (anchor) ->
+    switch anchor
+      when 'left'
+        'right'
+      when 'right'
+        'left'
+      when 'top'
+        'bottom'
+      when 'bottom'
+        'top'
+
+
   _getPanelType: (anchor) ->
     if anchor is 'left' or anchor is 'right'
       @vPanels
