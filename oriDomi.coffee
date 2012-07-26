@@ -26,9 +26,10 @@ testProp = (prop) ->
 
 testGradient = ->
   for prefix in prefixList
-    testEl.style.backgroundImage = "-#{ prefix.toLowerCase() }-linear-gradient(left, #000, #fff)"
+    dashed = "-#{ prefix.toLowerCase() }-"
+    testEl.style.backgroundImage = "#{ dashed }linear-gradient(left, #000, #fff)"
     if testEl.style.backgroundImage.indexOf('gradient') isnt -1
-      return "-#{ prefix }-"
+      return dashed
 
   ''
 
