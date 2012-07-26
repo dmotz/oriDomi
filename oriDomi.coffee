@@ -12,7 +12,6 @@ $ = root.$ or false
 silent = false
 testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
-transitionEnd = 'webkitTransitionEnd transitionend oTransitionEnd MSTransitionEnd KhtmlTransitionEnd'
 oriDomiSupport = true
 
 
