@@ -1,9 +1,11 @@
 ###
 * oriDomi
 * fold up the DOM
+* http://oridomi.com
 *
 * Dan Motzenbecker
-* (c) 2012
+* http://oxism.com
+* Copyright 2012
 ###
 
 
