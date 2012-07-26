@@ -23,6 +23,16 @@ testProp = (prop) ->
       return prefix + capProp
   false
 
+
+testGradient = ->
+  for prefix in prefixList
+    testEl.style.backgroundImage = "-#{ prefix.toLowerCase() }-linear-gradient(left, #000, #fff)"
+    if testEl.style.backgroundImage.indexOf('gradient') isnt -1
+      return "-#{ prefix }-"
+
+  ''
+
+
 # one dimensional:
 extendObj = (target, source) ->
   if source isnt Object source
@@ -146,10 +156,10 @@ class root.OriDomi
     if @shading
       topShader = shader.cloneNode()
       topShader.className = 'oridomi-shader-top'
-      topShader.style.background = '-webkit-linear-gradient(top, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      topShader.style.background = @_getShaderGradient 'top'
       bottomShader = shader.cloneNode()
       bottomShader.className = 'oridomi-shader-bottom'
-      bottomShader.style.background = '-webkit-linear-gradient(bottom, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      bottomShader.style.background = @_getShaderGradient 'bottom'
       hMask.appendChild topShader
       hMask.appendChild bottomShader
 
@@ -205,10 +215,10 @@ class root.OriDomi
     if @shading
       leftShader = vMask.getElementsByClassName('oridomi-shader-top')[0]
       leftShader.className = 'oridomi-shader-left'
-      leftShader.style.background = '-webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      leftShader.style.background = @_getShaderGradient 'left'
       rightShader = vMask.getElementsByClassName('oridomi-shader-bottom')[0]
       rightShader.className = 'oridomi-shader-right'
-      rightShader.style.background = '-webkit-linear-gradient(right, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)'
+      rightShader.style.background = @_getShaderGradient 'right'
 
     vPanel = hPanel.cloneNode()
     vPanel.className = 'oridomi-panel-v'
@@ -303,6 +313,8 @@ class root.OriDomi
       percent
 
 
+  _getShaderGradient: (anchor) ->
+    "#{ gradientPrefix }linear-gradient(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
   _getPanelType: (anchor) ->
     if anchor is 'left' or anchor is 'right'
       @vPanels
