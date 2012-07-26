@@ -364,6 +364,14 @@ class root.OriDomi
 
   _getShaderGradient: (anchor) ->
     "#{ gradientPrefix }linear-gradient(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
+
+
+  _showStage: (anchor) ->
+    @stages[anchor].style.display = 'block'
+    @stages[@lastAnchor].style.display = 'none'
+    @lastAnchor = anchor
+
+
   _getPanelType: (anchor) ->
     if anchor is 'left' or anchor is 'right'
       @vPanels
@@ -410,9 +418,7 @@ class root.OriDomi
     
     if anchor isnt @lastAnchor
       return @reset =>
-        @stages[anchor].style.display = 'block'
-        @stages[@lastAnchor].style.display = 'none'
-        @lastAnchor = anchor
+        @_showStage anchor
         setTimeout =>
           @accordion angle, options
         , 0
@@ -489,6 +495,7 @@ class root.OriDomi
     {anchor} = options
     angle = @_normalizeAngle(angle) /  @_getPanelType anchor
 
+        @_showStage anchor
     for panel, i in @panels[anchor]
       panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
 
