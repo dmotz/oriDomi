@@ -59,7 +59,7 @@ gradientProp = testProp 'linearGradient'
 if !transformProp or !transitionProp or !perspectiveProp or 
   !backfaceProp or !transformOriginProp or !transformStyleProp
     oriDomiSupport = false
-    console?.warn 'oriDomi: Browser does not support CSS 3D tranforms, disabling'
+    console?.warn 'oriDomi: Browser does not support oriDomi'
 
 
 defaults =
