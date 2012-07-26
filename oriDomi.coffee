@@ -51,7 +51,9 @@ extendObj = (target, source) ->
 transformProp = testProp 'transform'
 transformOriginProp = testProp 'transformOrigin'
 transformStyleProp = testProp 'transformStyle'
-transitionProp = testProp 'transition'
+transitionProp = testProp 'transitionProperty'
+transitionDurationProp = testProp 'transitionDuration'
+transitionEasingProp = testProp 'transitionTimingFunction'
 perspectiveProp = testProp 'perspective'
 backfaceProp = testProp 'backfaceVisibility'
 gradientPrefix = testGradient()
@@ -133,7 +135,9 @@ class root.OriDomi
           @shaders[axis].bottom = []
 
       shader = document.createElement 'div'
-      shader.style[transitionProp] = "opacity #{@settings.speed}s #{@settings.easingMethod}"
+      shader.style[transitionProp] = 'opacity'
+      shader.style[transitionDurationProp] = @settings.speed + 's'
+      shader.style[transitionEasingProp] = @settings.easingMethod
       shader.style.position = 'absolute'
       shader.style.width = '100%'
       shader.style.height = '100%'
@@ -168,7 +172,9 @@ class root.OriDomi
     hPanel.style.height = @panelHeight + 'px'
     hPanel.style.padding = '0'
     hPanel.style[transformProp] = @_transform [0, @panelHeight]
-    hPanel.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
+    hPanel.style[transitionProp] = 'all'
+    hPanel.style[transitionDurationProp] = @settings.speed + 's'
+    hPanel.style[transitionEasingProp] = @settings.easingMethod
     hPanel.style[transformOriginProp] = 'top'
     hPanel.style[transformStyleProp] = 'preserve-3d'
     hPanel.style[backfaceProp] = 'hidden'
@@ -262,7 +268,6 @@ class root.OriDomi
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
-    #@el.style[transitionProp] = "all #{@settings.speed}s #{@settings.easingMethod}"
     @el.style[perspectiveProp] = @settings.perspective
     @stages.left.style.display = 'block'
     @el.innerHTML = ''
