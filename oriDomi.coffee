@@ -26,14 +26,16 @@ testProp = (prop) ->
   false
 
 
-testGradient = ->
+getGradientProp = ->
   for prefix in prefixList
-    dashed = "-#{ prefix.toLowerCase() }-"
-    testEl.style.backgroundImage = "#{ dashed }linear-gradient(left, #000, #fff)"
+    dashed = "-#{ prefix.toLowerCase() }-linear-gradient"
+    testEl.style.backgroundImage = "#{ dashed }(left, #000, #fff)"
     if testEl.style.backgroundImage.indexOf('gradient') isnt -1
       return dashed
 
-  ''
+  'linear-gradient'
+
+
 
 
 # one dimensional:
@@ -64,6 +66,7 @@ if !transformProp or !transitionProp or !perspectiveProp or
   !backfaceProp or !transformOriginProp or !transformStyleProp
     oriDomiSupport = false
     console?.warn 'oriDomi: Browser does not support oriDomi'
+css.gradientProp = getGradientProp()
 
 
 defaults =
@@ -350,7 +353,7 @@ class root.OriDomi
 
 
   _getShaderGradient: (anchor) ->
-    "#{ gradientPrefix }linear-gradient(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
+    "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
   _showStage: (anchor) ->
