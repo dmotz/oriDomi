@@ -82,12 +82,11 @@ class root.OriDomi
     console.time 'oridomiConstruction'
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
-    
+
     silent = true if @settings.silent
-    
     if !@el? or @el.nodeType isnt 1
       return !silent and console?.warn 'oriDomi: First argument must be a DOM element'
-    
+
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     @$el = $ @el if $
     elStyle = root.getComputedStyle @el
@@ -100,10 +99,9 @@ class root.OriDomi
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
 
-
     @panelWidth = Math.floor(@width / @vPanels) or 1
     @panelHeight = Math.floor(@height / @hPanels) or 1
-    
+
     @axes = ['left', 'right', 'top', 'bottom']
     @lastAnchor = @axes[0]
     @lastAngle = 0
@@ -176,7 +174,6 @@ class root.OriDomi
     hPanel.style[backfaceProp] = 'hidden'
     hPanel.appendChild hMask
 
-
     for anchor in ['top', 'bottom']
       for i in [1..@hPanels]
         panel = hPanel.cloneNode true
@@ -206,7 +203,6 @@ class root.OriDomi
           @panels[anchor][i - 2].appendChild panel
 
       @stages[anchor].appendChild @panels[anchor][0]
-
 
     vMask = hMask.cloneNode true
     vMask.className = 'oridomi-mask-v'
@@ -285,7 +281,6 @@ class root.OriDomi
         delay = 0
       else
         delay = @settings.speed * 1000
-
       setTimeout =>
         options.callback()
       , delay
@@ -395,7 +390,7 @@ class root.OriDomi
   accordion: (angle, options) ->
     options = extendObj options, @_accordionDefaults
     {anchor} = options
-
+    
     if anchor isnt @lastAnchor
       return @reset =>
         @stages[anchor].style.display = 'block'
@@ -404,7 +399,6 @@ class root.OriDomi
         setTimeout =>
           @accordion angle, options
         , 0
-    
 
     @lastAngle = angle = @_normalizeAngle angle
 
@@ -414,10 +408,10 @@ class root.OriDomi
         deg = -angle
       else
         deg = angle
-      
       if anchor is 'right'
+
         deg = -deg
-      
+
       if options.sticky
         if i is 0
           deg = 0
@@ -425,7 +419,7 @@ class root.OriDomi
           deg *= 2
       else
         deg *= 2 unless i is 0
-      
+
       if options.fracture
         rotation = [1, 1, 1, deg]
       else
@@ -505,16 +499,16 @@ class root.OriDomi
   setAngles: (angles, axis, options = {}) ->
     if !Array.isArray angles
       return !silent and console?.warn 'oriDomi: Argument must be an array of angles'
-    
+
     for panel, i in @panels
       x = if i is 0 then 0 else @panelWidth - 1
       angle = @_normalizeAngle(angles[i])
-      
+
       unless i is 0
         angle *= 2
-      
+
       panel.style[transformProp] = "translate3d(#{x}px, 0, 0) rotate3d(0, 1, 0, #{angle}deg)"
-      
+
     @_callback options
 
 
