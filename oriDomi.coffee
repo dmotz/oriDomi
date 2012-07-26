@@ -252,7 +252,7 @@ class root.OriDomi
         content.style[transformProp] = @_transform [x, 0]
 
         if @shading
-          @shaders[anchor].left[i - 1] = panel.getElementsByClassName('oridomi-shader-left')[0]
+          @shaders[anchor].left[i - 1]  = panel.getElementsByClassName('oridomi-shader-left')[0]
           @shaders[anchor].right[i - 1] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
         @panels[anchor][i - 1] = panel
@@ -286,9 +286,7 @@ class root.OriDomi
         delay = 0
       else
         delay = @settings.speed * 1000
-      setTimeout =>
-        options.callback()
-      , delay
+      setTimeout options.callback, delay
 
 
   _transform: (translation, rotation) ->
