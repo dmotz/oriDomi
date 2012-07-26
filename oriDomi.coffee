@@ -171,7 +171,6 @@ class root.OriDomi
     hPanel.style.width = '100%'
     hPanel.style.height = @panelHeight + 'px'
     hPanel.style.padding = '0'
-    hPanel.style[transformProp] = @_transform [0, @panelHeight]
     hPanel.style[transitionProp] = 'all'
     hPanel.style[transitionDurationProp] = @settings.speed + 's'
     hPanel.style[transitionEasingProp] = @settings.easingMethod
@@ -183,19 +182,14 @@ class root.OriDomi
       for i in [1..@hPanels]
         panel = hPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
+        panel.style[transformProp] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'top'
           y = -((i - 1) * @panelHeight)
-          if i is 1
-            panel.style[transformProp] = @_transform [0, 0]
         else
           panel.style[transformOriginProp] = 'bottom'
           y = -((@hPanels * @panelHeight) - (@panelHeight * i))
-          if i is 1
-            panel.style[transformProp] = @_transform [0, @_getBottomAnchorCoord()]
-          else
-            panel.style[transformProp] = @_transform [0, -@panelHeight]
-          
+
         content.style[transformProp] = @_transform [0, y]
 
         if @shading
@@ -234,19 +228,13 @@ class root.OriDomi
       for i in [1..@vPanels]
         panel = vPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
+        panel.style[transformProp] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'left'
           x = -((i - 1) * @panelWidth)
-          if i is 1
-            panel.style[transformProp] = @_transform [0, 0]
         else
           panel.style[transformOriginProp] = 'right'
           x = -((@vPanels * @panelWidth) - (@panelWidth * i))
-          if i is 1
-            panel.style[transformProp] = @_transform [@_getRightAnchorCoord(), 0]
-          else
-            panel.style[transformProp] = @_transform [-@panelWidth, 0]
-
 
         content.style[transformProp] = @_transform [x, 0]
 
