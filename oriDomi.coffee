@@ -483,18 +483,37 @@ class root.OriDomi
     @accordion angle / 10, options
 
 
+  _curlDefaults:
+    anchor: 'left'
+    twist: false
+
+
   curl: (angle, options = {}) ->
+    options = extendObj options, @_curlDefaults
     {anchor} = options
     angle = @_normalizeAngle(angle) /  @_getPanelType anchor
 
+    if anchor isnt @lastAnchor
+      return @reset =>
         @_showStage anchor
+        setTimeout =>
+          @curl angle, options
+        , 0
+
+    @lastAngle = angle = @_normalizeAngle angle
+
+    if anchor is 'left' or anchor is 'right'
+      rotation = [0, 1, 0, angle]
+    else
+      rotation = [1, 0, 0, -angle]
+
     for panel, i in @panels[anchor]
       panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
 
     @_callback options
 
 
-  setAngles: (angles, axis, options = {}) ->
+  setAngles: (angles, options = {}) ->
     if !Array.isArray angles
       return !silent and console?.warn 'oriDomi: Argument must be an array of angles'
 
