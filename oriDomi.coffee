@@ -314,6 +314,36 @@ class root.OriDomi
       percent
 
 
+  _getXy: (i, anchor) ->
+    switch anchor
+      when 'left'
+        y = 0
+        if i is 0
+          x = 0
+        else
+          x = @panelWidth - 1
+      when 'right'
+        y = 0
+        if i is 0
+          x = @_getRightAnchorCoord()
+        else
+          x = -@panelWidth + 1
+      when 'top'
+        x = 0
+        if i is 0
+          y = 0
+        else
+          y = @panelHeight - 1
+      when 'bottom'
+        x = 0
+        if i is 0
+          y = @_getBottomAnchorCoord()
+        else
+          y = -@panelHeight + 1
+
+    [x, y]
+
+
   _getShaderGradient: (anchor) ->
     "#{ gradientPrefix }linear-gradient(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
   _getPanelType: (anchor) ->
@@ -349,35 +379,7 @@ class root.OriDomi
 
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
-      switch @lastAnchor
-        when 'left'
-          y = 0
-          if i is 0
-            x = 0
-          else
-            x = @panelWidth - 1
-        when 'right'
-          y = 0
-          if i is 0
-            x = @_getRightAnchorCoord()
-          else
-            x = -@panelWidth + 1
-        when 'top'
-          x = 0
-          if i is 0
-            y = 0
-          else
-            y = @panelHeight - 1
-        when 'bottom'
-          x = 0
-          if i is 0
-            y = @_getBottomAnchorCoord()
-          else
-            y = -@panelHeight + 1
-      
-      
-      panel.style[transformProp] = @_transform [x, y]
-      
+      panel.style[transformProp] = @_transform @_getXy i, @lastAnchor
       if @shading
         if @lastAnchor is 'left' or @lastAnchor is 'right'
           @shaders[@lastAnchor].right[i].style.opacity = 0
@@ -407,32 +409,6 @@ class root.OriDomi
     @lastAngle = angle = @_normalizeAngle angle
 
     for panel, i in @panels[anchor]
-      
-      switch anchor
-        when 'left'
-          y = 0
-          if i is 0
-            x = 0
-          else
-            x = @panelWidth - 1
-        when 'right'
-          y = 0
-          if i is 0
-            x = @_getRightAnchorCoord()
-          else
-            x = -@panelWidth + 1
-        when 'top'
-          x = 0
-          if i is 0
-            y = 0
-          else
-            y = @panelHeight - 1
-        when 'bottom'
-          x = 0
-          if i is 0
-            y = @_getBottomAnchorCoord()
-          else
-            y = -@panelHeight + 1
 
       if i % 2 isnt 0 and !options.twist
         deg = -angle
@@ -479,6 +455,7 @@ class root.OriDomi
             @shaders[anchor].top[i].style.opacity = 0
             @shaders[anchor].bottom[i].style.opacity = opacity
 
+      panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
 
     @_callback options
 
@@ -520,22 +497,7 @@ class root.OriDomi
     angle = @_normalizeAngle(angle) /  @_getPanelType anchor
 
     for panel, i in @panels[anchor]
-      
-      switch anchor
-        when 'left'
-          y = 0
-          if i is 0
-            x = 0
-          else 
-            x = @panelWidth - 1
-        when 'right'
-          y = 0
-          if i is 0
-            x = @_getRightAnchorCoord()
-          else
-            x = -@panelWidth + 1
-            
-      panel.style[transformProp] = @_transform [x, y], [0, 1, 0, angle]
+      panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
 
     @_callback options
 
