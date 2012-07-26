@@ -187,12 +187,12 @@ class root.OriDomi
         panel.style[transformProp] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'top'
-          y = -((i - 1) * @panelHeight)
+          yOffset = -((i - 1) * @panelHeight)
         else
           panel.style[transformOriginProp] = 'bottom'
-          y = -((@hPanels * @panelHeight) - (@panelHeight * i))
+          yOffset = -((@hPanels * @panelHeight) - (@panelHeight * i))
 
-        content.style[transformProp] = @_transform [0, y]
+        content.style[transformProp] = @_transform [0, yOffset]
 
         if @shading
           @shaders[anchor].top[i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
@@ -233,12 +233,12 @@ class root.OriDomi
         panel.style[transformProp] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'left'
-          x = -((i - 1) * @panelWidth)
+          xOffset = -((i - 1) * @panelWidth)
         else
           panel.style[transformOriginProp] = 'right'
-          x = -((@vPanels * @panelWidth) - (@panelWidth * i))
+          xOffset = -((@vPanels * @panelWidth) - (@panelWidth * i))
 
-        content.style[transformProp] = @_transform [x, 0]
+        content.style[transformProp] = @_transform [xOffset, 0]
 
         if @shading
           @shaders[anchor].left[i - 1]  = panel.getElementsByClassName('oridomi-shader-left')[0]
