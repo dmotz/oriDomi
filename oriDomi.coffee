@@ -421,8 +421,8 @@ class root.OriDomi
         deg = -angle
       else
         deg = angle
-      if anchor is 'right'
 
+      if anchor is 'right' or anchor is 'bottom'
         deg = -deg
 
       if options.sticky
