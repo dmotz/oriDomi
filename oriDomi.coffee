@@ -177,7 +177,6 @@ class root.OriDomi
     hPanel.style[transitionEasingProp] = @settings.easingMethod
     hPanel.style[transformOriginProp] = 'top'
     hPanel.style[transformStyleProp] = 'preserve-3d'
-    hPanel.style[backfaceProp] = 'hidden'
     hPanel.appendChild hMask
 
     for anchor in ['top', 'bottom']
