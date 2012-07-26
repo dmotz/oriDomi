@@ -344,6 +344,24 @@ class root.OriDomi
     [x, y]
 
 
+  _setShader: (i, anchor, deg) ->
+    opacity = Math.abs(deg) / 90 * @shadingIntensity * .4
+    if anchor is 'left' or anchor is 'right'
+      if deg < 0
+        @shaders[anchor].right[i].style.opacity = 0
+        @shaders[anchor].left[i].style.opacity = opacity
+      else
+        @shaders[anchor].left[i].style.opacity = 0
+        @shaders[anchor].right[i].style.opacity = opacity
+    else
+      if deg < 0
+        @shaders[anchor].bottom[i].style.opacity = 0
+        @shaders[anchor].top[i].style.opacity = opacity
+      else
+        @shaders[anchor].top[i].style.opacity = 0
+        @shaders[anchor].bottom[i].style.opacity = opacity
+
+
   _getShaderGradient: (anchor) ->
     "#{ gradientPrefix }linear-gradient(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
   _getPanelType: (anchor) ->
@@ -381,15 +399,9 @@ class root.OriDomi
     for panel, i in @panels[@lastAnchor]
       panel.style[transformProp] = @_transform @_getXy i, @lastAnchor
       if @shading
-        if @lastAnchor is 'left' or @lastAnchor is 'right'
-          @shaders[@lastAnchor].right[i].style.opacity = 0
-          @shaders[@lastAnchor].left[i].style.opacity = 0
-        else
-          @shaders[@lastAnchor].top[i].style.opacity = 0
-          @shaders[@lastAnchor].bottom[i].style.opacity = 0
-    
-    @_callback callback: callback
+        @_setShader i, @lastAnchor, 0
 
+    @_callback callback: callback
 
 
   accordion: (angle, options) ->
@@ -432,29 +444,11 @@ class root.OriDomi
           rotation = [0, 1, 0, deg]
         else
           rotation = [1, 0, 0, -deg]
-      
-      panel.style[transformProp] = @_transform [x, y], rotation
-      
-      if @shading and !(i is 0 and options.anchor) and Math.abs(deg) isnt 180
-        
-        opacity = Math.abs(deg) / 90 * @shadingIntensity * .4
-        
-        if anchor is 'left' or anchor is 'right'
-          if deg < 0
-            @shaders[anchor].right[i].style.opacity = 0
-            @shaders[anchor].left[i].style.opacity = opacity
-          else
-            @shaders[anchor].left[i].style.opacity = 0
-            @shaders[anchor].right[i].style.opacity = opacity
-        else
-          if deg < 0
-            @shaders[anchor].bottom[i].style.opacity = 0
-            @shaders[anchor].top[i].style.opacity = opacity
-          else
-            @shaders[anchor].top[i].style.opacity = 0
-            @shaders[anchor].bottom[i].style.opacity = opacity
 
       panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
+
+      if @shading and !(i is 0 and options.anchor) and Math.abs(deg) isnt 180
+        @_setShader i, anchor, deg
 
     @_callback options
 
