@@ -131,6 +131,7 @@ class root.OriDomi
     stage.style.position = 'absolute'
     stage.style.padding = '0'
     stage.style.margin = '0'
+    stage.style[css.perspective] = @settings.perspective + 'px'
 
 
     for axis in @axes
@@ -270,7 +271,6 @@ class root.OriDomi
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
-    @el.style[css.perspective] = @settings.perspective
     @stages.left.style.display = 'block'
     @el.innerHTML = ''
 
