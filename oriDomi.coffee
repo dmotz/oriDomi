@@ -135,7 +135,7 @@ class root.OriDomi
 
     for axis in @axes
       @panels[axis] = []
-      @stages[axis] = stage.cloneNode()
+      @stages[axis] = stage.cloneNode false
       @stages[axis].className = 'oridomi-stage-' + axis
 
     if @shading
@@ -172,10 +172,10 @@ class root.OriDomi
     hMask.appendChild contentHolder
 
     if @shading
-      topShader = shader.cloneNode()
+      topShader = shader.cloneNode false
       topShader.className = 'oridomi-shader-top'
       topShader.style.background = @_getShaderGradient 'top'
-      bottomShader = shader.cloneNode()
+      bottomShader = shader.cloneNode false
       bottomShader.className = 'oridomi-shader-bottom'
       bottomShader.style.background = @_getShaderGradient 'bottom'
       hMask.appendChild topShader
@@ -231,7 +231,7 @@ class root.OriDomi
       rightShader.className = 'oridomi-shader-right'
       rightShader.style.background = @_getShaderGradient 'right'
 
-    vPanel = hPanel.cloneNode()
+    vPanel = hPanel.cloneNode false
     vPanel.className = 'oridomi-panel-v'
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
