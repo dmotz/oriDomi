@@ -72,7 +72,7 @@ for key, value of css
   css[key] = testProp value
   if !css[key]
     console?.warn 'oriDomi: Browser does not support oriDomi'
-    oridomiSupport = false
+    oriDomiSupport = false
     break
 
 css.gradientProp = getGradientProp()
