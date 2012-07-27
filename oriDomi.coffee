@@ -58,20 +58,22 @@ extendObj = (target, source) ->
   target
 
 
-transformProp = testProp 'transform'
-transformOriginProp = testProp 'transformOrigin'
-transformStyleProp = testProp 'transformStyle'
-transitionProp = testProp 'transitionProperty'
-transitionDurationProp = testProp 'transitionDuration'
-transitionEasingProp = testProp 'transitionTimingFunction'
-perspectiveProp = testProp 'perspective'
-backfaceProp = testProp 'backfaceVisibility'
-gradientPrefix = testGradient()
+css = 
+  transform: 'transform'
+  transformOrigin: 'transformOrigin'
+  transformStyle: 'transformStyle'
+  transitionProp: 'transitionProperty'
+  transitionDuration: 'transitionDuration'
+  transitionEasing: 'transitionTimingFunction'
+  perspective: 'perspective'
 
-if !transformProp or !transitionProp or !perspectiveProp or 
-  !backfaceProp or !transformOriginProp or !transformStyleProp
-    oriDomiSupport = false
+
+for key, value of css
+  css[key] = testProp value
+  if !css[key]
     console?.warn 'oriDomi: Browser does not support oriDomi'
+    break
+
 css.gradientProp = getGradientProp()
 css.transformProp = getTransformProp()
 
@@ -148,9 +150,9 @@ class root.OriDomi
           @shaders[axis].bottom = []
 
       shader = document.createElement 'div'
-      shader.style[transitionProp] = 'opacity'
-      shader.style[transitionDurationProp] = @settings.speed + 's'
-      shader.style[transitionEasingProp] = @settings.easingMethod
+      shader.style[css.transitionProp] = 'opacity'
+      shader.style[css.transitionDuration] = @settings.speed + 's'
+      shader.style[css.transitionEasing] = @settings.easingMethod
       shader.style.position = 'absolute'
       shader.style.width = '100%'
       shader.style.height = '100%'
@@ -184,27 +186,26 @@ class root.OriDomi
     hPanel.style.width = '100%'
     hPanel.style.height = @panelHeight + 'px'
     hPanel.style.padding = '0'
-    hPanel.style[transitionProp] = 'all'
-    hPanel.style[transitionDurationProp] = @settings.speed + 's'
-    hPanel.style[transitionEasingProp] = @settings.easingMethod
-    hPanel.style[transformOriginProp] = 'top'
-    hPanel.style[transformStyleProp] = 'preserve-3d'
     hPanel.style[css.transitionProp] = css.transformProp
+    hPanel.style[css.transitionDuration] = @settings.speed + 's'
+    hPanel.style[css.transitionEasing] = @settings.easingMethod
+    hPanel.style[css.transformOrigin] = 'top'
+    hPanel.style[css.transformStyle] = 'preserve-3d'
     hPanel.appendChild hMask
 
     for anchor in ['top', 'bottom']
       for i in [1..@hPanels]
         panel = hPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[transformProp] = @_transform @_getXy i - 1, anchor
+        panel.style[css.transform] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'top'
           yOffset = -((i - 1) * @panelHeight)
         else
-          panel.style[transformOriginProp] = 'bottom'
+          panel.style[css.transformOrigin] = 'bottom'
           yOffset = -((@hPanels * @panelHeight) - (@panelHeight * i))
 
-        content.style[transformProp] = @_transform [0, yOffset]
+        content.style[css.transform] = @_transform [0, yOffset]
 
         if @shading
           @shaders[anchor].top[i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
@@ -234,23 +235,23 @@ class root.OriDomi
     vPanel.className = 'oridomi-panel-v'
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
-    vPanel.style[transformProp] = @_transform [@panelWidth, 0]
-    vPanel.style[transformOriginProp] = 'left'
+    vPanel.style[css.transform] = @_transform [@panelWidth, 0]
+    vPanel.style[css.transformOrigin] = 'left'
     vPanel.appendChild vMask
 
     for anchor in ['left', 'right']
       for i in [1..@vPanels]
         panel = vPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[transformProp] = @_transform @_getXy i - 1, anchor
+        panel.style[css.transform] = @_transform @_getXy i - 1, anchor
 
         if anchor is 'left'
           xOffset = -((i - 1) * @panelWidth)
         else
-          panel.style[transformOriginProp] = 'right'
+          panel.style[css.transformOrigin] = 'right'
           xOffset = -((@vPanels * @panelWidth) - (@panelWidth * i))
 
-        content.style[transformProp] = @_transform [xOffset, 0]
+        content.style[css.transform] = @_transform [xOffset, 0]
 
         if @shading
           @shaders[anchor].left[i - 1]  = panel.getElementsByClassName('oridomi-shader-left')[0]
@@ -269,7 +270,7 @@ class root.OriDomi
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
-    @el.style[perspectiveProp] = @settings.perspective
+    @el.style[css.perspective] = @settings.perspective
     @stages.left.style.display = 'block'
     @el.innerHTML = ''
 
@@ -408,7 +409,7 @@ class root.OriDomi
 
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
-      panel.style[transformProp] = @_transform @_getXy i, @lastAnchor
+      panel.style[css.transform] = @_transform @_getXy i, @lastAnchor
       if @shading
         @_setShader i, @lastAnchor, 0
 
@@ -454,7 +455,7 @@ class root.OriDomi
         else
           rotation = [1, 0, 0, -deg]
 
-      panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
+      panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
 
       if @shading and !(i is 0 and options.anchor) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
@@ -519,7 +520,7 @@ class root.OriDomi
       rotation = [1, 0, 0, -angle]
 
     for panel, i in @panels[anchor]
-      panel.style[transformProp] = @_transform @_getXy(i, anchor), rotation
+      panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
 
     @_callback options
 
@@ -535,7 +536,7 @@ class root.OriDomi
       unless i is 0
         angle *= 2
 
-      panel.style[transformProp] = "translate3d(#{x}px, 0, 0) rotate3d(0, 1, 0, #{angle}deg)"
+      panel.style[css.transform] = "translate3d(#{x}px, 0, 0) rotate3d(0, 1, 0, #{angle}deg)"
 
     @_callback options
 
