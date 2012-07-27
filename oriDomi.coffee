@@ -36,6 +36,12 @@ getGradientProp = ->
   'linear-gradient'
 
 
+getTransformProp = ->
+  prefix = css.transform.match(/(\w+)Transform/i)[1]
+  if prefix
+    "-#{ prefix.toLowerCase() }-transform"
+  else
+    'transform'
 
 
 # one dimensional:
@@ -67,6 +73,8 @@ if !transformProp or !transitionProp or !perspectiveProp or
     oriDomiSupport = false
     console?.warn 'oriDomi: Browser does not support oriDomi'
 css.gradientProp = getGradientProp()
+css.transformProp = getTransformProp()
+
 
 
 defaults =
@@ -181,6 +189,7 @@ class root.OriDomi
     hPanel.style[transitionEasingProp] = @settings.easingMethod
     hPanel.style[transformOriginProp] = 'top'
     hPanel.style[transformStyleProp] = 'preserve-3d'
+    hPanel.style[css.transitionProp] = css.transformProp
     hPanel.appendChild hMask
 
     for anchor in ['top', 'bottom']
