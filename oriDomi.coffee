@@ -123,8 +123,8 @@ class root.OriDomi
     @panelWidth = Math.floor(@width / @vPanels) or 1
     @panelHeight = Math.floor(@height / @hPanels) or 1
 
-    @axes = ['left', 'right', 'top', 'bottom']
-    @lastAnchor = @axes[0]
+    @anchors = ['left', 'right', 'top', 'bottom']
+    @lastAnchor = @anchors[0]
     @lastAngle = 0
     @panels = {}
     @stages = {}
@@ -138,21 +138,21 @@ class root.OriDomi
     stage.style[css.perspective] = @settings.perspective + 'px'
 
 
-    for axis in @axes
-      @panels[axis] = []
-      @stages[axis] = stage.cloneNode false
-      @stages[axis].className = 'oridomi-stage-' + axis
+    for anchor in @anchors
+      @panels[anchor] = []
+      @stages[anchor] = stage.cloneNode false
+      @stages[anchor].className = 'oridomi-stage-' + anchor
 
     if @shading
       @shaders = {}
-      for axis in @axes
-        @shaders[axis] = {}
-        if axis is 'left' or axis is 'right'
-          @shaders[axis].left = []
-          @shaders[axis].right = []
+      for anchor in @anchors
+        @shaders[anchor] = {}
+        if anchor is 'left' or anchor is 'right'
+          @shaders[anchor].left = []
+          @shaders[anchor].right = []
         else
-          @shaders[axis].top = []
-          @shaders[axis].bottom = []
+          @shaders[anchor].top = []
+          @shaders[anchor].bottom = []
 
       shader = document.createElement 'div'
       shader.style[css.transitionProp] = 'opacity'
@@ -281,8 +281,8 @@ class root.OriDomi
     @stages.left.style.display = 'block'
     @el.innerHTML = ''
 
-    for axis in @axes
-      @el.appendChild @stages[axis]
+    for anchor in @anchors
+      @el.appendChild @stages[anchor]
 
     @_callback @settings
     console.timeEnd 'oridomiConstruction'
