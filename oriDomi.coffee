@@ -396,6 +396,18 @@ class root.OriDomi
         'top'
 
 
+  _getLonghandAnchor: (shorthand) ->
+    switch shorthand
+      when 'left', 'l', 4
+        'left'
+      when 'right', 'r', 2
+        'right'
+      when 'top', 't', 1
+        'top'
+      when 'bottom', 'b', 3
+        'bottom'
+
+
   _getPanelType: (anchor) ->
     if anchor is 'left' or anchor is 'right'
       @vPanels
