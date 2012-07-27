@@ -92,6 +92,7 @@ defaults =
   shadingIntensity: 1
   easingMethod: ''
   newClass: null
+  showOnStart: false
   forceAntialiasing: false
 
 
@@ -283,7 +284,11 @@ class root.OriDomi
 
     for anchor in @anchors
       @el.appendChild @stages[anchor]
-
+    
+    if @settings.showOnStart
+      @el.style.display = 'block'
+      @el.style.visibility = 'visible'
+    
     @_callback @settings
     console.timeEnd 'oridomiConstruction'
 
