@@ -99,7 +99,7 @@ class root.OriDomi
 
   constructor: (@el, @settings = {}) ->
     console.time 'oridomiConstruction'
-    return @el if !oridomiSupport
+    return @el if !oriDomiSupport
 
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
