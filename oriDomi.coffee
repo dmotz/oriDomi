@@ -202,27 +202,27 @@ class root.OriDomi
     hPanel.appendChild hMask
 
     for anchor in ['top', 'bottom']
-      for i in [1..@hPanels]
+      for i in [0...@hPanels]
         panel = hPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[css.transform] = @_transform @_getXy i - 1, anchor
+        panel.style[css.transform] = @_transform @_getXy i, anchor
 
         if anchor is 'top'
-          yOffset = -((i - 1) * @panelHeight)
+          yOffset = -(i * @panelHeight)
         else
           panel.style[css.transformOrigin] = 'bottom'
-          yOffset = -((@hPanels * @panelHeight) - (@panelHeight * i))
+          yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
 
         content.style[css.transform] = @_transform [0, yOffset]
 
         if @shading
-          @shaders[anchor].top[i - 1] = panel.getElementsByClassName('oridomi-shader-top')[0]
-          @shaders[anchor].bottom[i - 1] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
+          @shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
+          @shaders[anchor].bottom[i] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
 
-        @panels[anchor][i - 1] = panel
+        @panels[anchor][i] = panel
 
-        unless i is 1
-          @panels[anchor][i - 2].appendChild panel
+        unless i is 0
+          @panels[anchor][i - 1].appendChild panel
 
       @stages[anchor].appendChild @panels[anchor][0]
 
@@ -248,27 +248,27 @@ class root.OriDomi
     vPanel.appendChild vMask
 
     for anchor in ['left', 'right']
-      for i in [1..@vPanels]
+      for i in [0...@vPanels]
         panel = vPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[css.transform] = @_transform @_getXy i - 1, anchor
+        panel.style[css.transform] = @_transform @_getXy i, anchor
 
         if anchor is 'left'
-          xOffset = -((i - 1) * @panelWidth)
+          xOffset = -(i * @panelWidth)
         else
           panel.style[css.transformOrigin] = 'right'
-          xOffset = -((@vPanels * @panelWidth) - (@panelWidth * i))
+          xOffset = -((@vPanels * @panelWidth) - (@panelWidth * (i + 1)))
 
         content.style[css.transform] = @_transform [xOffset, 0]
 
         if @shading
-          @shaders[anchor].left[i - 1]  = panel.getElementsByClassName('oridomi-shader-left')[0]
-          @shaders[anchor].right[i - 1] = panel.getElementsByClassName('oridomi-shader-right')[0]
+          @shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
+          @shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
-        @panels[anchor][i - 1] = panel
+        @panels[anchor][i] = panel
 
-        unless i is 1
-          @panels[anchor][i - 2].appendChild panel
+        unless i is 0
+          @panels[anchor][i - 1].appendChild panel
 
       @stages[anchor].appendChild @panels[anchor][0]
 
