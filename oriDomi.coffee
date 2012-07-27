@@ -72,6 +72,7 @@ for key, value of css
   css[key] = testProp value
   if !css[key]
     console?.warn 'oriDomi: Browser does not support oriDomi'
+    oridomiSupport = false
     break
 
 css.gradientProp = getGradientProp()
@@ -98,6 +99,8 @@ class root.OriDomi
 
   constructor: (@el, @settings = {}) ->
     console.time 'oridomiConstruction'
+    return @el if !oridomiSupport
+
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
 
