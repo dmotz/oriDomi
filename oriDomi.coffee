@@ -91,6 +91,7 @@ defaults =
   shadingIntensity: 1
   easingMethod: ''
   newClass: null
+  forceAntialiasing: false
 
 
 class root.OriDomi
@@ -192,6 +193,9 @@ class root.OriDomi
     hPanel.style[css.transitionEasing] = @settings.easingMethod
     hPanel.style[css.transformOrigin] = 'top'
     hPanel.style[css.transformStyle] = 'preserve-3d'
+    if @settings.forceAntialiasing
+      hPanel.style.outline = '1px solid transparent'
+
     hPanel.appendChild hMask
 
     for anchor in ['top', 'bottom']
