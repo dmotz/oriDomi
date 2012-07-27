@@ -415,13 +415,6 @@ class root.OriDomi
         'bottom'
 
 
-  _getPanelType: (anchor) ->
-    if anchor is 'left' or anchor is 'right'
-      @vPanels
-    else
-      @hPanels
-
-
   _getRightAnchorCoord: ->
     @panelWidth * (@vPanels - 1) - @vPanels + 1
 
