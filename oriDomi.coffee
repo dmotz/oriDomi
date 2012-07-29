@@ -357,7 +357,7 @@ class root.OriDomi
 
 
   _setShader: (i, anchor, deg) ->
-    opacity = Math.abs(deg) / 90 * @shadingIntensity * .4
+    opacity = Math.abs(deg) / 90 * @shadingIntensity * .3
     if anchor is 'left' or anchor is 'right'
       if deg < 0
         @shaders[anchor].right[i].style.opacity = 0
