@@ -481,7 +481,7 @@ class root.OriDomi
 
       panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
 
-      if @shading and !(i is 0 and options.anchor) and Math.abs(deg) isnt 180
+      if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
     @_callback options
