@@ -312,18 +312,18 @@ class root.OriDomi
       "translate3d(#{ x }px, #{ y }px, 0) rotate3d(#{ rX }, #{ rY }, #{ rZ }, #{ deg }deg)"
 
 
-  _normalizeAngle: (percent) ->
-    percent = parseFloat percent, 10
-    if isNaN percent
+  _normalizeAngle: (angle) ->
+    angle = parseFloat angle, 10
+    if isNaN angle
       0
-    else if percent > 90
+    else if angle > 90
       !silent and console?.warn 'oriDomi: Maximum value is 90'
       90
-    else if percent < -90
+    else if angle < -90
       !silent and console?.warn 'oriDomi: Minimum value is -90'
       -90
     else
-      percent
+      angle
 
 
   _getXy: (i, anchor) ->
