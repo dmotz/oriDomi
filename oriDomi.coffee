@@ -423,14 +423,6 @@ class root.OriDomi
     @panelHeight * (@hPanels - 1) - @hPanels + 1
 
 
-  _accordionDefaults:
-    anchor: 'left'
-    sticky: false
-    stairs: false
-    fracture: false
-    twist: false
-
-
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform @_getXy i, @lastAnchor
@@ -438,6 +430,14 @@ class root.OriDomi
         @_setShader i, @lastAnchor, 0
 
     @_callback callback: callback
+
+
+  _accordionDefaults:
+    anchor: 'left'
+    sticky: false
+    stairs: false
+    fracture: false
+    twist: false
 
 
   accordion: (angle, options) ->
