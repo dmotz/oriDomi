@@ -548,6 +548,9 @@ class root.OriDomi
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
+      
+      if @shading
+        @_setShader i, anchor, 0
 
     @_callback options
 
