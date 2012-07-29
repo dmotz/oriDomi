@@ -527,7 +527,6 @@ class root.OriDomi
   curl: (angle, options = {}) ->
     options = extendObj options, @_curlDefaults
     {anchor} = options
-    angle = @_normalizeAngle(angle) /  @_getPanelType anchor
 
     if anchor isnt @lastAnchor
       return @reset =>
@@ -537,6 +536,10 @@ class root.OriDomi
         , 0
 
     @lastAngle = angle = @_normalizeAngle angle
+    angle /=  @_getPanelType anchor
+
+    if anchor is 'right' or anchor is 'bottom'
+      angle = -angle
 
     if anchor is 'left' or anchor is 'right'
       rotation = [0, 1, 0, angle]
