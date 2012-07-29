@@ -552,6 +552,36 @@ class root.OriDomi
     @_callback options
 
 
+  _rampDefaults:
+    anchor: 'left'
+
+
+  ramp: (angle, options) ->
+    options = extendObj options, @_rampDefaults
+    {anchor} = options
+    
+    if anchor isnt @lastAnchor
+      return @reset =>
+        @_showStage anchor
+        setTimeout =>
+          @ramp angle, options
+        , 0
+
+    @lastAngle = angle = @_normalizeAngle angle
+
+    if anchor is 'right' or anchor is 'bottom'
+      angle = -angle
+
+    if anchor is 'left' or anchor is 'right'
+      rotation = [0, 1, 0, angle]
+    else
+      rotation = [1, 0, 0, -angle]
+
+    @panels[anchor][1].style[css.transform] = @_transform @_getXy(1, anchor), rotation
+
+    @_callback options
+
+
   setAngles: (angles, options = {}) ->
     if !Array.isArray angles
       return !silent and console?.warn 'oriDomi: Argument must be an array of angles'
