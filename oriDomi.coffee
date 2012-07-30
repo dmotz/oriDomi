@@ -60,7 +60,7 @@ extendObj = (target, source) ->
 
 css = 
   transform: 'transform'
-  transformOrigin: 'transformOrigin'
+  origin: 'transformOrigin'
   transformStyle: 'transformStyle'
   transitionProp: 'transitionProperty'
   transitionDuration: 'transitionDuration'
@@ -195,7 +195,7 @@ class root.OriDomi
     hPanel.style[css.transitionProp] = css.transformProp
     hPanel.style[css.transitionDuration] = @settings.speed + 's'
     hPanel.style[css.transitionEasing] = @settings.easingMethod
-    hPanel.style[css.transformOrigin] = 'top'
+    hPanel.style[css.origin] = 'top'
     hPanel.style[css.transformStyle] = 'preserve-3d'
     if @settings.forceAntialiasing
       hPanel.style.outline = '1px solid transparent'
@@ -245,7 +245,7 @@ class root.OriDomi
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
     vPanel.style[css.transform] = @_transform [@panelWidth, 0]
-    vPanel.style[css.transformOrigin] = 'left'
+    vPanel.style[css.origin] = 'left'
     vPanel.appendChild vMask
 
     for anchor in ['left', 'right']
@@ -257,7 +257,7 @@ class root.OriDomi
         if anchor is 'left'
           xOffset = -(i * @panelWidth)
         else
-          panel.style[css.transformOrigin] = 'right'
+          panel.style[css.origin] = 'right'
           xOffset = -((@vPanels * @panelWidth) - (@panelWidth * (i + 1)))
 
         content.style[css.transform] = @_transform [xOffset, 0]
