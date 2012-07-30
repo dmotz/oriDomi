@@ -356,6 +356,18 @@ class root.OriDomi
     [x, y]
 
 
+  _getRotation: (anchor, angle) ->
+    switch anchor
+      when 'left'
+        [0, 1, 0, angle]
+      when 'right'
+        [0, 1, 0, -angle]
+      when 'top'
+        [1, 0, 0, angle]
+      when 'bottom'
+        [1, 0, 0, -angle]
+
+
   _setShader: (i, anchor, deg) ->
     opacity = Math.abs(deg) / 90 * @shadingIntensity * .3
     if anchor is 'left' or anchor is 'right'
@@ -471,13 +483,9 @@ class root.OriDomi
       else
         deg *= 2 unless i is 0
 
+      rotation = @_getRotation anchor, deg
       if options.fracture
-        rotation = [1, 1, 1, deg]
-      else
-        if anchor is 'left' or anchor is 'right'
-          rotation = [0, 1, 0, deg]
-        else
-          rotation = [1, 0, 0, -deg]
+        rotation = [1, 1, 1, rotation[3]]
 
       panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
 
@@ -538,13 +546,7 @@ class root.OriDomi
     @lastAngle = angle = @_normalizeAngle angle
     angle /=  @_getPanelType anchor
 
-    if anchor is 'right' or anchor is 'bottom'
-      angle = -angle
-
-    if anchor is 'left' or anchor is 'right'
-      rotation = [0, 1, 0, angle]
-    else
-      rotation = [1, 0, 0, -angle]
+    rotation = @_getRotation anchor, angle
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
@@ -571,14 +573,7 @@ class root.OriDomi
         , 0
 
     @lastAngle = angle = @_normalizeAngle angle
-
-    if anchor is 'right' or anchor is 'bottom'
-      angle = -angle
-
-    if anchor is 'left' or anchor is 'right'
-      rotation = [0, 1, 0, angle]
-    else
-      rotation = [1, 0, 0, -angle]
+    rotation = @_getRotation anchor, angle
 
     @panels[anchor][1].style[css.transform] = @_transform @_getXy(1, anchor), rotation
 
