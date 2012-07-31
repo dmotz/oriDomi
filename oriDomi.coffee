@@ -66,6 +66,7 @@ css =
   transitionDuration: 'transitionDuration'
   transitionEasing: 'transitionTimingFunction'
   perspective: 'perspective'
+  backface: 'backfaceVisibility'
 
 
 for key, value of css
@@ -197,6 +198,7 @@ class root.OriDomi
     hPanel.style[css.transitionEasing] = @settings.easingMethod
     hPanel.style[css.origin] = 'top'
     hPanel.style[css.transformStyle] = 'preserve-3d'
+    hPanel.style[css.backface] = 'hidden'
     if @settings.forceAntialiasing
       hPanel.style.outline = '1px solid transparent'
 
