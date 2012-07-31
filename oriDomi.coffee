@@ -509,37 +509,36 @@ class root.OriDomi
     @_callback options
 
 
-  collapse: (options = {}) ->
+  collapse: (anchor, options = {}) ->
     options.sticky = false
-    @accordion -90
+    @accordion -90, anchor, options
 
 
-  collapseAlt: (options = {}) ->
+  collapseAlt: (anchor, options = {}) ->
     options.sticky = false
-    @accordion 90
+    @accordion 90, anchor, options
 
 
-  reveal: (angle, options = {}) ->
+  reveal: (angle, anchor, options = {}) ->
     options.sticky = true
-    @accordion angle, options
+    @accordion angle, anchor, options
 
 
-  stairs: (angle, options = {}) ->
+  stairs: (angle, anchor, options = {}) ->
     options.stairs = true
     options.sticky = true
-    @accordion angle, options
+    @accordion angle, anchor, options
 
 
-  fracture: (angle, options = {}) ->
+  fracture: (angle, anchor, options = {}) ->
     options.fracture = true
-    @accordion angle, options
+    @accordion angle, anchor, options
 
 
-  twist: (angle, options = {}) ->
+  twist: (angle, anchor, options = {}) ->
     options.fracture = true
     options.twist = true
-    @accordion angle / 10, options
-
+    @accordion angle / 10, anchor, options
 
 
   curl: (angle, anchor, options = {}) ->
