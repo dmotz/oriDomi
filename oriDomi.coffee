@@ -328,6 +328,21 @@ class root.OriDomi
       angle
 
 
+  _normalizeArgs: (method, args) ->
+    angle = @lastAngle = @_normalizeAngle args[0]
+    anchor = @_getLonghandAnchor args[1]
+    options = extendObj args[2], @_methodDefaults[method]
+    if anchor isnt @lastAnchor
+      @reset =>
+        @_showStage anchor
+        setTimeout =>
+          @[method].apply @, args
+        , 0
+      false
+    else
+      [angle, anchor, options]
+
+
   _getXy: (i, anchor) ->
     switch anchor
       when 'left'
@@ -439,6 +454,17 @@ class root.OriDomi
     @panelHeight * (@hPanels - 1) - @hPanels + 1
 
 
+  _methodDefaults:
+    accordion:
+      sticky: false
+      stairs: false
+      fracture: false
+      twist: false
+    curl:
+      twist: false
+    ramp: {}
+
+
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform @_getXy i, @lastAnchor
@@ -448,26 +474,10 @@ class root.OriDomi
     @_callback callback: callback
 
 
-  _accordionDefaults:
-    anchor: 'left'
-    sticky: false
-    stairs: false
-    fracture: false
-    twist: false
-
-
-  accordion: (angle, options) ->
-    options = extendObj options, @_accordionDefaults
-    {anchor} = options
-    
-    if anchor isnt @lastAnchor
-      return @reset =>
-        @_showStage anchor
-        setTimeout =>
-          @accordion angle, options
-        , 0
-
-    @lastAngle = angle = @_normalizeAngle angle
+  accordion: (angle, anchor, options) ->
+    normalized = @_normalizeArgs 'accordion', arguments
+    return if !normalized
+    [angle, anchor, options] = normalized
 
     for panel, i in @panels[anchor]
 
@@ -531,25 +541,13 @@ class root.OriDomi
     @accordion angle / 10, options
 
 
-  _curlDefaults:
-    anchor: 'left'
-    twist: false
 
-
-  curl: (angle, options = {}) ->
-    options = extendObj options, @_curlDefaults
-    {anchor} = options
-
-    if anchor isnt @lastAnchor
-      return @reset =>
-        @_showStage anchor
-        setTimeout =>
-          @curl angle, options
-        , 0
-
-    @lastAngle = angle = @_normalizeAngle angle
+  curl: (angle, anchor, options = {}) ->
+    normalized = @_normalizeArgs 'curl', arguments
+    return if !normalized
+    [angle, anchor, options] = normalized
+    
     angle /=  @_getPanelType anchor
-
     rotation = @_getRotation anchor, angle
 
     for panel, i in @panels[anchor]
@@ -561,13 +559,17 @@ class root.OriDomi
     @_callback options
 
 
-  _rampDefaults:
-    anchor: 'left'
+  ramp: (angle, anchor, options) ->
+    normalized = @_normalizeArgs 'ramp', arguments
+    return if !normalized
+    [angle, anchor, options] = normalized
+    
+    rotation = @_getRotation anchor, angle
+    @panels[anchor][1].style[css.transform] = @_transform @_getXy(1, anchor), rotation
+
+    @_callback options
 
 
-  ramp: (angle, options) ->
-    options = extendObj options, @_rampDefaults
-    {anchor} = options
     
     if anchor isnt @lastAnchor
       return @reset =>
