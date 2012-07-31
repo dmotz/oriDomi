@@ -427,6 +427,8 @@ class root.OriDomi
         'top'
       when 'bottom', 'b', 3
         'bottom'
+      else
+        'left'
 
 
   _getRightAnchorCoord: ->
