@@ -213,7 +213,7 @@ class root.OriDomi
         if anchor is 'top'
           yOffset = -(i * @panelHeight)
         else
-          panel.style[css.transformOrigin] = 'bottom'
+          panel.style[css.origin] = 'bottom'
           yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
 
         content.style[css.transform] = @_transform [0, yOffset]
