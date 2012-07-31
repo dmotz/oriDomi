@@ -28,11 +28,10 @@ testProp = (prop) ->
 
 getGradientProp = ->
   for prefix in prefixList
-    dashed = "-#{ prefix.toLowerCase() }-linear-gradient"
-    testEl.style.backgroundImage = "#{ dashed }(left, #000, #fff)"
+    hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
+    testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
     if testEl.style.backgroundImage.indexOf('gradient') isnt -1
-      return dashed
-
+      return hyphenated
   'linear-gradient'
 
 
