@@ -376,10 +376,11 @@ class root.OriDomi
 
 
   _setShader: (i, anchor, angle) ->
-    opacity = Math.abs(angle) / 90 * @shadingIntensity * .3
+    abs = Math.abs angle
+    opacity = abs / 90 * @shadingIntensity * .3
 
     if @settings.hardShading
-      angle = Math.abs angle
+      angle = abs
 
     switch anchor
       when 'left', 'top'
