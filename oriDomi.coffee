@@ -43,6 +43,20 @@ getTransformProp = ->
     'transform'
 
 
+getTransitionEndProp = ->
+  switch css.transitionProperty
+    when 'transitionProperty'
+      'transitionEnd'
+    when 'WebkitTransitionProperty'
+      'webkitTransitionEnd'
+    when 'MozTransitionProperty'
+      'transitionend'
+    when 'OTransitionProperty'
+      'oTransitionEnd'
+    when 'MSTransitionProperty'
+      'msTransitionEnd'
+
+
 # one dimensional:
 extendObj = (target, source) ->
   if source isnt Object source
