@@ -85,30 +85,6 @@ extendObj = (target, source) ->
   target
 
 
-css = 
-  transform: 'transform'
-  origin: 'transformOrigin'
-  transformStyle: 'transformStyle'
-  transitionProp: 'transitionProperty'
-  transitionDuration: 'transitionDuration'
-  transitionEasing: 'transitionTimingFunction'
-  perspective: 'perspective'
-  backface: 'backfaceVisibility'
-
-
-for key, value of css
-  css[key] = testProp value
-  if !css[key]
-    console?.warn 'oriDomi: Browser does not support oriDomi'
-    oriDomiSupport = false
-    break
-
-css.gradientProp = getGradientProp()
-css.transformProp = getTransformProp()
-css.transitionEnd = getTransitionEndProp()
-
-
-
 defaults =
   vPanels: 6
   hPanels: 5
