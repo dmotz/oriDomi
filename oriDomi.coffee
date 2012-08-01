@@ -544,20 +544,10 @@ class root.OriDomi
     @_callback options
 
 
-  setAngles: (angles, options = {}) ->
-    if !Array.isArray angles
-      return !silent and console?.warn 'oriDomi: Argument must be an array of angles'
 
-    for panel, i in @panels
-      x = if i is 0 then 0 else @panelWidth - 1
-      angle = @_normalizeAngle(angles[i])
 
-      unless i is 0
-        angle *= 2
 
-      panel.style[css.transform] = "translate3d(#{x}px, 0, 0) rotate3d(0, 1, 0, #{angle}deg)"
 
-    @_callback options
 
 
 # $ BRIDGE
