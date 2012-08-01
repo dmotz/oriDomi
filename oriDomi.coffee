@@ -139,20 +139,19 @@ class root.OriDomi
     @panelWidth = @width / @vPanels
     @panelHeight = @height / @hPanels
 
+    @lastAngle = 0
     @anchors = ['left', 'right', 'top', 'bottom']
     @lastAnchor = @anchors[0]
-    @lastAngle = 0
     @panels = {}
     @stages = {}
     stage = document.createElement 'div'
-    stage.style.display = 'none'
     stage.style.width = @width + 'px'
     stage.style.height = @height + 'px'
+    stage.style.display = 'none'
     stage.style.position = 'absolute'
     stage.style.padding = '0'
     stage.style.margin = '0'
     stage.style[css.perspective] = @settings.perspective + 'px'
-
 
     for anchor in @anchors
       @panels[anchor] = []
