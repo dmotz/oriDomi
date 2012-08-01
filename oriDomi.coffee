@@ -205,10 +205,11 @@ class root.OriDomi
       hMask.appendChild topShader
       hMask.appendChild bottomShader
 
+    bleed = 2
     hPanel = document.createElement 'div'
     hPanel.className = 'oridomi-panel-h'
     hPanel.style.width = '100%'
-    hPanel.style.height = @panelHeight + 'px'
+    hPanel.style.height = @panelHeight + bleed + 'px'
     hPanel.style.padding = '0'
     hPanel.style.position = 'relative'
     hPanel.style[css.transitionProp] = css.transformProp
