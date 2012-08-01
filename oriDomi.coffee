@@ -44,7 +44,7 @@ getTransformProp = ->
 
 
 getTransitionEndProp = ->
-  switch css.transitionProperty
+  switch css.transitionProp
     when 'transitionProperty'
       'transitionEnd'
     when 'WebkitTransitionProperty'
