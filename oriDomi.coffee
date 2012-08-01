@@ -121,8 +121,8 @@ class root.OriDomi
               parseInt(elStyle.paddingTop, 10) +
               parseInt(elStyle.paddingBottom, 10)
 
-    @panelWidth = Math.floor(@width / @vPanels) or 1
-    @panelHeight = Math.floor(@height / @hPanels) or 1
+    @panelWidth = @width / @vPanels
+    @panelHeight = @height / @hPanels
 
     @anchors = ['left', 'right', 'top', 'bottom']
     @lastAnchor = @anchors[0]
