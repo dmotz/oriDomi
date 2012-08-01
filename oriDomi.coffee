@@ -211,6 +211,7 @@ class root.OriDomi
     hPanel.style.width = '100%'
     hPanel.style.height = @panelHeight + 'px'
     hPanel.style.padding = '0'
+    hPanel.style.position = 'relative'
     hPanel.style[css.transitionProp] = css.transformProp
     hPanel.style[css.transitionDuration] = @settings.speed + 's'
     hPanel.style[css.transitionEasing] = @settings.easingMethod
@@ -226,15 +227,23 @@ class root.OriDomi
       for i in [0...@hPanels]
         panel = hPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[css.transform] = @_transform @_getXy i, anchor
 
         if anchor is 'top'
           yOffset = -(i * @panelHeight)
+          if i is 0
+            panel.style.top = '0'
+          else
+            panel.style.top = @panelHeight + 'px'
         else
           panel.style[css.origin] = 'bottom'
           yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
+          
+          if i is 0
+            panel.style.top = @panelHeight * (@vPanels - 2) - 2 + 'px'
+          else
+            panel.style.top = -@panelHeight + 'px'
 
-        content.style[css.transform] = @_transform [0, yOffset]
+        content.style.top = yOffset + 'px'
 
         if @shading
           @shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
@@ -264,7 +273,6 @@ class root.OriDomi
     vPanel.className = 'oridomi-panel-v'
     vPanel.style.width = @panelWidth + 'px'
     vPanel.style.height = '100%'
-    vPanel.style[css.transform] = @_transform [@panelWidth, 0]
     vPanel.style[css.origin] = 'left'
     vPanel.appendChild vMask
 
@@ -272,15 +280,22 @@ class root.OriDomi
       for i in [0...@vPanels]
         panel = vPanel.cloneNode true
         content = panel.getElementsByClassName('oridomi-content')[0]
-        panel.style[css.transform] = @_transform @_getXy i, anchor
 
         if anchor is 'left'
           xOffset = -(i * @panelWidth)
+          if i is 0
+            panel.style.left = 0
+          else
+            panel.style.left = @panelWidth + 'px'
         else
           panel.style[css.origin] = 'right'
           xOffset = -((@vPanels * @panelWidth) - (@panelWidth * (i + 1)))
+          if i is 0
+            panel.style.left = @panelWidth * (@vPanels - 1) - 1 + 'px'
+          else
+            panel.style.left = -@panelWidth + 'px'
 
-        content.style[css.transform] = @_transform [xOffset, 0]
+        content.style.left = xOffset + 'px'
 
         if @shading
           @shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
