@@ -335,13 +335,9 @@ class root.OriDomi
       setTimeout options.callback, delay
 
 
-  _transform: (translation, rotation) ->
-    [x, y] = translation
-    if !rotation
-      "translate3d(#{ x }px, #{ y }px, 0)"
-    else
-      [rX, rY, rZ, deg] = rotation
-      "translate3d(#{ x }px, #{ y }px, 0) rotate3d(#{ rX }, #{ rY }, #{ rZ }, #{ deg }deg)"
+  _transform: (rotation) ->
+    [rX, rY, rZ, deg] = rotation
+    "rotate3d(#{ rX }, #{ rY }, #{ rZ }, #{ deg }deg)"
 
 
   _normalizeAngle: (angle) ->
@@ -371,36 +367,6 @@ class root.OriDomi
       false
     else
       [angle, anchor, options]
-
-
-  _getXy: (i, anchor) ->
-    switch anchor
-      when 'left'
-        y = 0
-        if i is 0
-          x = 0
-        else
-          x = @panelWidth - 1
-      when 'right'
-        y = 0
-        if i is 0
-          x = @_getRightAnchorCoord()
-        else
-          x = -@panelWidth + 1
-      when 'top'
-        x = 0
-        if i is 0
-          y = 0
-        else
-          y = @panelHeight - 1
-      when 'bottom'
-        x = 0
-        if i is 0
-          y = @_getBottomAnchorCoord()
-        else
-          y = -@panelHeight + 1
-
-    [x, y]
 
 
   _getRotation: (anchor, angle) ->
@@ -485,7 +451,7 @@ class root.OriDomi
 
   reset: (callback) ->
     for panel, i in @panels[@lastAnchor]
-      panel.style[css.transform] = @_transform @_getXy i, @lastAnchor
+      panel.style[css.transform] = @_transform [0, 0, 0, 0]
       if @shading
         @_setShader i, @lastAnchor, 0
 
@@ -519,7 +485,7 @@ class root.OriDomi
       if options.fracture
         rotation = [1, 1, 1, rotation[3]]
 
-      panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
+      panel.style[css.transform] = @_transform rotation
 
       if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
@@ -568,7 +534,7 @@ class root.OriDomi
     rotation = @_getRotation anchor, angle
 
     for panel, i in @panels[anchor]
-      panel.style[css.transform] = @_transform @_getXy(i, anchor), rotation
+      panel.style[css.transform] = @_transform rotation
       
       if @shading
         @_setShader i, anchor, 0
@@ -582,7 +548,7 @@ class root.OriDomi
     [angle, anchor, options] = normalized
     
     rotation = @_getRotation anchor, angle
-    @panels[anchor][1].style[css.transform] = @_transform @_getXy(1, anchor), rotation
+    @panels[anchor][1].style[css.transform] = @_transform rotation
 
     @_callback options
 
