@@ -91,6 +91,7 @@ for key, value of css
 
 css.gradientProp = getGradientProp()
 css.transformProp = getTransformProp()
+css.transitionEnd = getTransitionEndProp()
 
 
 
