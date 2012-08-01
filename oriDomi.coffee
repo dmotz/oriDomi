@@ -431,14 +431,6 @@ class root.OriDomi
         'left'
 
 
-  _getRightAnchorCoord: ->
-    @panelWidth * (@vPanels - 1) - @vPanels + 1
-
-
-  _getBottomAnchorCoord: ->
-    @panelHeight * (@hPanels - 1) - @hPanels + 1
-
-
   _methodDefaults:
     accordion:
       sticky: false
