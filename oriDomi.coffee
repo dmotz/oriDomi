@@ -12,9 +12,9 @@
 root = window
 $ = root.$ or false
 silent = false
+oriDomiSupport = true
 testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
-oriDomiSupport = true
 
 
 testProp = (prop) ->
@@ -97,7 +97,7 @@ css.transitionEnd = getTransitionEndProp()
 
 defaults =
   vPanels: 6
-  hPanels: 2
+  hPanels: 5
   perspective: 1000
   shading: true
   speed: .6
