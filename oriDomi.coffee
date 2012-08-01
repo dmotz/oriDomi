@@ -11,7 +11,7 @@
 
 root = window
 $ = root.$ or false
-silent = false
+devMode = false
 oriDomiSupport = true
 testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
@@ -37,7 +37,7 @@ testProp = (prop) ->
 for key, value of css
   css[key] = testProp value
   if !css[key]
-    console?.warn 'oriDomi: Browser does not support oriDomi'
+    devMode and console.warn 'oriDomi: Browser does not support oriDomi'
     oriDomiSupport = false
     break
 
@@ -74,7 +74,7 @@ css.transitionEnd = do ->
 # one dimensional:
 extendObj = (target, source) ->
   if source isnt Object source
-    !silent and console?.warn 'oriDomi: Must pass an object to extend with'
+    devMode and console.warn 'oriDomi: Must pass an object to extend with'
     return target
   if target isnt Object target
     target = {}
@@ -93,7 +93,6 @@ defaults =
   hardShading: false
   speed: .6
   oriDomiClass: 'oriDomi'
-  silent: false
   smoothStart: true
   shadingIntensity: 1
   easingMethod: ''
@@ -102,19 +101,19 @@ defaults =
   forceAntialiasing: false
 
 
-class root.OriDomi
+class OriDomi
 
   constructor: (@el, options) ->
-    console.time 'oridomiConstruction'
+    devMode and console.time 'oridomiConstruction'
     return @el if !oriDomiSupport
 
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
 
     @settings = extendObj options, defaults
-    silent = true if @settings.silent
+
     if !@el? or @el.nodeType isnt 1
-      return !silent and console?.warn 'oriDomi: First argument must be a DOM element'
+      return devMode and console.warn 'oriDomi: First argument must be a DOM element'
 
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     @$el = $ @el if $
@@ -314,7 +313,7 @@ class root.OriDomi
       @el.style.visibility = 'visible'
     
     @_callback @settings
-    console.timeEnd 'oridomiConstruction'
+    devMode and console.timeEnd 'oridomiConstruction'
 
 
   _callback: (options) ->
@@ -351,10 +350,10 @@ class root.OriDomi
     if isNaN angle
       0
     else if angle > 90
-      !silent and console?.warn 'oriDomi: Maximum value is 90'
+      devMode and console.warn 'oriDomi: Maximum value is 90'
       90
     else if angle < -90
-      !silent and console?.warn 'oriDomi: Minimum value is -90'
+      devMode and console.warn 'oriDomi: Minimum value is -90'
       -90
     else
       angle
@@ -548,7 +547,10 @@ class root.OriDomi
 
 
 
+OriDomi.devMode = ->
+  devMode = true
 
+root.OriDomi = OriDomi
 
 
 # $ BRIDGE
@@ -560,13 +562,13 @@ if $
     if typeof options is 'string'
 
       if typeof OriDomi::[options] isnt 'function'
-        return !silent and console?.warn "oriDomi: No such method '#{options}'"
+        return devMode and console.warn "oriDomi: No such method '#{ options }'"
 
       for el in @
         instance = $.data el, 'oriDomi'
 
         if not instance?
-          return !silent and console?.warn "oriDomi: Can't call #{options}, oriDomi hasn't been initialized on this element"
+          return devMode and console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element"
 
         args = Array::slice.call arguments
         args.shift()
