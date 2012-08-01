@@ -191,7 +191,9 @@ class root.OriDomi
     hMask.className = 'oridomi-mask-h'
     hMask.style.position = 'absolute'
     hMask.style.overflow = 'hidden'
-    hMask.style.height = @panelHeight + 'px'
+    hMask.style.width = '100%'
+    hMask.style.height = '100%'
+    hMask.style[css.transform] = 'translate3d(0, 0, 0)'
     hMask.appendChild contentHolder
 
     if @shading
