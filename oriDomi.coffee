@@ -535,21 +535,11 @@ class root.OriDomi
     return if !normalized
     [angle, anchor, options] = normalized
     @panels[anchor][1].style[css.transform] = @_transform angle
-    @_callback options
+    for i in [2...@panels[anchor].length]
+      @panels[anchor][i].style[css.transform] = @_transform 0
 
-
-    
-    if anchor isnt @lastAnchor
-      return @reset =>
-        @_showStage anchor
-        setTimeout =>
-          @ramp angle, options
-        , 0
-
-    @lastAngle = angle = @_normalizeAngle angle
-    rotation = @_getRotation anchor, angle
-
-    @panels[anchor][1].style[css.transform] = @_transform @_getXy(1, anchor), rotation
+      if @shading
+        @_setShader i, anchor, 0
 
     @_callback options
 
