@@ -257,8 +257,6 @@ class root.OriDomi
 
     vMask = hMask.cloneNode true
     vMask.className = 'oridomi-mask-v'
-    vMask.style.width = @panelWidth + 'px'
-    vMask.style.height = '100%'
 
     if @shading
       leftShader = vMask.getElementsByClassName('oridomi-shader-top')[0]
