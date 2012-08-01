@@ -329,12 +329,14 @@ class root.OriDomi
 
   _callback: (options) ->
     if typeof options.callback is 'function'
-      # transitionend events are unreliable at the moment unfortunately
+      onTransitionEnd = (e) =>
+        e.currentTarget.removeEventListener css.transitionEnd, onTransitionEnd, false
+        options.callback()
+
       if @lastAngle is 0
-        delay = 0
+        options.callback()
       else
-        delay = @settings.speed * 1000
-      setTimeout options.callback, delay
+        @panels[@lastAnchor][0].addEventListener css.transitionEnd, onTransitionEnd, false
 
 
   _transform: (angle, fracture) ->
