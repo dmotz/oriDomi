@@ -15,7 +15,15 @@ silent = false
 oriDomiSupport = true
 testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
-
+css = 
+  transform: 'transform'
+  origin: 'transformOrigin'
+  transformStyle: 'transformStyle'
+  transitionProp: 'transitionProperty'
+  transitionDuration: 'transitionDuration'
+  transitionEasing: 'transitionTimingFunction'
+  perspective: 'perspective'
+  backface: 'backfaceVisibility'
 
 testProp = (prop) ->
   return prop if testEl.style[prop]?
@@ -26,7 +34,14 @@ testProp = (prop) ->
   false
 
 
-getGradientProp = ->
+for key, value of css
+  css[key] = testProp value
+  if !css[key]
+    console?.warn 'oriDomi: Browser does not support oriDomi'
+    oriDomiSupport = false
+    break
+
+css.gradientProp = do ->
   for prefix in prefixList
     hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
     testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
@@ -34,16 +49,14 @@ getGradientProp = ->
       return hyphenated
   'linear-gradient'
 
-
-getTransformProp = ->
+css.transformProp = do ->
   prefix = css.transform.match(/(\w+)Transform/i)[1]
   if prefix
     "-#{ prefix.toLowerCase() }-transform"
   else
     'transform'
 
-
-getTransitionEndProp = ->
+css.transitionEnd = do ->
   switch css.transitionProp
     when 'transitionProperty'
       'transitionEnd'
@@ -55,6 +68,7 @@ getTransitionEndProp = ->
       'oTransitionEnd'
     when 'MSTransitionProperty'
       'msTransitionEnd'
+
 
 
 # one dimensional:
