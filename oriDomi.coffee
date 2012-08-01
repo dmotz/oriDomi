@@ -269,7 +269,7 @@ class root.OriDomi
 
     vPanel = hPanel.cloneNode false
     vPanel.className = 'oridomi-panel-v'
-    vPanel.style.width = @panelWidth + 'px'
+    vPanel.style.width = @panelWidth + bleed + 'px'
     vPanel.style.height = '100%'
     vPanel.style[css.origin] = 'left'
     vPanel.appendChild vMask
