@@ -100,6 +100,7 @@ defaults =
   hPanels: 5
   perspective: 1000
   shading: true
+  hardShading: false
   speed: .6
   oriDomiClass: 'oriDomi'
   silent: false
@@ -382,23 +383,34 @@ class root.OriDomi
       [angle, anchor, options]
 
 
+  _setShader: (i, anchor, angle) ->
+    opacity = Math.abs(angle) / 90 * @shadingIntensity * .3
 
-  _setShader: (i, anchor, deg) ->
-    opacity = Math.abs(deg) / 90 * @shadingIntensity * .3
+    if @settings.hardShading
+      angle = Math.abs angle
+
+    switch anchor
+      when 'left', 'top'
+        if angle < 0
+          a = opacity
+          b = 0
+        else
+          a = 0
+          b = opacity
+      when 'right', 'bottom'
+        if angle < 0
+          a = 0
+          b = opacity
+        else
+          a = opacity
+          b = 0
+    
     if anchor is 'left' or anchor is 'right'
-      if deg < 0
-        @shaders[anchor].right[i].style.opacity = 0
-        @shaders[anchor].left[i].style.opacity = opacity
-      else
-        @shaders[anchor].left[i].style.opacity = 0
-        @shaders[anchor].right[i].style.opacity = opacity
+      @shaders[anchor].left[i].style.opacity = a
+      @shaders[anchor].right[i].style.opacity = b
     else
-      if deg < 0
-        @shaders[anchor].bottom[i].style.opacity = 0
-        @shaders[anchor].top[i].style.opacity = opacity
-      else
-        @shaders[anchor].top[i].style.opacity = 0
-        @shaders[anchor].bottom[i].style.opacity = opacity
+      @shaders[anchor].top[i].style.opacity = a
+      @shaders[anchor].bottom[i].style.opacity = b
 
 
   _getShaderGradient: (anchor) ->
