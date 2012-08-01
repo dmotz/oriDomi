@@ -364,7 +364,7 @@ class root.OriDomi
     angle = @lastAngle = @_normalizeAngle args[0]
     anchor = @_getLonghandAnchor args[1]
     options = extendObj args[2], @_methodDefaults[method]
-    if anchor isnt @lastAnchor
+    if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0)
       @reset =>
         @_showStage anchor
         setTimeout =>
