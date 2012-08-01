@@ -114,13 +114,14 @@ defaults =
 
 class root.OriDomi
 
-  constructor: (@el, @settings = {}) ->
+  constructor: (@el, options) ->
     console.time 'oridomiConstruction'
     return @el if !oriDomiSupport
 
     if !(@ instanceof OriDomi)
       return new oriDomi @el, @settings
 
+    @settings = extendObj options, defaults
     silent = true if @settings.silent
     if !@el? or @el.nodeType isnt 1
       return !silent and console?.warn 'oriDomi: First argument must be a DOM element'
@@ -185,7 +186,6 @@ class root.OriDomi
     contentHolder.classList.add 'oridomi-content'
     contentHolder.style.margin = '0'
     contentHolder.style.position = 'relative'
-    
 
     hMask = document.createElement 'div'
     hMask.className = 'oridomi-mask-h'
@@ -602,14 +602,11 @@ if $
       @
 
     else
-      settings = extendObj options, defaults
-
       for el in @
         instance = $.data el, 'oriDomi'
         if instance
           return instance
         else
-          $.data el, 'oriDomi', new OriDomi el, settings
+          $.data el, 'oriDomi', new OriDomi el, options
 
       @
-
