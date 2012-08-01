@@ -183,7 +183,9 @@ class root.OriDomi
 
     contentHolder = @el.cloneNode true
     contentHolder.classList.add 'oridomi-content'
-    contentHolder.margin = '0'
+    contentHolder.style.margin = '0'
+    contentHolder.style.position = 'relative'
+    
 
     hMask = document.createElement 'div'
     hMask.className = 'oridomi-mask-h'
