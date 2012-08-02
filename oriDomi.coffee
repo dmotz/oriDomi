@@ -36,7 +36,7 @@ testProp = (prop) ->
 
 for key, value of css
   css[key] = testProp value
-  if !css[key]
+  unless css[key]
     devMode and console.warn 'oriDomi: Browser does not support oriDomi'
     oriDomiSupport = false
     break
@@ -45,7 +45,7 @@ css.gradientProp = do ->
   for prefix in prefixList
     hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
     testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
-    if testEl.style.backgroundImage.indexOf('gradient') isnt -1
+    unless testEl.style.backgroundImage.indexOf('gradient') is -1
       return hyphenated
   'linear-gradient'
 
@@ -585,9 +585,9 @@ class OriDomi
         setTimeout =>
 
           unless i is limit
-            do (j = i) =>
+            do (i) =>
               setTimeout =>
-                @panels[anchor][j].style.display = 'none'
+                @panels[anchor][i].style.display = 'none'
               , delay * .8
 
           @panels[anchor][i].style[css.transform] = @_transform angle
@@ -599,7 +599,7 @@ class OriDomi
 
 
   unfold: (callback) ->
-    if !@isFoldedUp
+    unless @isFoldedUp
       if typeof callback is 'function'
         callback()
 
@@ -631,17 +631,17 @@ root.OriDomi = OriDomi
 
 if $
   $.fn.oriDomi = (options) ->
-    return @ if !oriDomiSupport
+    return @ unless oriDomiSupport
 
     if typeof options is 'string'
 
-      if typeof OriDomi::[options] isnt 'function'
+      unless typeof OriDomi::[options] is 'function'
         return devMode and console.warn "oriDomi: No such method '#{ options }'"
 
       for el in @
         instance = $.data el, 'oriDomi'
 
-        if not instance?
+        unless instance?
           return devMode and console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element"
 
         args = Array::slice.call arguments
