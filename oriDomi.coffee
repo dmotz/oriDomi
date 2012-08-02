@@ -540,8 +540,10 @@ class OriDomi
     return if !normalized
     [angle, anchor, options] = normalized
     @panels[anchor][1].style[css.transform] = @_transform angle
-    for i in [2...@panels[anchor].length]
-      @panels[anchor][i].style[css.transform] = @_transform 0
+
+    for panel, i in @panels[anchor]
+      if i > 1
+        @panels[anchor][i].style[css.transform] = @_transform 0
 
       if @shading
         @_setShader i, anchor, 0
