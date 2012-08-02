@@ -349,10 +349,10 @@ class OriDomi
     if isNaN angle
       0
     else if angle > 89
-      devMode and console.warn 'oriDomi: Maximum value is 90'
+      devMode and console.warn 'oriDomi: Maximum value is 89'
       89
     else if angle < -89
-      devMode and console.warn 'oriDomi: Minimum value is -90'
+      devMode and console.warn 'oriDomi: Minimum value is -89'
       -89
     else
       angle
