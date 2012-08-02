@@ -92,10 +92,8 @@ defaults =
   shading: 'hard'
   speed: 700
   oriDomiClass: 'oriDomi'
-  smoothStart: true
   shadingIntensity: 1
   easingMethod: ''
-  newClass: null
   showOnStart: false
   forceAntialiasing: false
 
