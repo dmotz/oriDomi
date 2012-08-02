@@ -348,12 +348,12 @@ class OriDomi
     angle = parseFloat angle, 10
     if isNaN angle
       0
-    else if angle > 90
+    else if angle > 89
       devMode and console.warn 'oriDomi: Maximum value is 90'
-      90
-    else if angle < -90
+      89
+    else if angle < -89
       devMode and console.warn 'oriDomi: Minimum value is -90'
-      -90
+      -89
     else
       angle
 
@@ -490,12 +490,12 @@ class OriDomi
 
   collapse: (anchor, options = {}) ->
     options.sticky = false
-    @accordion -90, anchor, options
+    @accordion -89, anchor, options
 
 
   collapseAlt: (anchor, options = {}) ->
     options.sticky = false
-    @accordion 90, anchor, options
+    @accordion 89, anchor, options
 
 
   reveal: (angle, anchor, options = {}) ->
