@@ -89,8 +89,8 @@ defaults =
   vPanels: 6
   hPanels: 5
   perspective: 1000
-  speed: .6
   shading: 'hard'
+  speed: 700
   oriDomiClass: 'oriDomi'
   smoothStart: true
   shadingIntensity: 1
@@ -161,7 +161,7 @@ class OriDomi
 
       shader = document.createElement 'div'
       shader.style[css.transitionProp] = 'opacity'
-      shader.style[css.transitionDuration] = @settings.speed + 's'
+      shader.style[css.transitionDuration] = @settings.speed + 'ms'
       shader.style[css.transitionEasing] = @settings.easingMethod
       shader.style.position = 'absolute'
       shader.style.width = '100%'
@@ -202,7 +202,7 @@ class OriDomi
     hPanel.style.padding = '0'
     hPanel.style.position = 'relative'
     hPanel.style[css.transitionProp] = css.transformProp
-    hPanel.style[css.transitionDuration] = @settings.speed + 's'
+    hPanel.style[css.transitionDuration] = @settings.speed + 'ms'
     hPanel.style[css.transitionEasing] = @settings.easingMethod
     hPanel.style[css.origin] = 'top'
     hPanel.style[css.transformStyle] = 'preserve-3d'
