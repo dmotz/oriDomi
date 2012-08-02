@@ -274,7 +274,7 @@ class OriDomi
         if anchor is 'left'
           xOffset = -(i * @panelWidth)
           if i is 0
-            panel.style.left = 0
+            panel.style.left = '0'
           else
             panel.style.left = @panelWidth + 'px'
         else
