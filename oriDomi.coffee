@@ -102,14 +102,14 @@ class OriDomi
 
   constructor: (@el, options) ->
     devMode and console.time 'oridomiConstruction'
-    return @el if !oriDomiSupport
+    return @el unless oriDomiSupport
 
-    if !(@ instanceof OriDomi)
+    unless @ instanceof OriDomi
       return new oriDomi @el, @settings
 
     @settings = extendObj options, defaults
 
-    if !@el? or @el.nodeType isnt 1
+    unless @el? or @el.nodeType isnt 1
       return devMode and console.warn 'oriDomi: First argument must be a DOM element'
 
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
@@ -205,6 +205,7 @@ class OriDomi
     hPanel.style[css.origin] = 'top'
     hPanel.style[css.transformStyle] = 'preserve-3d'
     hPanel.style[css.backface] = 'hidden'
+
     if @settings.forceAntialiasing
       hPanel.style.outline = '1px solid transparent'
 
@@ -472,7 +473,7 @@ class OriDomi
 
   accordion: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'accordion', arguments
-    return if !normalized
+    return if not normalized
     [angle, anchor, options] = normalized
 
     for panel, i in @panels[anchor]
@@ -534,7 +535,7 @@ class OriDomi
 
   curl: (angle, anchor, options = {}) ->
     normalized = @_normalizeArgs 'curl', arguments
-    return if !normalized
+    return if not normalized
     [angle, anchor, options] = normalized
     angle /=  @_getPanelType anchor
 
@@ -549,7 +550,7 @@ class OriDomi
 
   ramp: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'ramp', arguments
-    return if !normalized
+    return if not normalized
     [angle, anchor, options] = normalized
     @panels[anchor][1].style[css.transform] = @_transform angle
 
@@ -564,13 +565,13 @@ class OriDomi
 
 
   foldUp: (anchor, callback) ->
-    if !anchor
+    if not anchor
       anchor = 'left'
     else if typeof anchor is 'function'
       callback = anchor
 
     normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
-    return if !normalized
+    return if not normalized
     anchor = normalized[1]
     @isFoldedUp = true
     limit = @panels[anchor].length - 1
@@ -583,7 +584,7 @@ class OriDomi
 
         setTimeout =>
 
-          if i isnt limit
+          unless i is limit
             do (j = i) =>
               setTimeout =>
                 @panels[anchor][j].style.display = 'none'
@@ -604,7 +605,7 @@ class OriDomi
 
     @isFoldedUp = false
     for panel, i in @panels[@lastAnchor]
-      if i isnt 0
+      unless i is 0
         delay = i * @settings.speed * .6
         console.log delay
 
