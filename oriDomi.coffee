@@ -113,7 +113,6 @@ class OriDomi
       return devMode and console.warn 'oriDomi: First argument must be a DOM element'
 
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
-    @$el = $ @el if $
     elStyle = root.getComputedStyle @el
 
     @width = parseInt(elStyle.width, 10) +
@@ -310,6 +309,7 @@ class OriDomi
       @el.style.display = 'block'
       @el.style.visibility = 'visible'
 
+    @$el = $ @el if $
     @_callback @settings
     devMode and console.timeEnd 'oridomiConstruction'
 
