@@ -359,17 +359,27 @@ class OriDomi
 
 
   _normalizeArgs: (method, args) ->
-    angle = @lastAngle = @_normalizeAngle args[0]
+    angle = @_normalizeAngle args[0]
     anchor = @_getLonghandAnchor args[1]
     options = extendObj args[2], @_methodDefaults[method]
+
     if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0)
+      
       @reset =>
         @_showStage anchor
+
         setTimeout =>
+
+          if method is 'foldUp' or method is 'unfold'
+            args.shift()
+
           @[method].apply @, args
+
         , 0
+
       false
     else
+      @lastAngle = angle
       [angle, anchor, options]
 
 
