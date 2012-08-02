@@ -89,9 +89,8 @@ defaults =
   vPanels: 6
   hPanels: 5
   perspective: 1000
-  shading: true
-  hardShading: false
   speed: .6
+  shading: 'hard'
   oriDomiClass: 'oriDomi'
   smoothStart: true
   shadingIntensity: 1
@@ -376,10 +375,16 @@ class OriDomi
 
   _setShader: (i, anchor, angle) ->
     abs = Math.abs angle
-    opacity = abs / 90 * @shadingIntensity * .3
+    opacity = abs / 90 * @shadingIntensity
 
-    if @settings.hardShading
-      angle = abs
+    if @shading is 'hard'
+      opacity *= .15
+      if @lastAngle < 0
+        angle = abs
+      else
+        angle = -abs
+    else
+      opacity *= .4
 
     switch anchor
       when 'left', 'top'
@@ -396,7 +401,7 @@ class OriDomi
         else
           a = opacity
           b = 0
-    
+
     if anchor is 'left' or anchor is 'right'
       @shaders[anchor].left[i].style.opacity = a
       @shaders[anchor].right[i].style.opacity = b
