@@ -226,7 +226,7 @@ class OriDomi
         else
           panel.style[css.origin] = 'bottom'
           yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
-          
+
           if i is 0
             panel.style.top = @panelHeight * (@vPanels - 2) - 2 + 'px'
           else
@@ -306,11 +306,11 @@ class OriDomi
 
     for anchor in @anchors
       @el.appendChild @stages[anchor]
-    
+
     if @settings.showOnStart
       @el.style.display = 'block'
       @el.style.visibility = 'visible'
-    
+
     @_callback @settings
     devMode and console.timeEnd 'oridomiConstruction'
 
@@ -337,7 +337,7 @@ class OriDomi
         axes = [1, 0, 0, -angle]
       when 'bottom'
         axes = [1, 0, 0, angle]
-      
+
     if fracture
       [axes[0], axes[1], axes[2]] = [1, 1, 1]
 
@@ -528,7 +528,7 @@ class OriDomi
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle
-      
+
       if @shading
         @_setShader i, anchor, 0
 
