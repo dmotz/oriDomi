@@ -460,6 +460,7 @@ class OriDomi
     curl:
       twist: false
     ramp: {}
+    foldUp: {}
 
 
   reset: (callback) ->
@@ -564,6 +565,60 @@ class OriDomi
     @_callback options
 
 
+  foldUp: (anchor, callback) ->
+    if !anchor
+      anchor = 'left'
+    else if typeof anchor is 'function'
+      callback = anchor
+
+    normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
+    return if !normalized
+    anchor = normalized[1]
+    @isFoldedUp = true
+    limit = @panels[anchor].length - 1
+
+    for i in [limit..1] by -1
+      delay = (limit - i) * @settings.speed * .6
+      angle = 100
+
+      do (i, delay, angle) =>
+
+        setTimeout =>
+
+          if i isnt limit
+            do (j = i) =>
+              setTimeout =>
+                @panels[anchor][j].style.display = 'none'
+              , delay * .8
+
+          @panels[anchor][i].style[css.transform] = @_transform angle
+          if @shading
+            @_setShader i, anchor, angle
+
+        , delay
+
+
+
+  unfold: (callback) ->
+    if !@isFoldedUp
+      if typeof callback is 'function'
+        callback()
+
+    @isFoldedUp = false
+    for panel, i in @panels[@lastAnchor]
+      if i isnt 0
+        delay = i * @settings.speed * .6
+        console.log delay
+
+        do (i, delay) =>
+
+          setTimeout =>
+            @panels[@lastAnchor][i].style.display = 'block'
+            @panels[@lastAnchor][i].style[css.transform] = @_transform 0
+            if @shading
+              @_setShader i, @lastAnchor, 0
+
+          , delay
 
 
 
