@@ -480,7 +480,7 @@ class OriDomi
 
   accordion: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'accordion', arguments
-    return if not normalized
+    return unless normalized
     [angle, anchor, options] = normalized
 
     for panel, i in @panels[anchor]
@@ -540,9 +540,9 @@ class OriDomi
     @accordion angle / 10, anchor, options
 
 
-  curl: (angle, anchor, options = {}) ->
+  curl: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'curl', arguments
-    return if not normalized
+    return unless normalized
     [angle, anchor, options] = normalized
     angle /=  @_getPanelType anchor
 
@@ -557,7 +557,7 @@ class OriDomi
 
   ramp: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'ramp', arguments
-    return if not normalized
+    return unless normalized
     [angle, anchor, options] = normalized
     @panels[anchor][1].style[css.transform] = @_transform angle
 
@@ -578,7 +578,7 @@ class OriDomi
       callback = anchor
 
     normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
-    return if not normalized
+    return unless normalized
     anchor = normalized[1]
     @isFoldedUp = true
     limit = @panels[anchor].length - 1
@@ -602,7 +602,6 @@ class OriDomi
             @_setShader i, anchor, angle
 
         , delay
-
 
 
   unfold: (callback) ->
