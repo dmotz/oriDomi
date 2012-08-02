@@ -480,6 +480,9 @@ class OriDomi
           deg *= 2
       else
         deg *= 2 unless i is 0
+      
+      if options.stairs
+        deg = -deg
 
       panel.style[css.transform] = @_transform deg, options.fracture
       if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
