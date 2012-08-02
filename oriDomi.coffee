@@ -117,11 +117,16 @@ class OriDomi
 
     @width = parseInt(elStyle.width, 10) +
              parseInt(elStyle.paddingLeft, 10) +
-             parseInt(elStyle.paddingRight, 10)
+             parseInt(elStyle.paddingRight, 10) +
+             parseInt(elStyle.borderLeftWidth, 10) +
+             parseInt(elStyle.borderRightWidth, 10)
 
     @height = parseInt(elStyle.height, 10) +
               parseInt(elStyle.paddingTop, 10) +
-              parseInt(elStyle.paddingBottom, 10)
+              parseInt(elStyle.paddingBottom, 10) +
+              parseInt(elStyle.borderTopWidth, 10) +
+              parseInt(elStyle.borderBottomWidth, 10)
+
 
     @panelWidth = @width / @vPanels
     @panelHeight = @height / @hPanels
@@ -299,6 +304,8 @@ class OriDomi
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
+    @el.style.border = 'none'
+    @el.style.outline = 'none'
     @stages.left.style.display = 'block'
     @el.innerHTML = ''
 
