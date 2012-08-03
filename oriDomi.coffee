@@ -133,6 +133,7 @@ class OriDomi
     @panelHeight = @height / @hPanels
 
     @lastAngle = 0
+    @isFoldedUp = false
     @anchors = ['left', 'right', 'top', 'bottom']
     @lastAnchor = @anchors[0]
     @panels = {}
