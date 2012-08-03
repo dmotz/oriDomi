@@ -371,14 +371,12 @@ class OriDomi
     anchor = @_getLonghandAnchor args[1]
     options = extendObj args[2], @_methodDefaults[method]
 
-    if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0)
-      
+    if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0) or @isFoldedUp
       @reset =>
         @_showStage anchor
 
         setTimeout =>
-
-          if method is 'foldUp' or method is 'unfold'
+          if method is 'foldUp'
             args.shift()
 
           @[method].apply @, args
@@ -472,6 +470,9 @@ class OriDomi
 
 
   reset: (callback) ->
+    if @isFoldedUp
+      return @unfold callback
+
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform 0
       if @shading
@@ -583,27 +584,24 @@ class OriDomi
     return unless normalized
     anchor = normalized[1]
     @isFoldedUp = true
-    limit = @panels[anchor].length - 1
+    i = @panels[anchor].length - 1
+    angle = 100
 
-    for i in [limit..1] by -1
-      delay = (limit - i) * @settings.speed * .6
-      angle = 100
+    nextPanel = =>
+      @panels[anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
+      @panels[anchor][i].style[css.transform] = @_transform angle
+      if @shading
+        @_setShader i, anchor, angle
 
-      do (i, delay, angle) =>
+    onTransitionEnd = (e) =>
+      @panels[anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
+      @panels[anchor][i].style.display = 'none'
+      if --i is 0
+        @_callback callback
+      else
+        setTimeout nextPanel, 0
 
-        setTimeout =>
-
-          unless i is limit
-            do (i) =>
-              setTimeout =>
-                @panels[anchor][i].style.display = 'none'
-              , delay * .8
-
-          @panels[anchor][i].style[css.transform] = @_transform angle
-          if @shading
-            @_setShader i, anchor, angle
-
-        , delay
+    nextPanel()
 
 
   unfold: (callback) ->
@@ -612,20 +610,26 @@ class OriDomi
         callback()
 
     @isFoldedUp = false
-    for panel, i in @panels[@lastAnchor]
-      unless i is 0
-        delay = i * @settings.speed * .6
-        console.log delay
+    i = 1
+    angle = 0
 
-        do (i, delay) =>
+    nextPanel = =>
+      @panels[@lastAnchor][i].style.display = 'block'
+      setTimeout =>
+        @panels[@lastAnchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
+        @panels[@lastAnchor][i].style[css.transform] = @_transform angle
+        if @shading
+          @_setShader i, @lastAnchor, angle
+      , 0
+    
+    onTransitionEnd = (e) =>
+      @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
+      if ++i is @panels[@lastAnchor].length
+        callback()
+      else
+        setTimeout nextPanel, 0
 
-          setTimeout =>
-            @panels[@lastAnchor][i].style.display = 'block'
-            @panels[@lastAnchor][i].style[css.transform] = @_transform 0
-            if @shading
-              @_setShader i, @lastAnchor, 0
-
-          , delay
+    nextPanel()
 
 
 
