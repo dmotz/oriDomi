@@ -597,7 +597,7 @@ class OriDomi
       @panels[anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       @panels[anchor][i].style.display = 'none'
       if --i is 0
-        @_callback callback
+        callback() if typeof callback is 'function'
       else
         setTimeout nextPanel, 0
 
@@ -625,7 +625,7 @@ class OriDomi
     onTransitionEnd = (e) =>
       @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       if ++i is @panels[@lastAnchor].length
-        callback()
+        callback() if typeof callback is 'function'
       else
         setTimeout nextPanel, 0
 
