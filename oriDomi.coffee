@@ -8,6 +8,7 @@
 * Copyright 2012
 ###
 
+'use strict'
 
 root = window
 $ = root.$ or false
