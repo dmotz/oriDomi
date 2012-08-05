@@ -306,6 +306,7 @@ class OriDomi
     @el.style.width = @width + 'px'
     @el.style.height = @height + 'px'
     @el.style.backgroundColor = 'transparent'
+    @el.style.backgroundImage = 'none'
     @el.style.border = 'none'
     @el.style.outline = 'none'
     @stages.left.style.display = 'block'
