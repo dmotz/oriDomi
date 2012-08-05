@@ -511,38 +511,6 @@ class OriDomi
     @_callback options
 
 
-  collapse: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion -89, anchor, options
-
-
-  collapseAlt: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion 89, anchor, options
-
-
-  reveal: (angle, anchor, options = {}) ->
-    options.sticky = true
-    @accordion angle, anchor, options
-
-
-  stairs: (angle, anchor, options = {}) ->
-    options.stairs = true
-    options.sticky = true
-    @accordion angle, anchor, options
-
-
-  fracture: (angle, anchor, options = {}) ->
-    options.fracture = true
-    @accordion angle, anchor, options
-
-
-  twist: (angle, anchor, options = {}) ->
-    options.fracture = true
-    options.twist = true
-    @accordion angle / 10, anchor, options
-
-
   curl: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'curl', arguments
     return unless normalized
@@ -632,11 +600,44 @@ class OriDomi
     nextPanel()
 
 
+collapse: (anchor, options = {}) ->
+  options.sticky = false
+  @accordion -89, anchor, options
+
+
+collapseAlt: (anchor, options = {}) ->
+  options.sticky = false
+  @accordion 89, anchor, options
+
+
+reveal: (angle, anchor, options = {}) ->
+  options.sticky = true
+  @accordion angle, anchor, options
+
+
+stairs: (angle, anchor, options = {}) ->
+  options.stairs = true
+  options.sticky = true
+  @accordion angle, anchor, options
+
+
+fracture: (angle, anchor, options = {}) ->
+  options.fracture = true
+  @accordion angle, anchor, options
+
+
+twist: (angle, anchor, options = {}) ->
+  options.fracture = true
+  options.twist = true
+  @accordion angle / 10, anchor, options
+
+
 
 OriDomi.devMode = ->
   devMode = true
 
 root.OriDomi = OriDomi
+
 
 
 # $ BRIDGE
