@@ -1,8 +1,9 @@
 # oriDomi
-## Fold up DOM elements like paper
+### Fold up DOM elements like paper
 Dan Motzenbecker, MIT License
 
 
-### Hold Tight
-Docs and examples coming soon...
+###[oriDomi.com](http://oridomi.com)
+
+Examples, Documentation, Notes
 
