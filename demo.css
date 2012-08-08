@@ -176,16 +176,13 @@ section > pre{
     width: 350px;
     margin: 0 auto;
     text-align: center;
-    //background-color: #ff7918;
     background-color: #444;
     color: #fff;
-    //color: rgba(255, 255, 255, .8);
     padding: 10px 0;
     border: 20px #eee solid;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .1);
     margin-bottom: 40px;
-    //background-image: url('http://upload.wikimedia.org/wikipedia/commons/7/74/Contre_amiral_Jacques_Philippe_CUVILLIER.JPG');
-    background-image: url('http://upload.wikimedia.org/wikipedia/commons/e/e4/Bismarck_im_Barte_%28Originaltitel%29%2C_1883.jpg');
+    background-image: url('images/1.jpeg');
     background-size: 350px;
     cursor: pointer;
 }
@@ -252,7 +249,7 @@ section > pre{
     color: #fff;
     width: 430px;
     padding: 30px 15px;
-    background-image: url('http://upload.wikimedia.org/wikipedia/commons/7/74/Contre_amiral_Jacques_Philippe_CUVILLIER.JPG');
+    background-image: url('images/3.jpeg');
     background-size: 500px;
     text-align: center;
     float: left;
@@ -263,8 +260,7 @@ section > pre{
     height: 200px;
     margin-top: 40px;
     float: left;
-
-    background-image: url('http://upload.wikimedia.org/wikipedia/commons/d/dd/Muybridge_race_horse_animated.gif');
+    background-image: url('images/4.gif');
 }
 
 .demo5{
@@ -275,17 +271,12 @@ section > pre{
     text-align: center;
     background-color: #444;
     color: #E2BB7C;
-    //color: #f8f8f8;
     float: left;
     letter-spacing: -3px;
     text-shadow: 2px 2px 0 #555;
-    //background-color: #40d8ad;
     padding: 50px 10px;
-    //border: 10px solid #c09d65;
-    //background-image: url('http://upload.wikimedia.org/wikipedia/commons/d/d3/Otto_von_Bismarck%2C_Jugendbildnis_im_Alter_von_22_Jahren.jpg');
     background-size: 400px;
     float: right;
-    //text-shadow: 0 -1px 0 rgba(0, 0, 0, .2)
 }
 
 #features{
@@ -294,13 +285,9 @@ section > pre{
 
 #features ul{
     font-size: 18px;
-    //background-color: #f8f8f8;
     width: 70%;
     margin: 0 auto;
-    //padding: 15px 4px;
     text-shadow: 1px 1px 0 #fff;
-    //background-image: url('pyramid.png');
-    //color: #F8508D;
     text-align: center;
 }
 #features > ul > li{
