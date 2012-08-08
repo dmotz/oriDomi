@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Dan Motzenbecker">
+    <title>oriDomi - Fold up the DOM like paper.</title>
+    <link href="demo.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:100,900" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Old+Standard+TT:400,400italic" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <a href="https://github.com/dmotz/oridomi" target="_blank" class="fold-me">
+        <p>fold me on Github</p>
+    </a>
+    
+    <div class="demo1">
+        <h1>Hello.</h1>
+        <h4>my name is oriDomi.</h4>
+    </div>
+    
+    <div class="source demo1-source">
+        <span class="source-link left">&larr; view source</span>
+        <article class="hidden">
+            <label>html</label>
+            <pre>
+&lt;div id="demo1"&gt;
+    &lt;h1>Hello.&lt;/h1&gt;
+    &lt;h4&gt;my name is oriDomi.&lt;/h4&gt;
+&lt;/div&gt;
+            </pre>
+            <label>js</label>
+            <pre>
+$('#demo1').oriDomi('reveal', 40, 'top');
+            </pre>
+        </article>
+    </div>
+
+    <div id="tagline">
+        <h1>Fold up the DOM like paper.</h1>
+        <a href="http://oxism.com" id="author">by Dan Motzenbecker / oxism.com</a>
+    </div>
+
+    <section id="features">
+        <h2>Features</h2>
+        <ul>
+            <li><em>zero</em> dependencies</li>
+            <li>less than 15k</li>
+            <li>optional jQuery/Ender/<em>&c.</em> support</li>
+            <li>works on iOS</li>
+            <li>fold images, webfonts, animated gifs&hellip;</li>
+        </ul>
+    </section>
+    
+    <h3 id="get-source"><a href="https://github.com/dmotz/oridomi">Give me the source</a></h3>
+    
+    <section id="examples">
+        <h2>Examples</h2>
+        <h5>(click to cycle angle)</h5>
+        
+        <div class="demo demo2" data-id="2" data-anchor="l">Late Capitalism</div>
+        
+        <div class="demo demo3" data-id="3" data-anchor="r">Delight</div>
+        
+        <br class="clear">
+        
+        <div class="demo demo4" data-id="4" data-anchor="l"></div>
+
+        <div class="demo demo5" data-id="5" data-anchor="t">Tennis Court Oath</div>
+        
+    </section>
+    
+    <br class="clear">
+    
+    <section id="usage">
+        <h2>Usage</h2>
+
+        <p><b>oriDomi</b> works with or without a DOM library like jQuery.</p>
+        
+        <p>First, initialize your target element with <b>oriDomi</b> using either jQuery:</p>
+        
+        <pre>var $myDomi = $('.my-div').oriDomi();
+        </pre>
+        
+        <p>or using the standard DOM API:</p>
+        
+        <pre>var domi = new OriDomi(document.getElementsByClassName('my-div'));
+        </pre>
+        
+        <p>You can pass a number of options when initializing <b>oriDomi</b> on an element.</p>
+        
+        <p>Options can include the number of horizontal and vertical panels, speed, perspective distance, shading method, 
+            as well as a few others.</p>
+        
+        <p>For example:</p>
+        
+        <pre>var $myDomi = $('.my-div').oriDomi({ vPanels: 3, hPanels: 10, 
+        perspective: 200, speed: 500, shading: false });
+        </pre>
+        
+        <p>Once <b>oriDomi</b> is initialized on an element, you can call methods like so:</p>
+        
+        <pre>$myDomi.oriDomi('accordion', -30, 'right');
+        </pre>
+        
+        <p>The first argument is the method to be called, the second is the angle to rotate by, and the third, optional
+            argument is the anchor from which to transform (left, right, top, bottom).<br>Left is default.</p>
+        
+        <p>You can also pass an options object
+            literal as another argument, which can include a callback function to run when the animation completes.</p>
+                
+        <p>Methods include accordion, reveal, curl, collapse, ramp, foldUp, unfold and reset.</p>
+        
+        <p>Keep in mind, you can pass shorthand anchor names such as l, r, t, b or 1, 2, 3, 4.</p>
+        
+        <pre>$myDomi.oriDomi('reveal', 44, 1, 
+        { callback: function(){ alert('oriDomi'); } });
+        </pre>
+
+        
+    </section>
+    
+    
+    <section id="caveats">
+        <h2>Caveats</h2>
+        <ul>
+            <li><b>oriDomi</b> only works in modern browsers that support CSS 3D transforms<br>
+            <span>If a browser doesn&rsquo;t support <b>oriDomi</b>, the DOM won&rsquo;t be touched.</span></li>
+            <li><b>oriDomi</b> works best in WebKit browsers.<br>
+                <span>Firefox is supported, but performance is poor and antialiasing doesn&rsquo;t work well. 
+                    This should improve soon.</span></li>
+            <li>If you&rsquo;re targeting an element that has dimensions defined by media it contains (e.g. an image), 
+                be sure to wait until the image is loaded before invoking <b>oriDomi</b>.<br>
+                <span><b>oriDomi</b> works best when you define a width and height on the target element.</span>
+            </li>
+        </ul>
+    </section>
+
+    
+    <section id="final">
+        <h2>Final Thoughts</h2>
+        <p><b>oriDomi</b> is brand new, so it likely has plenty of bugs.</p>
+        <p>If you have an idea or a bugfix, please contribute to the <a href="https://github.com/dmotz/oridomi">Github repo</a>.</p>
+        <p>If you enjoy <b>oriDomi</b>, check out my iPhone app <b><a href="http://chaincalapp.com">ChainCal</a></b>.</p>
+        <p>The DOM is your oyster.</p>
+    </section>
+    
+    
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://raw.github.com/dmotz/oriDomi/master/oriDomi.min.js"></script>
+    <script src="demo.js"></script>
+</body>
+</html>
