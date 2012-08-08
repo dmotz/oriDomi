@@ -446,13 +446,13 @@ class OriDomi
 
   _getLonghandAnchor: (shorthand) ->
     switch shorthand
-      when 'left', 'l', 4
+      when 'left', 'l', '4', 4
         'left'
-      when 'right', 'r', 2
+      when 'right', 'r', '2', 2
         'right'
-      when 'top', 't', 1
+      when 'top', 't', '1', 1
         'top'
-      when 'bottom', 'b', 3
+      when 'bottom', 'b', '3', 3
         'bottom'
       else
         'left'
