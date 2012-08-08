@@ -264,16 +264,19 @@ section > pre{
 }
 
 .demo5{
-    font-family: "old standard tt", "Hoefler Text", Constantia, Palatino, Georgia, serif;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
     font-size: 80px;
     width: 400px;
     line-height: 1;
     text-align: center;
     background-color: #444;
     color: #E2BB7C;
+    border: 15px solid #E2BB7C;
     float: left;
-    letter-spacing: -3px;
-    text-shadow: 2px 2px 0 #555;
+    letter-spacing: -5px;
     padding: 50px 10px;
     background-size: 400px;
     float: right;
