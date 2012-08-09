@@ -8,6 +8,7 @@
 * Dan Motzenbecker
 * http://oxism.com
 * Copyright 2012
+* MIT License
 */
 
 
