@@ -1,0 +1,325 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+::-moz-selection {
+    background: #444;
+    color: #fff;
+    text-shadow: none;
+}
+
+::selection {
+    background: #444;
+    color: #fff;
+    text-shadow: none;
+}
+
+.clear{
+    clear: both;
+}
+a{
+    color: #333;
+}
+body{
+    width: 900px;
+    background-color: #fff;
+    color: #333;
+    margin: 0 auto;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    padding-top: 20px;
+    position: relative;
+    color: #555;
+
+}
+h2{
+    text-align: center;
+    margin-bottom: 20px;
+    text-decoration: underline;
+}
+h5{
+    text-align: center;
+    font-weight: normal;
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 40px;
+}
+
+.fold-me{
+    position: fixed;
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 10px;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7);
+    text-decoration: none;
+    color: #666;
+    z-index: 100;
+}
+.fold-me p{
+    padding: 10px;
+    padding-right: 20px;
+    width: 40px;
+    background-color: #ccc;
+    border-radius: 0 0 5px 5px;
+    font-size: 14px;
+}
+#tagline{
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    margin-top: -80px;
+    font-size: 26px;
+    letter-spacing: -1px;
+    z-index: -1;
+}
+#tagline h1{
+    background-color: #444;
+    color: #fff;
+    display: inline-block;
+    padding: 5px;
+    font-size: 26px;
+}
+#author{
+    text-align: center;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 3;
+    display: block;
+    text-decoration: none;
+    color: #444;
+    cursor: pointer;
+}
+ul > li{
+    text-align: center;
+    line-height: 2;
+}
+ul{
+    list-style: disc;
+    list-style-position: inside;
+}
+.hidden{
+    display: none;
+}
+section{
+    margin-bottom: 50px;
+    float: left;
+    width: 100%;
+}
+section > h2{
+    color: #666;
+}
+section > p{
+    text-align: center;
+    margin-bottom: 20px;
+}
+pre{
+    background-color: #444;
+    color: #fff;
+    border-radius: 5px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+    font-size: 14px;
+    margin: 0 auto;
+    padding: 0 15px;
+    padding-top: 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+section > pre{
+    width: 70%;
+}
+.source{
+    width: 360px;
+}
+.source > article{
+    margin-top: 10px;
+}
+.source-link{
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    background-color: #555;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .5);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+.source-link:active{
+    top: 1px;
+}
+.source label{
+    float: right;
+    font-size: 11px;
+    font-weight: bold;
+    background-color: #ff5a67;
+    color: #fff;
+    padding: 3px;
+    padding-top: 6px;
+    border-radius: 0px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .2);
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    border-top-right-radius: 5px;
+}
+.source pre{
+    border-top-right-radius: 10px;
+
+}
+.demo1{
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    width: 350px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: #444;
+    color: #fff;
+    padding: 10px 0;
+    border: 20px #eee solid;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .1);
+    margin-bottom: 40px;
+    background-image: url('../images/1.jpg');
+    background-size: 350px;
+    cursor: pointer;
+}
+.demo1 > h1{
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    font-size: 70px;
+    line-height: 2;
+}
+.demo1 > h4{
+    font-size: 30px;
+    line-height: 0;
+    margin-bottom: 60px;
+}
+.demo1-source{
+    position: absolute;
+    right: 10px;
+    margin-top: -290px;
+    margin-right: -190px;
+}
+
+#get-source{
+    text-align: center;
+    margin-bottom: 50px;
+}
+#get-source > a{
+    text-decoration: none;
+    color: #fff;
+    background-color: #666;
+    padding: 3px 5px;
+    -webkit-transition: background-color .5s;
+    -moz-transition: background-color .5s;
+    transition: background-color .5s;
+}
+#get-source > a:hover{
+    background-color: #444;
+}
+#examples > div{
+}
+.demo{
+    cursor: pointer;
+}
+.demo2{
+    font-family: "Abril Fatface","Hoefler Text", Constantia, Palatino, Georgia, serif;
+    font-size: 72px;
+    width: 400px;
+    height: 160px;
+    text-align: center;
+    line-height: 1;
+    color: #fff;
+    color: #FF676D;
+    background-color: #6ac1ff;
+    padding: 40px 0;
+    margin-right: 40px;
+    float: left;
+
+}
+
+.demo3{
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 100px;
+    background-color: #444;
+    color: #fff;
+    width: 430px;
+    padding: 30px 15px;
+    background-image: url('../images/3.jpeg');
+    background-size: 500px;
+    text-align: center;
+    float: left;
+}
+
+.demo4{
+    width: 300px;
+    height: 200px;
+    margin-top: 40px;
+    float: left;
+    background-image: url('../images/4.gif');
+}
+
+.demo5{
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 80px;
+    width: 400px;
+    line-height: 1;
+    text-align: center;
+    background-color: #444;
+    color: #E2BB7C;
+    border: 15px solid #E2BB7C;
+    float: left;
+    letter-spacing: -5px;
+    padding: 50px 10px;
+    background-size: 400px;
+    float: right;
+}
+
+#features{
+    margin-bottom: 30px;
+}
+
+#features ul{
+    font-size: 18px;
+    width: 70%;
+    margin: 0 auto;
+    text-shadow: 1px 1px 0 #fff;
+    text-align: center;
+}
+#features > ul > li{
+    display: inline-block;
+    margin-right: 35px;
+}
+#features > ul > li::before{
+    content: '•';
+    margin-right: 8px;
+}
+
+#usage > p {
+    padding: 0 120px;
+    line-height: 1.8;
+}
+
+
+#caveats > ul{
+    width: 60%;
+    margin: 0 auto;
+
+}
+
+#caveats > ul > li{
+    margin-bottom: 30px;
+}
+
+#caveats > ul > li > span{
+    color: #666;
+    font-size: 14px;
+}
+
