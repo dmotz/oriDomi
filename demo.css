@@ -182,7 +182,7 @@ section > pre{
     border: 20px #eee solid;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, .1);
     margin-bottom: 40px;
-    background-image: url('images/1.jpeg');
+    background-image: url('images/1.jpg');
     background-size: 350px;
     cursor: pointer;
 }
