@@ -1,4 +1,4 @@
-//(function(){
+(function(){
     
 
 var $body,
@@ -77,4 +77,4 @@ function init(){
 $(init);
 
 
-//})();
+})();
