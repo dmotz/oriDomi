@@ -179,6 +179,7 @@ class OriDomi
     contentHolder.classList.add 'oridomi-content'
     contentHolder.style.margin = '0'
     contentHolder.style.position = 'relative'
+    contentHolder.style.float = 'none'
 
     hMask = document.createElement 'div'
     hMask.className = 'oridomi-mask-h'
