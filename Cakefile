@@ -5,7 +5,7 @@ output = (data) ->
   console.log data.toString()
 
 
-task 'build', 'Build oriDomi', ->
+task 'build', 'Build and minify oriDomi', ->
   exec 'coffee -c oriDomi.coffee', (err, stdout, stderr) ->
     throw err if err
     console.log stdout, stderr
