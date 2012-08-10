@@ -88,8 +88,8 @@ extendObj = (target, source) ->
 
 
 defaults =
-  vPanels: 6
-  hPanels: 5
+  vPanels: 3
+  hPanels: 3
   perspective: 1000
   shading: 'hard'
   speed: 700
