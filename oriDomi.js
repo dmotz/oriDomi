@@ -258,7 +258,7 @@
             panel.style[css.origin] = 'bottom';
             yOffset = -((this.hPanels * this.panelHeight) - (this.panelHeight * (i + 1)));
             if (i === 0) {
-              panel.style.top = this.panelHeight * (this.vPanels - 2) - bleed + 'px';
+              panel.style.top = this.panelHeight * (this.vPanels - 1) - bleed + 'px';
             } else {
               panel.style.top = -this.panelHeight + 'px';
             }

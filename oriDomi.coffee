@@ -235,7 +235,7 @@ class OriDomi
           yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
 
           if i is 0
-            panel.style.top = @panelHeight * (@vPanels - 2) - bleed + 'px'
+            panel.style.top = @panelHeight * (@vPanels - 1) - bleed + 'px'
           else
             panel.style.top = -@panelHeight + 'px'
 
