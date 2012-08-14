@@ -2,6 +2,7 @@
 
 /*
 * oriDomi
+* 0.1
 * fold up the DOM
 * http://oridomi.com
 *
