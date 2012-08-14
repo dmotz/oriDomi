@@ -93,7 +93,10 @@ h5{
     display: block;
     text-decoration: none;
     color: #444;
-    cursor: pointer;
+    margin-top: -30px;
+}
+#author:hover{
+    text-decoration: underline;
 }
 ul > li{
     text-align: center;
