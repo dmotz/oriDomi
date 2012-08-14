@@ -39,8 +39,9 @@ $('#demo1').oriDomi('reveal', 40, 'top');
 
     <div id="tagline">
         <h1>Fold up the DOM like paper.</h1>
-        <a href="http://oxism.com" id="author">by Dan Motzenbecker / oxism.com</a>
     </div>
+    <a href="http://oxism.com" id="author">by Dan Motzenbecker, oxism.com</a>
+
 
     <section id="features">
         <h2>Features</h2>
@@ -80,7 +81,7 @@ $('#demo1').oriDomi('reveal', 40, 'top');
         
         <p>First, initialize your target element with <b>oriDomi</b> using either jQuery:</p>
         
-        <pre>var $myDomi = $('.my-div').oriDomi();
+        <pre>var $domi = $('.my-div').oriDomi();
         </pre>
         
         <p>or using the standard DOM API:</p>
@@ -95,13 +96,13 @@ $('#demo1').oriDomi('reveal', 40, 'top');
         
         <p>For example:</p>
         
-        <pre>var $myDomi = $('.my-div').oriDomi({ vPanels: 3, hPanels: 10, 
+        <pre>var $domi = $('.my-div').oriDomi({ vPanels: 3, hPanels: 10, 
         perspective: 200, speed: 500, shading: false });
         </pre>
         
         <p>Once <b>oriDomi</b> is initialized on an element, you can call methods like so:</p>
         
-        <pre>$myDomi.oriDomi('accordion', -30, 'right');
+        <pre>$domi.oriDomi('accordion', -30, 'right');
         </pre>
         
         <p>The first argument is the method to be called, the second is the angle to rotate by, and the third, optional
@@ -114,7 +115,7 @@ $('#demo1').oriDomi('reveal', 40, 'top');
         
         <p>Keep in mind, you can pass shorthand anchor names such as l, r, t, b or 1, 2, 3, 4.</p>
         
-        <pre>$myDomi.oriDomi('reveal', 44, 1, 
+        <pre>$domi.oriDomi('reveal', 44, 1, 
         { callback: function(){ alert('oriDomi'); } });
         </pre>
 
