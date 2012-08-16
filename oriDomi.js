@@ -2,7 +2,7 @@
 
 /*
 * oriDomi
-* 0.1
+* 0.1.0
 * fold up the DOM
 * http://oridomi.com
 *
@@ -749,6 +749,8 @@
     return OriDomi;
 
   })();
+
+  OriDomi.VERSION = '0.1.0';
 
   OriDomi.devMode = function() {
     return devMode = true;

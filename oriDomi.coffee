@@ -1,6 +1,6 @@
 ###
 * oriDomi
-* 0.1
+* 0.1.0
 * fold up the DOM
 * http://oridomi.com
 *
@@ -636,6 +636,7 @@ class OriDomi
     @accordion angle / 10, anchor, options
 
 
+OriDomi.VERSION = '0.1.0'
 
 OriDomi.devMode = ->
   devMode = true
