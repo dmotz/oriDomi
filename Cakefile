@@ -5,13 +5,18 @@ output = (data) ->
   console.log data.toString()
 
 
-task 'build', 'Build and minify oriDomi', ->
+task 'build', 'Build, minify, and generate docs for oriDomi', ->
   exec 'coffee -c oriDomi.coffee', (err, stdout, stderr) ->
     throw err if err
     console.log stdout, stderr
+
     exec 'uglifyjs -o oriDomi.min.js oriDomi.js', (err, stdout, stderr) ->
       throw err if err
       console.log stdout, stderr
+
+      exec 'docco oriDomi.coffee', (err, stdout, stderr) ->
+        throw err if err
+        console.log stdout, stderr
 
 
 task 'watch', 'Build oriDomi continuously', ->
