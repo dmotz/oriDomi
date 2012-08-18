@@ -208,11 +208,11 @@ section > pre{
     margin-right: -190px;
 }
 
-#get-source{
+h3{
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
-#get-source > a{
+h3 > a{
     text-decoration: none;
     color: #fff;
     background-color: #666;
@@ -221,8 +221,14 @@ section > pre{
     -moz-transition: background-color .5s;
     transition: background-color .5s;
 }
-#get-source > a:hover{
+h3 > a:hover{
     background-color: #444;
+}
+#get-source{
+    margin-bottom: 50px;
+}
+#get-source > a{
+    background-color: #888;
 }
 #examples > div{
 }
