@@ -1,5 +1,5 @@
 # [oriDomi](http://oridomi.com)
-# =======
+# =============================
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
@@ -8,7 +8,7 @@
 # Copyright 2012, MIT License
 
 # Setup
-# =========
+# =====
 
 # Enable strict mode in this scope to keep us in line.
 'use strict'
