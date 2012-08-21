@@ -1,6 +1,8 @@
 #[oriDomi](http://oridomi.com)
 #### Fold up DOM elements like paper
-Dan Motzenbecker, MIT License
+[Dan Motzenbecker](http://oxism.com), MIT License
+
+[@dcmotz](http://twitter.com/dcmotz)
 
 #![oriDomi](http://oxism.com/images/oridomi.png)
 #![oriDomi](http://oxism.com/images/oridomi2.png)
