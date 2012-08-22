@@ -86,9 +86,9 @@ css.gradientProp = do ->
 # Invoke a functional scope to set a hyphenated version of the transform property.
 css.transformProp = do ->
   # Use a regex to pluck the prefix `testProp` found.
-  prefix = css.transform.match(/(\w+)Transform/i)[1]
+  prefix = css.transform.match /(\w+)Transform/i
   if prefix
-    "-#{ prefix.toLowerCase() }-transform"
+    "-#{ prefix[1].toLowerCase() }-transform"
   else
     'transform'
 

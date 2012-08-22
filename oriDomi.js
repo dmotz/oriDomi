@@ -67,9 +67,9 @@
 
   css.transformProp = (function() {
     var prefix;
-    prefix = css.transform.match(/(\w+)Transform/i)[1];
+    prefix = css.transform.match(/(\w+)Transform/i);
     if (prefix) {
-      return "-" + (prefix.toLowerCase()) + "-transform";
+      return "-" + (prefix[1].toLowerCase()) + "-transform";
     } else {
       return 'transform';
     }
