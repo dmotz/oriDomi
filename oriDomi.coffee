@@ -3,7 +3,7 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.1.1`
+# `0.1.2`
 
 # Copyright 2012, MIT License
 
@@ -876,7 +876,7 @@ class OriDomi
 
 
 # Set a version flag for easy external retrieval.
-OriDomi.VERSION = '0.1.0'
+OriDomi.VERSION = '0.1.2'
 
 # External function to enable `devMode`.
 OriDomi.devMode = ->

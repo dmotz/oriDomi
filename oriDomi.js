@@ -736,7 +736,7 @@
 
   })();
 
-  OriDomi.VERSION = '0.1.0';
+  OriDomi.VERSION = '0.1.2';
 
   OriDomi.devMode = function() {
     return devMode = true;
