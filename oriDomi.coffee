@@ -3,7 +3,7 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.1.2`
+# `0.1.3`
 
 # Copyright 2012, MIT License
 
@@ -15,6 +15,10 @@
 
 # Set a reference to the global object within this scope.
 root = window
+
+# An array to hold references to oriDomi instances so they can be easily freed
+# from memory via the `destroy()` method.
+instances = []
 
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to false so oriDomi knows we are working without jQuery.
@@ -168,27 +172,36 @@ defaults =
 
 class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
-  constructor: (@el, options) ->
+  constructor: (el, options) ->
     # If `devMode` is enabled, start a benchmark timer for the constructor.
     devMode and console.time 'oridomiConstruction'
     # If the browser doesn't support oriDomi, return the element unmodified.
-    return @el unless oriDomiSupport
+    return el unless oriDomiSupport
     
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     unless @ instanceof OriDomi
-      return new oriDomi @el, @settings
+      return new oriDomi el, @settings
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
 
     # Return if the first argument isn't a DOM element.
-    unless @el? or @el.nodeType isnt 1
+    if not el or el.nodeType isnt 1
       return devMode and console.warn 'oriDomi: First argument must be a DOM element'
+
+    # Clone the target element and save a copy of it.
+    @el = el.cloneNode true
+    @cleanEl = el
 
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @el
+    elStyle = root.getComputedStyle @cleanEl
+
+    # Save the original CSS display of the target. If `none`, assume `block`.
+    @displayStyle = elStyle.display
+    if @displayStyle is 'none'
+      @displayStyle = 'block'
 
     # Calculate the element's total width by adding all horizontal dimensions.
     @width = parseInt(elStyle.width, 10) +
@@ -213,6 +226,9 @@ class OriDomi
     # Set our current fold angle at `0` and `isFoldedUp` as `false`.
     @lastAngle = 0
     @isFoldedUp = false
+    # `isFrozen` records if the oriDomi effect is temporarily disabled for easier
+    # manipulation of the target's inner contents later.
+    @isFrozen = false
     # Set an array of anchor names.
     @anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
@@ -452,8 +468,14 @@ class OriDomi
       @el.style.display = 'block'
       @el.style.visibility = 'visible'
 
+    # Hide the original element and insert the oriDomi version.
+    @cleanEl.style.display = 'none'
+    @cleanEl.parentNode.insertBefore @el, @cleanEl
+
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
+    # Push this instance into the instances collection.
+    instances.push @
     # If a callback was passed in the constructor options, run it.
     @_callback @settings
     # End the constructor benchmark if `devMode` is active.
@@ -518,6 +540,7 @@ class OriDomi
 
   # `_normalizeArgs` bootstraps every public method.
   _normalizeArgs: (method, args) ->
+    @unfreeze() if @isFrozen
     # Get a valid angle.
     angle = @_normalizeAngle args[0]
     # Get the full anchor name.
@@ -671,7 +694,47 @@ class OriDomi
     @_callback callback: callback
 
 
-  # oriDomi's bread and butter effect. Transforms the target like its namesake.
+  # Disables oriDomi slicing by showing the original, untouched target element.
+  # This is useful for certain user interactions on the inner content.
+  freeze: (callback) ->
+    # Return if already frozen.
+    if @isFrozen
+      callback() if typeof callback is 'function'
+    else
+      # Make sure to reset folding first.
+      @reset =>
+        @isFrozen = true
+        # Swap the visibility of the elements.
+        @el.style.display = 'none'
+        @cleanEl.style.display = @displayStyle
+        callback() if typeof callback is 'function'
+
+
+  # Restores the oriDomi version of the element for folding purposes.
+  unfreeze: ->
+    # Only unfreeze if already frozen.
+    if @isFrozen
+      @isFrozen = false
+      # Swap the visibility of the elements.
+      @cleanEl.style.display = 'none'
+      @el.style.display = @displayStyle
+
+
+  # Removes the oriDomi element and deletes its instance from memory.
+  destroy: (callback) ->
+    # First restore the original element.
+    @freeze =>
+      # Remove the data reference if using jQuery.
+      if $
+        $.data @cleanEl, 'oriDomi', null
+      # Remove the oriDomi element from the DOM.
+      @el.parentNode.removeChild @el
+      # Free up this instance for garbage collection.
+      instances[instances.indexOf @] = null
+      callback() if typeof callback is 'function'
+
+
+  # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'accordion', arguments
     # If `_normalizeArgs` returns false, we need to abort for a reset operation.
@@ -876,7 +939,7 @@ class OriDomi
 
 
 # Set a version flag for easy external retrieval.
-OriDomi.VERSION = '0.1.2'
+OriDomi.VERSION = '0.1.3'
 
 # External function to enable `devMode`.
 OriDomi.devMode = ->

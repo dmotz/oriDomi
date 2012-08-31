@@ -2,9 +2,11 @@
 (function() {
   'use strict';
 
-  var $, OriDomi, css, defaults, devMode, extendObj, key, oriDomiSupport, prefixList, root, testEl, testProp, value;
+  var $, OriDomi, css, defaults, devMode, extendObj, instances, key, oriDomiSupport, prefixList, root, testEl, testProp, value;
 
   root = window;
+
+  instances = [];
 
   $ = root.$ || false;
 
@@ -124,26 +126,32 @@
 
     function OriDomi(el, options) {
       var anchor, bleed, bottomShader, content, contentHolder, elStyle, hMask, hPanel, i, leftShader, panel, rightShader, shader, stage, topShader, vMask, vPanel, xOffset, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _n, _o, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
-      this.el = el;
       devMode && console.time('oridomiConstruction');
       if (!oriDomiSupport) {
-        return this.el;
+        return el;
       }
       if (!(this instanceof OriDomi)) {
-        return new oriDomi(this.el, this.settings);
+        return new oriDomi(el, this.settings);
       }
       this.settings = extendObj(options, defaults);
-      if (!((this.el != null) || this.el.nodeType !== 1)) {
+      if (!el || el.nodeType !== 1) {
         return devMode && console.warn('oriDomi: First argument must be a DOM element');
       }
+      this.el = el.cloneNode(true);
+      this.cleanEl = el;
       _ref = this.settings, this.shading = _ref.shading, this.shadingIntensity = _ref.shadingIntensity, this.vPanels = _ref.vPanels, this.hPanels = _ref.hPanels;
-      elStyle = root.getComputedStyle(this.el);
+      elStyle = root.getComputedStyle(this.cleanEl);
+      this.displayStyle = elStyle.display;
+      if (this.displayStyle === 'none') {
+        this.displayStyle = 'block';
+      }
       this.width = parseInt(elStyle.width, 10) + parseInt(elStyle.paddingLeft, 10) + parseInt(elStyle.paddingRight, 10) + parseInt(elStyle.borderLeftWidth, 10) + parseInt(elStyle.borderRightWidth, 10);
       this.height = parseInt(elStyle.height, 10) + parseInt(elStyle.paddingTop, 10) + parseInt(elStyle.paddingBottom, 10) + parseInt(elStyle.borderTopWidth, 10) + parseInt(elStyle.borderBottomWidth, 10);
       this.panelWidth = this.width / this.vPanels;
       this.panelHeight = this.height / this.hPanels;
       this.lastAngle = 0;
       this.isFoldedUp = false;
+      this.isFrozen = false;
       this.anchors = ['left', 'right', 'top', 'bottom'];
       this.lastAnchor = this.anchors[0];
       this.panels = {};
@@ -331,9 +339,12 @@
         this.el.style.display = 'block';
         this.el.style.visibility = 'visible';
       }
+      this.cleanEl.style.display = 'none';
+      this.cleanEl.parentNode.insertBefore(this.el, this.cleanEl);
       if ($) {
         this.$el = $(this.el);
       }
+      instances.push(this);
       this._callback(this.settings);
       devMode && console.timeEnd('oridomiConstruction');
     }
@@ -393,6 +404,9 @@
     OriDomi.prototype._normalizeArgs = function(method, args) {
       var anchor, angle, options,
         _this = this;
+      if (this.isFrozen) {
+        this.unfreeze();
+      }
       angle = this._normalizeAngle(args[0]);
       anchor = this._getLonghandAnchor(args[1]);
       options = extendObj(args[2], this._methodDefaults[method]);
@@ -531,6 +545,46 @@
       }
       return this._callback({
         callback: callback
+      });
+    };
+
+    OriDomi.prototype.freeze = function(callback) {
+      var _this = this;
+      if (this.isFrozen) {
+        if (typeof callback === 'function') {
+          return callback();
+        }
+      } else {
+        return this.reset(function() {
+          _this.isFrozen = true;
+          _this.el.style.display = 'none';
+          _this.cleanEl.style.display = _this.displayStyle;
+          if (typeof callback === 'function') {
+            return callback();
+          }
+        });
+      }
+    };
+
+    OriDomi.prototype.unfreeze = function() {
+      if (this.isFrozen) {
+        this.isFrozen = false;
+        this.cleanEl.style.display = 'none';
+        return this.el.style.display = this.displayStyle;
+      }
+    };
+
+    OriDomi.prototype.destroy = function(callback) {
+      var _this = this;
+      return this.freeze(function() {
+        if ($) {
+          $.data(_this.cleanEl, 'oriDomi', null);
+        }
+        _this.el.parentNode.removeChild(_this.el);
+        instances[instances.indexOf(_this)] = null;
+        if (typeof callback === 'function') {
+          return callback();
+        }
       });
     };
 
@@ -736,7 +790,7 @@
 
   })();
 
-  OriDomi.VERSION = '0.1.2';
+  OriDomi.VERSION = '0.1.3';
 
   OriDomi.devMode = function() {
     return devMode = true;
