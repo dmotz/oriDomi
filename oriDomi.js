@@ -786,15 +786,15 @@
       return this.accordion(angle / 10, anchor, options);
     };
 
+    OriDomi.VERSION = '0.1.4';
+
+    OriDomi.devMode = function() {
+      return devMode = true;
+    };
+
     return OriDomi;
 
   })();
-
-  OriDomi.VERSION = '0.1.3';
-
-  OriDomi.devMode = function() {
-    return devMode = true;
-  };
 
   root.OriDomi = OriDomi;
 

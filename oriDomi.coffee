@@ -3,7 +3,7 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.1.3`
+# `0.1.4`
 
 # Copyright 2012, MIT License
 
@@ -938,12 +938,17 @@ class OriDomi
     @accordion angle / 10, anchor, options
 
 
-# Set a version flag for easy external retrieval.
-OriDomi.VERSION = '0.1.3'
+  # Class Members
+  # =============
 
-# External function to enable `devMode`.
-OriDomi.devMode = ->
-  devMode = true
+
+  # Set a version flag for easy external retrieval.
+  @VERSION = '0.1.4'
+
+
+  # External function to enable `devMode`.
+  @devMode = ->
+    devMode = true
 
 # Attach `OriDomi` constructor to `window`.
 root.OriDomi = OriDomi
