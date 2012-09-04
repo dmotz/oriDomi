@@ -457,20 +457,21 @@ class OriDomi
     # Show the left stage to start with.
     @stages.left.style.display = 'block'
     # Empty the target element.
-    @el.innerHTML = ''
+    @stageEl = document.createElement 'div'
 
     # Append each stage to the target element.
     for anchor in @anchors
-      @el.appendChild @stages[anchor]
+      @stageEl.appendChild @stages[anchor]
 
     # Show the target if applicable.
     if @settings.showOnStart
       @el.style.display = 'block'
       @el.style.visibility = 'visible'
 
-    # Hide the original element and insert the oriDomi version.
-    @cleanEl.style.display = 'none'
-    @cleanEl.parentNode.insertBefore @el, @cleanEl
+    # Hide the original content and insert the oriDomi version.
+    @el.innerHTML = ''
+    @el.appendChild @cleanEl
+    @el.appendChild @stageEl
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
