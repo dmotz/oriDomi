@@ -1,0 +1,21 @@
+{
+  "name": "oridomi",
+  "description": "Fold up the DOM like paper.",
+  "author": "Dan Motzenbecker <dan@oxism.com> (http://oxism.com)",
+  "homepage": "http://oridomi.com",
+  "version": "0.1.4",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dmotz/oriDomi.git"
+  },
+  "keywords": [
+    "DOM",
+    "paper",
+    "frontend",
+    "jquery"
+  ],
+  "dependencies": {
+      "coffee-script" : "1.3.x"
+  }
+}
