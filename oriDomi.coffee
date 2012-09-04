@@ -741,7 +741,12 @@ class OriDomi
       if $
         $.data @el, 'oriDomi', null
       # Remove the oriDomi element from the DOM.
-      @el.parentNode.removeChild @el
+      @el.innerHTML = @cleanEl.innerHTML
+
+      # Reset original styles.
+      for key, value of @originalStyles
+        @el.style[key] = value
+
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
       callback() if typeof callback is 'function'
