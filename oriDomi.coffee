@@ -709,8 +709,8 @@ class OriDomi
       @reset =>
         @isFrozen = true
         # Swap the visibility of the elements.
-        @el.style.display = 'none'
-        @cleanEl.style.display = @displayStyle
+        @stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+        @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
         callback() if typeof callback is 'function'
 
 
@@ -720,8 +720,8 @@ class OriDomi
     if @isFrozen
       @isFrozen = false
       # Swap the visibility of the elements.
-      @cleanEl.style.display = 'none'
-      @el.style.display = @displayStyle
+      @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+      @stageEl.style[css.transform] = 'translate3d(0, 0, 0)'
 
 
   # Removes the oriDomi element and deletes its instance from memory.
