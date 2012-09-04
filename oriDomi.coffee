@@ -172,31 +172,34 @@ defaults =
 
 class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
-  constructor: (el, options) ->
+  constructor: (@el, options) ->
     # If `devMode` is enabled, start a benchmark timer for the constructor.
     devMode and console.time 'oridomiConstruction'
     # If the browser doesn't support oriDomi, return the element unmodified.
-    return el unless oriDomiSupport
+    return @el unless oriDomiSupport
     
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     unless @ instanceof OriDomi
-      return new oriDomi el, @settings
+      return new oriDomi @el, @settings
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
 
     # Return if the first argument isn't a DOM element.
-    if not el or el.nodeType isnt 1
+    if not @el or @el.nodeType isnt 1
       return devMode and console.warn 'oriDomi: First argument must be a DOM element'
 
     # Clone the target element and save a copy of it.
-    @el = el.cloneNode true
-    @cleanEl = el
+    @cleanEl = @el.cloneNode true
+    @cleanEl.style.margin = '0'
+    @cleanEl.style.position = 'absolute'
+    # A much faster version of `display: none` when using hardware acceleration.
+    @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @cleanEl
+    elStyle = root.getComputedStyle @el
 
     # Save the original CSS display of the target. If `none`, assume `block`.
     @displayStyle = elStyle.display
