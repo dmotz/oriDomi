@@ -732,7 +732,7 @@ class OriDomi
     @freeze =>
       # Remove the data reference if using jQuery.
       if $
-        $.data @cleanEl, 'oriDomi', null
+        $.data @el, 'oriDomi', null
       # Remove the oriDomi element from the DOM.
       @el.parentNode.removeChild @el
       # Free up this instance for garbage collection.
