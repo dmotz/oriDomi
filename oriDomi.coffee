@@ -172,31 +172,34 @@ defaults =
 
 class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
-  constructor: (el, options) ->
+  constructor: (@el, options) ->
     # If `devMode` is enabled, start a benchmark timer for the constructor.
     devMode and console.time 'oridomiConstruction'
     # If the browser doesn't support oriDomi, return the element unmodified.
-    return el unless oriDomiSupport
+    return @el unless oriDomiSupport
     
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     unless @ instanceof OriDomi
-      return new oriDomi el, @settings
+      return new oriDomi @el, @settings
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
 
     # Return if the first argument isn't a DOM element.
-    if not el or el.nodeType isnt 1
+    if not @el or @el.nodeType isnt 1
       return devMode and console.warn 'oriDomi: First argument must be a DOM element'
 
     # Clone the target element and save a copy of it.
-    @el = el.cloneNode true
-    @cleanEl = el
+    @cleanEl = @el.cloneNode true
+    @cleanEl.style.margin = '0'
+    @cleanEl.style.position = 'absolute'
+    # A much faster version of `display: none` when using hardware acceleration.
+    @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @cleanEl
+    elStyle = root.getComputedStyle @el
 
     # Save the original CSS display of the target. If `none`, assume `block`.
     @displayStyle = elStyle.display
@@ -445,6 +448,13 @@ class OriDomi
 
     # Add a special class to the target element.
     @el.classList.add @settings.oriDomiClass
+
+    # Before overriding styles, save copies of their original values should
+    # the user later call `destroy()`.
+    @originalStyles = {}
+    for key in ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
+      @originalStyles[key] = elStyle[key]
+
     # Remove its padding and set a fixed width and height.
     @el.style.padding = '0'
     @el.style.width = @width + 'px'
@@ -457,20 +467,21 @@ class OriDomi
     # Show the left stage to start with.
     @stages.left.style.display = 'block'
     # Empty the target element.
-    @el.innerHTML = ''
+    @stageEl = document.createElement 'div'
 
     # Append each stage to the target element.
     for anchor in @anchors
-      @el.appendChild @stages[anchor]
+      @stageEl.appendChild @stages[anchor]
 
     # Show the target if applicable.
     if @settings.showOnStart
       @el.style.display = 'block'
       @el.style.visibility = 'visible'
 
-    # Hide the original element and insert the oriDomi version.
-    @cleanEl.style.display = 'none'
-    @cleanEl.parentNode.insertBefore @el, @cleanEl
+    # Hide the original content and insert the oriDomi version.
+    @el.innerHTML = ''
+    @el.appendChild @cleanEl
+    @el.appendChild @stageEl
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
@@ -705,8 +716,8 @@ class OriDomi
       @reset =>
         @isFrozen = true
         # Swap the visibility of the elements.
-        @el.style.display = 'none'
-        @cleanEl.style.display = @displayStyle
+        @stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+        @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
         callback() if typeof callback is 'function'
 
 
@@ -716,8 +727,10 @@ class OriDomi
     if @isFrozen
       @isFrozen = false
       # Swap the visibility of the elements.
-      @cleanEl.style.display = 'none'
-      @el.style.display = @displayStyle
+      @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+      @stageEl.style[css.transform] = 'translate3d(0, 0, 0)'
+      # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
+      @lastAngle = 0
 
 
   # Removes the oriDomi element and deletes its instance from memory.
@@ -726,9 +739,14 @@ class OriDomi
     @freeze =>
       # Remove the data reference if using jQuery.
       if $
-        $.data @cleanEl, 'oriDomi', null
+        $.data @el, 'oriDomi', null
       # Remove the oriDomi element from the DOM.
-      @el.parentNode.removeChild @el
+      @el.innerHTML = @cleanEl.innerHTML
+
+      # Reset original styles.
+      for key, value of @originalStyles
+        @el.style[key] = value
+
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
       callback() if typeof callback is 'function'

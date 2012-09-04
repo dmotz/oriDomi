@@ -125,22 +125,25 @@
   OriDomi = (function() {
 
     function OriDomi(el, options) {
-      var anchor, bleed, bottomShader, content, contentHolder, elStyle, hMask, hPanel, i, leftShader, panel, rightShader, shader, stage, topShader, vMask, vPanel, xOffset, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _n, _o, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var anchor, bleed, bottomShader, content, contentHolder, elStyle, hMask, hPanel, i, leftShader, panel, rightShader, shader, stage, topShader, vMask, vPanel, xOffset, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      this.el = el;
       devMode && console.time('oridomiConstruction');
       if (!oriDomiSupport) {
-        return el;
+        return this.el;
       }
       if (!(this instanceof OriDomi)) {
-        return new oriDomi(el, this.settings);
+        return new oriDomi(this.el, this.settings);
       }
       this.settings = extendObj(options, defaults);
-      if (!el || el.nodeType !== 1) {
+      if (!this.el || this.el.nodeType !== 1) {
         return devMode && console.warn('oriDomi: First argument must be a DOM element');
       }
-      this.el = el.cloneNode(true);
-      this.cleanEl = el;
+      this.cleanEl = this.el.cloneNode(true);
+      this.cleanEl.style.margin = '0';
+      this.cleanEl.style.position = 'absolute';
+      this.cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)';
       _ref = this.settings, this.shading = _ref.shading, this.shadingIntensity = _ref.shadingIntensity, this.vPanels = _ref.vPanels, this.hPanels = _ref.hPanels;
-      elStyle = root.getComputedStyle(this.cleanEl);
+      elStyle = root.getComputedStyle(this.el);
       this.displayStyle = elStyle.display;
       if (this.displayStyle === 'none') {
         this.displayStyle = 'block';
@@ -321,6 +324,12 @@
         this.stages[anchor].appendChild(this.panels[anchor][0]);
       }
       this.el.classList.add(this.settings.oriDomiClass);
+      this.originalStyles = {};
+      _ref7 = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline'];
+      for (_o = 0, _len4 = _ref7.length; _o < _len4; _o++) {
+        key = _ref7[_o];
+        this.originalStyles[key] = elStyle[key];
+      }
       this.el.style.padding = '0';
       this.el.style.width = this.width + 'px';
       this.el.style.height = this.height + 'px';
@@ -329,18 +338,19 @@
       this.el.style.border = 'none';
       this.el.style.outline = 'none';
       this.stages.left.style.display = 'block';
-      this.el.innerHTML = '';
-      _ref7 = this.anchors;
-      for (_o = 0, _len4 = _ref7.length; _o < _len4; _o++) {
-        anchor = _ref7[_o];
-        this.el.appendChild(this.stages[anchor]);
+      this.stageEl = document.createElement('div');
+      _ref8 = this.anchors;
+      for (_p = 0, _len5 = _ref8.length; _p < _len5; _p++) {
+        anchor = _ref8[_p];
+        this.stageEl.appendChild(this.stages[anchor]);
       }
       if (this.settings.showOnStart) {
         this.el.style.display = 'block';
         this.el.style.visibility = 'visible';
       }
-      this.cleanEl.style.display = 'none';
-      this.cleanEl.parentNode.insertBefore(this.el, this.cleanEl);
+      this.el.innerHTML = '';
+      this.el.appendChild(this.cleanEl);
+      this.el.appendChild(this.stageEl);
       if ($) {
         this.$el = $(this.el);
       }
@@ -557,8 +567,8 @@
       } else {
         return this.reset(function() {
           _this.isFrozen = true;
-          _this.el.style.display = 'none';
-          _this.cleanEl.style.display = _this.displayStyle;
+          _this.stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)';
+          _this.cleanEl.style[css.transform] = 'translate3d(0, 0, 0)';
           if (typeof callback === 'function') {
             return callback();
           }
@@ -569,18 +579,25 @@
     OriDomi.prototype.unfreeze = function() {
       if (this.isFrozen) {
         this.isFrozen = false;
-        this.cleanEl.style.display = 'none';
-        return this.el.style.display = this.displayStyle;
+        this.cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)';
+        this.stageEl.style[css.transform] = 'translate3d(0, 0, 0)';
+        return this.lastAngle = 0;
       }
     };
 
     OriDomi.prototype.destroy = function(callback) {
       var _this = this;
       return this.freeze(function() {
+        var _ref;
         if ($) {
-          $.data(_this.cleanEl, 'oriDomi', null);
+          $.data(_this.el, 'oriDomi', null);
         }
-        _this.el.parentNode.removeChild(_this.el);
+        _this.el.innerHTML = _this.cleanEl.innerHTML;
+        _ref = _this.originalStyles;
+        for (key in _ref) {
+          value = _ref[key];
+          _this.el.style[key] = value;
+        }
         instances[instances.indexOf(_this)] = null;
         if (typeof callback === 'function') {
           return callback();
