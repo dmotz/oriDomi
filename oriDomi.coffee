@@ -839,7 +839,7 @@ class OriDomi
     else if typeof anchor is 'function'
       callback = anchor
 
-    # `foldUp` uses irregular arguments, so we manually construct the arugments array.
+    # `foldUp` uses irregular arguments, so we manually construct the arguments array.
     normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
     return unless normalized
     anchor = normalized[1]
