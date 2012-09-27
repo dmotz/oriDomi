@@ -40,7 +40,7 @@ testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-css = 
+css =
   transform: 'transform'
   origin: 'transformOrigin'
   transformStyle: 'transformStyle'
@@ -126,7 +126,7 @@ extendObj = (target, source) ->
   for prop of source
     if not target[prop]?
       target[prop] = source[prop]
-  
+
   # Return the extended target object.
   target
 
@@ -177,7 +177,7 @@ class OriDomi
     devMode and console.time 'oridomiConstruction'
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
-    
+
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     unless @ instanceof OriDomi
       return new oriDomi @el, @settings
@@ -900,7 +900,7 @@ class OriDomi
         if @shading
           @_setShader i, @lastAnchor, angle
       , 0
-    
+
     onTransitionEnd = (e) =>
       @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       # Increment the iterator and check if we're past the last panel.
