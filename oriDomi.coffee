@@ -444,12 +444,6 @@ class OriDomi
     # Add a special class to the target element.
     @el.classList.add @settings.oriDomiClass
 
-    # Before overriding styles, save copies of their original values should
-    # the user later call `destroy()`.
-    @originalStyles = {}
-    for key in ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-      @originalStyles[key] = elStyle[key]
-
     # Remove its padding and set a fixed width and height.
     @el.style.padding = '0'
     @el.style.width = @width + 'px'
@@ -744,8 +738,9 @@ class OriDomi
       @el.innerHTML = @cleanEl.innerHTML
 
       # Reset original styles.
-      for key, value of @originalStyles
-        @el.style[key] = value
+      changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
+      for key in changedKeys
+        @el.style[key] = @_elStyle[key]
 
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
