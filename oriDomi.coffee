@@ -199,7 +199,7 @@ class OriDomi
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @el
+    @_elStyle = root.getComputedStyle @el
 
     # Save the original CSS display of the target. If `none`, assume `block`.
     @displayStyle = elStyle.display
