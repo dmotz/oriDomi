@@ -202,24 +202,19 @@ class OriDomi
     @_elStyle = root.getComputedStyle @el
 
     # Save the original CSS display of the target. If `none`, assume `block`.
-    @displayStyle = elStyle.display
+    @displayStyle = @_elStyle.display
     if @displayStyle is 'none'
       @displayStyle = 'block'
 
-    # Calculate the element's total width by adding all horizontal dimensions.
-    @width = parseInt(elStyle.width, 10) +
-             parseInt(elStyle.paddingLeft, 10) +
-             parseInt(elStyle.paddingRight, 10) +
-             parseInt(elStyle.borderLeftWidth, 10) +
-             parseInt(elStyle.borderRightWidth, 10)
+    # To calculate the full dimensions of the element, create arrays of relevant metric keys.
+    xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
+    yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
 
-    # Find the total height in a similar manner.
-    @height = parseInt(elStyle.height, 10) +
-              parseInt(elStyle.paddingTop, 10) +
-              parseInt(elStyle.paddingBottom, 10) +
-              parseInt(elStyle.borderTopWidth, 10) +
-              parseInt(elStyle.borderBottomWidth, 10)
-
+    # Add up values for width and height using `_getMetric()`.
+    @width = 0
+    @height = 0
+    @width += @_getMetric metric for metric in xMetrics
+    @height += @_getMetric metric for metric in yMetrics
 
     # Calculate the panel width and panel height by dividing the total width and
     # height by the requested number of panels in each axis.
@@ -239,7 +234,7 @@ class OriDomi
     # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
-    # Create a stage div to serve as a prototype. 
+    # Create a stage div to serve as a prototype.
     stage = document.createElement 'div'
     # The stage should occupy the full width and height of the target element.
     stage.style.width = @width + 'px'
@@ -512,6 +507,11 @@ class OriDomi
       # Otherwise, attach an event listener to be called on the transition's end.
       else
         @panels[@lastAnchor][0].addEventListener css.transitionEnd, onTransitionEnd, false
+
+
+  # `_getMetric` returns an integer of pixels for a style key.
+  _getMetric: (metric) ->
+    parseInt @_elStyle[metric], 10
 
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
