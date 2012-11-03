@@ -40,7 +40,7 @@ testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-css = 
+css =
   transform: 'transform'
   origin: 'transformOrigin'
   transformStyle: 'transformStyle'
@@ -126,7 +126,7 @@ extendObj = (target, source) ->
   for prop of source
     if not target[prop]?
       target[prop] = source[prop]
-  
+
   # Return the extended target object.
   target
 
@@ -177,7 +177,7 @@ class OriDomi
     devMode and console.time 'oridomiConstruction'
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
-    
+
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     unless @ instanceof OriDomi
       return new oriDomi @el, @settings
@@ -239,7 +239,7 @@ class OriDomi
     # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
-    # Create a stage div to serve as a prototype. 
+    # Create a stage div to serve as a prototype.
     stage = document.createElement 'div'
     # The stage should occupy the full width and height of the target element.
     stage.style.width = @width + 'px'
@@ -710,7 +710,7 @@ class OriDomi
   freeze: (callback) ->
     # Return if already frozen.
     if @isFrozen
-      callback() if typeof callback is 'function'
+      callback?()
     else
       # Make sure to reset folding first.
       @reset =>
@@ -718,7 +718,7 @@ class OriDomi
         # Swap the visibility of the elements.
         @stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
         @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
-        callback() if typeof callback is 'function'
+        callback?()
 
 
   # Restores the oriDomi version of the element for folding purposes.
@@ -738,8 +738,7 @@ class OriDomi
     # First restore the original element.
     @freeze =>
       # Remove the data reference if using jQuery.
-      if $
-        $.data @el, 'oriDomi', null
+      $.data @el, 'oriDomi', null if $
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
 
@@ -749,7 +748,7 @@ class OriDomi
 
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
-      callback() if typeof callback is 'function'
+      callback?()
 
 
   # oriDomi's most basic effect. Transforms the target like its namesake.
@@ -804,9 +803,7 @@ class OriDomi
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle
-
-      if @shading
-        @_setShader i, anchor, 0
+      @_setShader i, anchor, 0 if @shading
 
     @_callback options
 
@@ -833,7 +830,7 @@ class OriDomi
   # `foldUp` folds up all panels in separate synchronous animations.
   foldUp: (anchor, callback) ->
     # Default to left anchor.
-    if not anchor
+    unless anchor
       anchor = 'left'
     # Check if callback is the first argument.
     else if typeof anchor is 'function'
@@ -854,8 +851,7 @@ class OriDomi
     nextPanel = =>
       @panels[anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
       @panels[anchor][i].style[css.transform] = @_transform angle
-      if @shading
-        @_setShader i, anchor, angle
+      @_setShader i, anchor, angle if @shading
 
     # Called when each panel finishes folding in.
     onTransitionEnd = (e) =>
@@ -866,7 +862,7 @@ class OriDomi
       # Decrement the iterator and check if we're on the first panel.
       if --i is 0
         # If so, invoke the callback directly if applicable.
-        callback() if typeof callback is 'function'
+        callback?()
       else
         # Otherwise, defer until the next event loop and fold back the next panel.
         setTimeout nextPanel, 0
@@ -879,9 +875,7 @@ class OriDomi
   unfold: (callback) ->
     # If the target isn't folded up, there's no reason to call this method and
     # the callback is immediately invoked.
-    unless @isFoldedUp
-      if typeof callback is 'function'
-        callback()
+    callback?() unless @isFoldedUp
 
     # Reset `isFoldedUp`.
     @isFoldedUp = false
@@ -897,15 +891,14 @@ class OriDomi
       setTimeout =>
         @panels[@lastAnchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
         @panels[@lastAnchor][i].style[css.transform] = @_transform angle
-        if @shading
-          @_setShader i, @lastAnchor, angle
+        @_setShader i, @lastAnchor, angle if @shading
       , 0
-    
+
     onTransitionEnd = (e) =>
       @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       # Increment the iterator and check if we're past the last panel.
       if ++i is @panels[@lastAnchor].length
-        callback() if typeof callback is 'function'
+        callback?()
       else
         setTimeout nextPanel, 0
 
@@ -990,7 +983,7 @@ if $
       unless typeof OriDomi::[options] is 'function'
         return devMode and console.warn "oriDomi: No such method '#{ options }'"
 
-      # Loop through selection.
+      # Loop through the jQuery selection.
       for el in @
         # Retrieve the instance of oriDomi attached to the element.
         instance = $.data el, 'oriDomi'
