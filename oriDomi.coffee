@@ -170,6 +170,23 @@ defaults =
   # This setting forces Firefox to smooth edges, but usually results in poor performance,
   # so it's not recommended for animation-heavy use of oriDomi until Firefox's transform performance improves.
   forceAntialiasing: false
+  # Allow the user to fold the target by dragging a finger or the mouse.
+  touchEnabled: true
+  # Transformation effect to perform when touching/dragging.
+  # Use any of the public effect methods.
+  touchEffect: 'accordion'
+  # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
+  touchSensitivity: .25
+  # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
+  # be used to manipulate objects outside of the oriDomi instance (e.g. sliding panels).
+  # x values are returned when folding left and right, y values for top and bottom.
+  # These are empty functions by default.
+  # Invoked with starting coordinate as first argument.
+  touchStartCallback: noOp
+  # Invoked with current movement distance.
+  touchMoveCallback: noOp
+  # Inkoked with ending point.
+  touchEndCallback: noOp
 
 
 # oriDomi Class
@@ -471,8 +488,18 @@ class OriDomi
     @el.style.outline = 'none'
     # Show the left stage to start with.
     @stages.left.style.display = 'block'
-    # Empty the target element.
+
+    # Create an element to hold stages.
     @stageEl = document.createElement 'div'
+    # Attach touch/drag event listeners.
+    @stageEl.addEventListener 'touchstart', @_onTouchStart, false
+    @stageEl.addEventListener 'mousedown', @_onTouchStart, false
+    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
+    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
+    @stageEl.addEventListener 'touchend', @_onTouchEnd, false
+    @stageEl.addEventListener 'mouseup', @_onTouchEnd, false
+
+    @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
     for anchor in @anchors
@@ -487,6 +514,10 @@ class OriDomi
     @el.innerHTML = ''
     @el.appendChild @cleanEl
     @el.appendChild @stageEl
+
+    # These properties record starting angles for touch/drag events.
+    # Initialize both to zero.
+    [@_xLast, @_yLast] = [0, 0]
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
@@ -570,7 +601,8 @@ class OriDomi
       @reset =>
         # Show the stage element of the originally requested anchor.
         @_showStage anchor
-
+        # Since the anchor changed, update the mouse drag cursor.
+        @_setCursor() if @_touchEnabled
         # Defer this operation until the next event loop to prevent a sudden jump.
         setTimeout =>
           # `foldUp` is a special method that doesn't accept an angle argument.
@@ -672,6 +704,41 @@ class OriDomi
         'left'
 
 
+  # Allows other methods to change the tween duration or disable it altogether.
+  _setTweening: (speed) ->
+    # If the speed value is `true` reset the speed to the original settings.
+    # Set it to zero if `false`.
+    if typeof speed is 'boolean'
+      speed = if speed then @settings.speed + 'ms' else '0'
+
+    # To loop through the shaders, derive the correct pair from the current anchor.
+    if @lastAnchor is 'left' or @lastAnchor is 'right'
+      shaderPair = ['left', 'right']
+    else
+      shaderPair = ['top', 'bottom']
+
+    # Loop through the panels in this anchor and set the transition duration to the new speed.
+    for panel, i in @panels[@lastAnchor]
+      panel.style[css.transitionDuration] = speed
+      if @shading
+        @shaders[@lastAnchor][shaderPair[0]][i].style[css.transitionDuration] = speed
+        @shaders[@lastAnchor][shaderPair[1]][i].style[css.transitionDuration] = speed
+
+    # Return null and not the loop's result.
+    null
+
+
+  # Gives the element a resize cursor to prompt the user to drag the mouse.
+  _setCursor: ->
+    if @_touchEnabled
+      if @lastAnchor is 'left' or @lastAnchor is 'right'
+        @stageEl.style.cursor = 'ew-resize'
+      else
+        @stageEl.style.cursor = 'ns-resize'
+    else
+      @stageEl.style.cursor = 'default'
+
+
   # Map of defaults for each method. Some are empty for now.
   _methodDefaults:
     accordion:
@@ -686,6 +753,70 @@ class OriDomi
       twist: false
     ramp: {}
     foldUp: {}
+
+
+  # Touch / Drag Event Handlers
+  # ===========================
+
+
+  # This method is called when a finger or mouse button is pressed on the element.
+  _onTouchStart: (e) =>
+    return unless @_touchEnabled
+    e.preventDefault()
+    # Disable tweening to enable instant 1 to 1 movement.
+    @_setTweening false
+    # Derive the axis to fold on.
+    @_touchAxis = if @lastAnchor is 'left' or @lastAnchor is 'right' then 'x' else 'y'
+    # Set a reference to the last folded angle to accurately derive deltas.
+    @["_#{ @_touchAxis }Last"] = @lastAngle
+
+    # Determine the starting tap's coordinate for touch and mouse events.
+    if e.type is 'mousedown'
+      @["_#{ @_touchAxis }1"] = e["page#{ @_touchAxis.toUpperCase() }"]
+    else
+      @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+
+    # Return that value to an external listener.
+    @settings.touchStartCallback @["_#{ @_touchAxis }1"]
+
+
+  # Called on touch/mouse movement.
+  _onTouchMove: (e) =>
+    return unless @_touchEnabled
+    e.preventDefault()
+    # Set a reference to the current x or y position.
+    # Cancel if the mouse button isn't down.
+    if e.type is 'mousemove'
+      return if e.which isnt 1
+      current = e["page#{ @_touchAxis.toUpperCase() }"]
+    else
+      current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+
+    # Calculate distance and multiply by `touchSensitivity`.
+    distance = (current - @["_#{ @_touchAxis }1"]) * @settings.touchSensitivity
+
+    # Calculate final delta based on starting angle and anchor.
+    if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+      delta = @["_#{ @_touchAxis }Last"] + distance
+    else
+      delta = @["_#{ @_touchAxis }Last"] - distance
+
+    # Prevent negative angles.
+    delta = 0 if delta < 0
+
+    # Invoke the effect method with the delta as an angle argument.
+    @[@settings.touchEffect] delta
+    # Pass the delta to the movement callback.
+    @settings.touchMoveCallback delta
+
+
+  # Teardown process when touch/drag event ends.
+  _onTouchEnd: (e) =>
+    return unless @_touchEnabled
+    # Enable tweening again.
+    @_setTweening true
+    # Pass callback final value.
+    @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
 
   # Public Methods
@@ -750,6 +881,18 @@ class OriDomi
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
       callback?()
+
+
+  # Enables touch events and sets cursor.
+  enableTouch: ->
+    @_touchEnabled = true
+    @_setCursor()
+
+
+  # Disables touch events.
+  disableTouch: ->
+    @_touchEnabled = false
+    @_setCursor()
 
 
   # Convenient way to retrieve an oriDomi instance from jQuery object.
