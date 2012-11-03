@@ -70,7 +70,7 @@ for key, value of css
   # If the returned value is false, warn the user that the browser doesn't support
   # oriDomi, set `oriDomiSupport` to false, and break out of the loop.
   unless css[key]
-    devMode and console.warn 'oriDomi: Browser does not support oriDomi'
+    console.warn 'oriDomi: Browser does not support oriDomi' if devMode
     oriDomiSupport = false
     break
 
@@ -116,7 +116,7 @@ css.transitionEnd = do ->
 extendObj = (target, source) ->
   # Check if the extension object is an object literal by casting it and comparing it.
   if source isnt Object source
-    devMode and console.warn 'oriDomi: Must pass an object to extend with'
+    console.warn 'oriDomi: Must pass an object to extend with' if devMode
     # Return the original target if its source isn't valid.
     return target
   # If the target isn't an object, set it to an empty object literal.
@@ -174,7 +174,7 @@ class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
     # If `devMode` is enabled, start a benchmark timer for the constructor.
-    devMode and console.time 'oridomiConstruction'
+    console.time 'oridomiConstruction' if devMode
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
 
@@ -187,7 +187,8 @@ class OriDomi
 
     # Return if the first argument isn't a DOM element.
     if not @el or @el.nodeType isnt 1
-      return devMode and console.warn 'oriDomi: First argument must be a DOM element'
+      console.warn 'oriDomi: First argument must be a DOM element' if devMode
+      return
 
     # Clone the target element and save a copy of it.
     @cleanEl = @el.cloneNode true
@@ -203,8 +204,7 @@ class OriDomi
 
     # Save the original CSS display of the target. If `none`, assume `block`.
     @displayStyle = elStyle.display
-    if @displayStyle is 'none'
-      @displayStyle = 'block'
+    @displayStyle = 'block' if @displayStyle is 'none'
 
     # Calculate the element's total width by adding all horizontal dimensions.
     @width = parseInt(elStyle.width, 10) +
@@ -490,7 +490,7 @@ class OriDomi
     # If a callback was passed in the constructor options, run it.
     @_callback @settings
     # End the constructor benchmark if `devMode` is active.
-    devMode and console.timeEnd 'oridomiConstruction'
+    console.timeEnd 'oridomiConstruction' if devMode
 
 
   # Internal Methods
@@ -540,22 +540,21 @@ class OriDomi
     if isNaN angle
       0
     else if angle > 89
-      devMode and console.warn 'oriDomi: Maximum value is 89'
       89
     else if angle < -89
-      devMode and console.warn 'oriDomi: Minimum value is -89'
       -89
     else
       angle
 
 
-  # `_normalizeArgs` bootstraps every public method.
+  # `_normalizeArgs` normalizes every public method's arguments and makes sure the current
+  # axis unfolds if ordered to switch to another axis.
   _normalizeArgs: (method, args) ->
     @unfreeze() if @isFrozen
     # Get a valid angle.
     angle = @_normalizeAngle args[0]
     # Get the full anchor name.
-    anchor = @_getLonghandAnchor args[1]
+    anchor = @_getLonghandAnchor args[1] or @lastAnchor
     # Extend the given options with the method's defaults.
     options = extendObj args[2], @_methodDefaults[method]
 
@@ -696,8 +695,7 @@ class OriDomi
 
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform 0
-      if @shading
-        @_setShader i, @lastAnchor, 0
+      @_setShader i, @lastAnchor, 0 if @shading
 
     # When called internally, `reset` comes with a callback to advance to the next transformation.
     @_callback callback: callback
@@ -979,7 +977,8 @@ if $
 
       # Check if method exists and warn if it doesn't.
       unless typeof OriDomi::[options] is 'function'
-        return devMode and console.warn "oriDomi: No such method '#{ options }'"
+        console.warn "oriDomi: No such method '#{ options }'" if devMode
+        return
 
       # Loop through the jQuery selection.
       for el in @
@@ -988,7 +987,8 @@ if $
 
         # Warn if oriDomi hasn't been initialized on this element.
         unless instance?
-          return devMode and console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element"
+          console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element" if devMode
+          return
 
         # Convert arguments to a proper array and remove the first element.
         args = Array::slice.call arguments
