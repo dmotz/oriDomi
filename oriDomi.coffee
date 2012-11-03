@@ -570,9 +570,7 @@ class OriDomi
         # Defer this operation until the next event loop to prevent a sudden jump.
         setTimeout =>
           # `foldUp` is a special method that doesn't accept an angle argument.
-          if method is 'foldUp'
-            args.shift()
-
+          args.shift() if method is 'foldUp'
           # We can now call the originally requested method.
           @[method].apply @, args
 
