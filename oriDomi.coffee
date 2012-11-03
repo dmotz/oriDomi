@@ -752,6 +752,13 @@ class OriDomi
       callback?()
 
 
+  # Convenient way to retrieve an oriDomi instance from jQuery object.
+  # For example, `$oriDiv.oriDomi('getInstance')` will return the oriDomi instance
+  # instead of the jQuery selection.
+  getInstance: ->
+    @
+
+
   # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: (angle, anchor, options) ->
     normalized = @_normalizeArgs 'accordion', arguments
@@ -998,8 +1005,12 @@ if $
         # Convert arguments to a proper array and remove the first element.
         args = Array::slice.call arguments
         args.shift()
-        # Call method from instance.
-        instance[options].apply instance, args
+        # If method is `getInstance`, return its result.
+        # Otherwise just call the requested method with arguments.
+        if options is 'getInstance'
+          return instance.getInstance()
+        else
+          instance[options].apply instance, args
 
       # Return selection.
       @
