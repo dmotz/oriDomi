@@ -134,6 +134,11 @@ extendObj = (target, source) ->
 # Defaults
 # ========
 
+# Empty function to be used as placeholder for callback defaults
+# (instead of creating separate empty functions).
+noOp = ->
+
+
 # Map of oriDomi instance defaults.
 defaults =
   # The number of vertical panels (for folding left or right).
