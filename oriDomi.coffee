@@ -494,8 +494,6 @@ class OriDomi
     # Attach touch/drag event listeners.
     @stageEl.addEventListener 'touchstart', @_onTouchStart, false
     @stageEl.addEventListener 'mousedown', @_onTouchStart, false
-    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
-    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
     @stageEl.addEventListener 'touchend', @_onTouchEnd, false
     @stageEl.addEventListener 'mouseup', @_onTouchEnd, false
 
@@ -709,7 +707,7 @@ class OriDomi
     # If the speed value is `true` reset the speed to the original settings.
     # Set it to zero if `false`.
     if typeof speed is 'boolean'
-      speed = if speed then @settings.speed + 'ms' else '0'
+      speed = if speed then @settings.speed + 'ms' else '0ms'
 
     # To loop through the shaders, derive the correct pair from the current anchor.
     if @lastAnchor is 'left' or @lastAnchor is 'right'
@@ -776,6 +774,10 @@ class OriDomi
     else
       @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
+    # Add movement listener.
+    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
+    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
+
     # Return that value to an external listener.
     @settings.touchStartCallback @["_#{ @_touchAxis }1"]
 
@@ -785,9 +787,7 @@ class OriDomi
     return unless @_touchEnabled
     e.preventDefault()
     # Set a reference to the current x or y position.
-    # Cancel if the mouse button isn't down.
     if e.type is 'mousemove'
-      return if e.which isnt 1
       current = e["page#{ @_touchAxis.toUpperCase() }"]
     else
       current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
@@ -815,6 +815,11 @@ class OriDomi
     return unless @_touchEnabled
     # Enable tweening again.
     @_setTweening true
+
+    # Remove movement listeners.
+    @stageEl.removeEventListener 'touchmove', @_onTouchMove, false
+    @stageEl.removeEventListener 'mousemove', @_onTouchMove, false
+
     # Pass callback final value.
     @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
