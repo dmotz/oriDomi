@@ -128,7 +128,6 @@
     showOnStart: false,
     forceAntialiasing: false,
     touchEnabled: true,
-    touchEffect: 'accordion',
     touchSensitivity: .25,
     touchStartCallback: noOp,
     touchMoveCallback: noOp,
@@ -383,6 +382,10 @@
       this.el.appendChild(this.cleanEl);
       this.el.appendChild(this.stageEl);
       _ref9 = [0, 0], this._xLast = _ref9[0], this._yLast = _ref9[1];
+      this.lastOp = {
+        method: 'accordion',
+        options: {}
+      };
       if ($) {
         this.$el = $(this.el);
       }
@@ -452,6 +455,11 @@
       angle = this._normalizeAngle(args[0]);
       anchor = this._getLonghandAnchor(args[1] || this.lastAnchor);
       options = extendObj(args[2], this._methodDefaults[method]);
+      this.lastOp = {
+        method: method,
+        options: options,
+        negative: angle < 0
+      };
       if (anchor !== this.lastAnchor || (method === 'foldUp' && this.lastAngle !== 0) || this.isFoldedUp) {
         this.reset(function() {
           _this._showStage(anchor);
@@ -639,15 +647,26 @@
         current = e.targetTouches[0]["page" + (this._touchAxis.toUpperCase())];
       }
       distance = (current - this["_" + this._touchAxis + "1"]) * this.settings.touchSensitivity;
-      if (this.lastAnchor === 'right' || this.lastAnchor === 'bottom') {
-        delta = this["_" + this._touchAxis + "Last"] + distance;
+      if (this.lastOp.negative) {
+        if (this.lastAnchor === 'right' || this.lastAnchor === 'bottom') {
+          delta = this["_" + this._touchAxis + "Last"] - distance;
+        } else {
+          delta = this["_" + this._touchAxis + "Last"] + distance;
+        }
+        if (delta > 0) {
+          delta = 0;
+        }
       } else {
-        delta = this["_" + this._touchAxis + "Last"] - distance;
+        if (this.lastAnchor === 'right' || this.lastAnchor === 'bottom') {
+          delta = this["_" + this._touchAxis + "Last"] + distance;
+        } else {
+          delta = this["_" + this._touchAxis + "Last"] - distance;
+        }
+        if (delta < 0) {
+          delta = 0;
+        }
       }
-      if (delta < 0) {
-        delta = 0;
-      }
-      this[this.settings.touchEffect](delta);
+      this[this.lastOp.method](delta, this.lastAnchor, this.lastOp.options);
       return this.settings.touchMoveCallback(delta);
     };
 
