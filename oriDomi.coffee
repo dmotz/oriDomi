@@ -154,7 +154,7 @@ defaults =
   shading: 'hard'
   # Determines the duration of all animations in milliseconds.
   speed: 700
-  # This class is applied to elements that oriDomi has been invoked so they can be
+  # This CSS class is applied to elements that oriDomi has been invoked so they can be
   # easily targeted later if needed.
   oriDomiClass: 'oridomi'
   # This is a multiplier that determines the darkness of shading.
@@ -407,8 +407,7 @@ class OriDomi
         @panels[anchor][i] = panel
 
         # Append each panel to its previous sibling (unless it's the first panel).
-        unless i is 0
-          @panels[anchor][i - 1].appendChild panel
+        @panels[anchor][i - 1].appendChild panel unless i is 0
 
       # Append the first panel (containing all of its siblings) to its respective stage.
       @stages[anchor].appendChild @panels[anchor][0]
@@ -461,9 +460,7 @@ class OriDomi
           @shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
         @panels[anchor][i] = panel
-
-        unless i is 0
-          @panels[anchor][i - 1].appendChild panel
+        @panels[anchor][i - 1].appendChild panel unless i is 0
 
       @stages[anchor].appendChild @panels[anchor][0]
 
@@ -500,8 +497,7 @@ class OriDomi
     @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
-    for anchor in @anchors
-      @stageEl.appendChild @stages[anchor]
+    @stageEl.appendChild @stages[anchor] for anchor in @anchors
 
     # Show the target if applicable.
     if @settings.showOnStart
@@ -919,7 +915,7 @@ class OriDomi
     for panel, i in @panels[anchor]
 
       # If it's an odd-numbered panel, reverse the angle.
-      if i % 2 isnt 0 and !options.twist
+      if i % 2 isnt 0 and not options.twist
         deg = -angle
       else
         deg = angle
