@@ -172,9 +172,6 @@ defaults =
   forceAntialiasing: false
   # Allow the user to fold the target by dragging a finger or the mouse.
   touchEnabled: true
-  # Transformation effect to perform when touching/dragging.
-  # Use any of the public effect methods.
-  touchEffect: 'accordion'
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
   touchSensitivity: .25
   # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
@@ -512,6 +509,8 @@ class OriDomi
     # These properties record starting angles for touch/drag events.
     # Initialize both to zero.
     [@_xLast, @_yLast] = [0, 0]
+    # This property determines the effect used during touch/drag events.
+    @lastOp = method: 'accordion', options: {}
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
@@ -587,6 +586,8 @@ class OriDomi
     anchor = @_getLonghandAnchor args[1] or @lastAnchor
     # Extend the given options with the method's defaults.
     options = extendObj args[2], @_methodDefaults[method]
+    # Store a record of this operation for future touch events.
+    @lastOp = method: method, options: options, negative: angle < 0
 
     # If the user is trying to transform using a different anchor, we must first
     # unfold the current anchor for transition purposes.
@@ -791,17 +792,23 @@ class OriDomi
     # Calculate distance and multiply by `touchSensitivity`.
     distance = (current - @["_#{ @_touchAxis }1"]) * @settings.touchSensitivity
 
-    # Calculate final delta based on starting angle and anchor.
-    if @lastAnchor is 'right' or @lastAnchor is 'bottom'
-      delta = @["_#{ @_touchAxis }Last"] + distance
+    # Calculate final delta based on starting angle, anchor, and what side of zero
+    # the last operation was on.
+    if @lastOp.negative
+      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+        delta = @["_#{ @_touchAxis }Last"] - distance
+      else
+        delta = @["_#{ @_touchAxis }Last"] + distance
+      delta = 0 if delta > 0
     else
-      delta = @["_#{ @_touchAxis }Last"] - distance
-
-    # Prevent negative angles.
-    delta = 0 if delta < 0
+      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+        delta = @["_#{ @_touchAxis }Last"] + distance
+      else
+        delta = @["_#{ @_touchAxis }Last"] - distance
+      delta = 0 if delta < 0
 
     # Invoke the effect method with the delta as an angle argument.
-    @[@settings.touchEffect] delta
+    @[@lastOp.method] delta, @lastAnchor, @lastOp.options
     # Pass the delta to the movement callback.
     @settings.touchMoveCallback delta
 
