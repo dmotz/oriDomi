@@ -873,18 +873,23 @@ class OriDomi
       @lastAngle = 0
 
 
-  # Removes the oriDomi element and deletes its instance from memory.
+  # Removes the oriDomi element and marks its instance for garbage collection.
   destroy: (callback) ->
     # First restore the original element.
     @freeze =>
+      # Remove event listeners.
+      @stageEl.removeEventListener 'touchstart', @_onTouchStart, false
+      @stageEl.removeEventListener 'mousedown', @_onTouchStart, false
+      @stageEl.removeEventListener 'touchend', @_onTouchEnd, false
+      @stageEl.removeEventListener 'mouseup', @_onTouchEnd, false
+
       # Remove the data reference if using jQuery.
       $.data @el, 'oriDomi', null if $
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
 
       # Reset original styles.
-      for key, value of @originalStyles
-        @el.style[key] = value
+      @el.style[key] = value for key, value of @originalStyles
 
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
