@@ -219,26 +219,21 @@ class OriDomi
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @el
+    @_elStyle = root.getComputedStyle @el
 
     # Save the original CSS display of the target. If `none`, assume `block`.
-    @displayStyle = elStyle.display
+    @displayStyle = @_elStyle.display
     @displayStyle = 'block' if @displayStyle is 'none'
 
-    # Calculate the element's total width by adding all horizontal dimensions.
-    @width = parseInt(elStyle.width, 10) +
-             parseInt(elStyle.paddingLeft, 10) +
-             parseInt(elStyle.paddingRight, 10) +
-             parseInt(elStyle.borderLeftWidth, 10) +
-             parseInt(elStyle.borderRightWidth, 10)
+    # To calculate the full dimensions of the element, create arrays of relevant metric keys.
+    xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
+    yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
 
-    # Find the total height in a similar manner.
-    @height = parseInt(elStyle.height, 10) +
-              parseInt(elStyle.paddingTop, 10) +
-              parseInt(elStyle.paddingBottom, 10) +
-              parseInt(elStyle.borderTopWidth, 10) +
-              parseInt(elStyle.borderBottomWidth, 10)
-
+    # Add up values for width and height using `_getMetric()`.
+    @width = 0
+    @height = 0
+    @width += @_getMetric metric for metric in xMetrics
+    @height += @_getMetric metric for metric in yMetrics
 
     # Calculate the panel width and panel height by dividing the total width and
     # height by the requested number of panels in each axis.
@@ -465,12 +460,6 @@ class OriDomi
     # Add a special class to the target element.
     @el.classList.add @settings.oriDomiClass
 
-    # Before overriding styles, save copies of their original values should
-    # the user later call `destroy()`.
-    @originalStyles = {}
-    for key in ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-      @originalStyles[key] = elStyle[key]
-
     # Remove its padding and set a fixed width and height.
     @el.style.padding = '0'
     @el.style.width = @width + 'px'
@@ -541,6 +530,11 @@ class OriDomi
       # Otherwise, attach an event listener to be called on the transition's end.
       else
         @panels[@lastAnchor][0].addEventListener css.transitionEnd, onTransitionEnd, false
+
+
+  # `_getMetric` returns an integer of pixels for a style key.
+  _getMetric: (metric) ->
+    parseInt @_elStyle[metric], 10
 
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
@@ -834,8 +828,7 @@ class OriDomi
   # Reset handles resetting all panels back to zero degrees.
   reset: (callback) ->
     # If the stage is folded up, unfold it first.
-    if @isFoldedUp
-      return @unfold callback
+    return @unfold callback if @isFoldedUp
 
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform 0
@@ -889,7 +882,8 @@ class OriDomi
       @el.innerHTML = @cleanEl.innerHTML
 
       # Reset original styles.
-      @el.style[key] = value for key, value of @originalStyles
+      changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
+      @el.style[key] = @_elStyle[key] for key in changedKeys
 
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null

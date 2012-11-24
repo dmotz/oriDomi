@@ -137,7 +137,7 @@
   OriDomi = (function() {
 
     function OriDomi(el, options) {
-      var anchor, bleed, bottomShader, content, contentHolder, elStyle, hMask, hPanel, i, leftShader, panel, rightShader, shader, stage, topShader, vMask, vPanel, xOffset, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _m, _n, _o, _p, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var anchor, bleed, bottomShader, content, contentHolder, hMask, hPanel, i, leftShader, metric, panel, rightShader, shader, stage, topShader, vMask, vPanel, xMetrics, xOffset, yMetrics, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _p, _q, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       this.el = el;
       this._onTouchEnd = __bind(this._onTouchEnd, this);
 
@@ -166,13 +166,23 @@
       this.cleanEl.style.position = 'absolute';
       this.cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)';
       _ref = this.settings, this.shading = _ref.shading, this.shadingIntensity = _ref.shadingIntensity, this.vPanels = _ref.vPanels, this.hPanels = _ref.hPanels;
-      elStyle = root.getComputedStyle(this.el);
-      this.displayStyle = elStyle.display;
+      this._elStyle = root.getComputedStyle(this.el);
+      this.displayStyle = this._elStyle.display;
       if (this.displayStyle === 'none') {
         this.displayStyle = 'block';
       }
-      this.width = parseInt(elStyle.width, 10) + parseInt(elStyle.paddingLeft, 10) + parseInt(elStyle.paddingRight, 10) + parseInt(elStyle.borderLeftWidth, 10) + parseInt(elStyle.borderRightWidth, 10);
-      this.height = parseInt(elStyle.height, 10) + parseInt(elStyle.paddingTop, 10) + parseInt(elStyle.paddingBottom, 10) + parseInt(elStyle.borderTopWidth, 10) + parseInt(elStyle.borderBottomWidth, 10);
+      xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'];
+      yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth'];
+      this.width = 0;
+      this.height = 0;
+      for (_i = 0, _len = xMetrics.length; _i < _len; _i++) {
+        metric = xMetrics[_i];
+        this.width += this._getMetric(metric);
+      }
+      for (_j = 0, _len1 = yMetrics.length; _j < _len1; _j++) {
+        metric = yMetrics[_j];
+        this.height += this._getMetric(metric);
+      }
       this.panelWidth = this.width / this.vPanels;
       this.panelHeight = this.height / this.hPanels;
       this.lastAngle = 0;
@@ -191,8 +201,8 @@
       stage.style.margin = '0';
       stage.style[css.perspective] = this.settings.perspective + 'px';
       _ref1 = this.anchors;
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        anchor = _ref1[_i];
+      for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
+        anchor = _ref1[_k];
         this.panels[anchor] = [];
         this.stages[anchor] = stage.cloneNode(false);
         this.stages[anchor].className = 'oridomi-stage-' + anchor;
@@ -200,8 +210,8 @@
       if (this.shading) {
         this.shaders = {};
         _ref2 = this.anchors;
-        for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-          anchor = _ref2[_j];
+        for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
+          anchor = _ref2[_l];
           this.shaders[anchor] = {};
           if (anchor === 'left' || anchor === 'right') {
             this.shaders[anchor].left = [];
@@ -263,9 +273,9 @@
       }
       hPanel.appendChild(hMask);
       _ref3 = ['top', 'bottom'];
-      for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
-        anchor = _ref3[_k];
-        for (i = _l = 0, _ref4 = this.hPanels; 0 <= _ref4 ? _l < _ref4 : _l > _ref4; i = 0 <= _ref4 ? ++_l : --_l) {
+      for (_m = 0, _len4 = _ref3.length; _m < _len4; _m++) {
+        anchor = _ref3[_m];
+        for (i = _n = 0, _ref4 = this.hPanels; 0 <= _ref4 ? _n < _ref4 : _n > _ref4; i = 0 <= _ref4 ? ++_n : --_n) {
           panel = hPanel.cloneNode(true);
           content = panel.getElementsByClassName('oridomi-content')[0];
           if (anchor === 'top') {
@@ -313,9 +323,9 @@
       vPanel.style[css.origin] = 'left';
       vPanel.appendChild(vMask);
       _ref5 = ['left', 'right'];
-      for (_m = 0, _len3 = _ref5.length; _m < _len3; _m++) {
-        anchor = _ref5[_m];
-        for (i = _n = 0, _ref6 = this.vPanels; 0 <= _ref6 ? _n < _ref6 : _n > _ref6; i = 0 <= _ref6 ? ++_n : --_n) {
+      for (_o = 0, _len5 = _ref5.length; _o < _len5; _o++) {
+        anchor = _ref5[_o];
+        for (i = _p = 0, _ref6 = this.vPanels; 0 <= _ref6 ? _p < _ref6 : _p > _ref6; i = 0 <= _ref6 ? ++_p : --_p) {
           panel = vPanel.cloneNode(true);
           content = panel.getElementsByClassName('oridomi-content')[0];
           if (anchor === 'left') {
@@ -347,12 +357,6 @@
         this.stages[anchor].appendChild(this.panels[anchor][0]);
       }
       this.el.classList.add(this.settings.oriDomiClass);
-      this.originalStyles = {};
-      _ref7 = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline'];
-      for (_o = 0, _len4 = _ref7.length; _o < _len4; _o++) {
-        key = _ref7[_o];
-        this.originalStyles[key] = elStyle[key];
-      }
       this.el.style.padding = '0';
       this.el.style.width = this.width + 'px';
       this.el.style.height = this.height + 'px';
@@ -369,9 +373,9 @@
       if (this.settings.touchEnabled) {
         this.enableTouch();
       }
-      _ref8 = this.anchors;
-      for (_p = 0, _len5 = _ref8.length; _p < _len5; _p++) {
-        anchor = _ref8[_p];
+      _ref7 = this.anchors;
+      for (_q = 0, _len6 = _ref7.length; _q < _len6; _q++) {
+        anchor = _ref7[_q];
         this.stageEl.appendChild(this.stages[anchor]);
       }
       if (this.settings.showOnStart) {
@@ -381,7 +385,7 @@
       this.el.innerHTML = '';
       this.el.appendChild(this.cleanEl);
       this.el.appendChild(this.stageEl);
-      _ref9 = [0, 0], this._xLast = _ref9[0], this._yLast = _ref9[1];
+      _ref8 = [0, 0], this._xLast = _ref8[0], this._yLast = _ref8[1];
       this.lastOp = {
         method: 'accordion',
         options: {}
@@ -410,6 +414,10 @@
           return this.panels[this.lastAnchor][0].addEventListener(css.transitionEnd, onTransitionEnd, false);
         }
       }
+    };
+
+    OriDomi.prototype._getMetric = function(metric) {
+      return parseInt(this._elStyle[metric], 10);
     };
 
     OriDomi.prototype._transform = function(angle, fracture) {
@@ -724,7 +732,7 @@
     OriDomi.prototype.destroy = function(callback) {
       var _this = this;
       return this.freeze(function() {
-        var _ref;
+        var changedKeys, _i, _len;
         _this.stageEl.removeEventListener('touchstart', _this._onTouchStart, false);
         _this.stageEl.removeEventListener('mousedown', _this._onTouchStart, false);
         _this.stageEl.removeEventListener('touchend', _this._onTouchEnd, false);
@@ -733,10 +741,10 @@
           $.data(_this.el, 'oriDomi', null);
         }
         _this.el.innerHTML = _this.cleanEl.innerHTML;
-        _ref = _this.originalStyles;
-        for (key in _ref) {
-          value = _ref[key];
-          _this.el.style[key] = value;
+        changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline'];
+        for (_i = 0, _len = changedKeys.length; _i < _len; _i++) {
+          key = changedKeys[_i];
+          _this.el.style[key] = _this._elStyle[key];
         }
         instances[instances.indexOf(_this)] = null;
         return typeof callback === "function" ? callback() : void 0;
