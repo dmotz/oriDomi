@@ -725,6 +725,10 @@
       var _this = this;
       return this.freeze(function() {
         var _ref;
+        _this.stageEl.removeEventListener('touchstart', _this._onTouchStart, false);
+        _this.stageEl.removeEventListener('mousedown', _this._onTouchStart, false);
+        _this.stageEl.removeEventListener('touchend', _this._onTouchEnd, false);
+        _this.stageEl.removeEventListener('mouseup', _this._onTouchEnd, false);
         if ($) {
           $.data(_this.el, 'oriDomi', null);
         }
