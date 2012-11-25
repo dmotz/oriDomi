@@ -265,8 +265,9 @@ class OriDomi
     # Eliminate padding and margins since the stage is already the full width and height.
     stage.style.padding = '0'
     stage.style.margin = '0'
-    # Apply 3D perspective to the stage prototype.
+    # Apply 3D perspective and preserve any parent perspective.
     stage.style[css.perspective] = @settings.perspective + 'px'
+    stage.style[css.transformStyle] = 'preserve-3d'
 
     # Loop through the anchors list and create a stage and empty panel set for each.
     for anchor in @anchors
