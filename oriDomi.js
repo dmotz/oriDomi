@@ -200,6 +200,7 @@
       stage.style.padding = '0';
       stage.style.margin = '0';
       stage.style[css.perspective] = this.settings.perspective + 'px';
+      stage.style[css.transformStyle] = 'preserve-3d';
       _ref1 = this.anchors;
       for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
         anchor = _ref1[_k];
@@ -231,6 +232,7 @@
         shader.style.opacity = '0';
         shader.style.top = '0';
         shader.style.left = '0';
+        shader.style.pointerEvents = 'none';
       }
       contentHolder = this.el.cloneNode(true);
       contentHolder.classList.add('oridomi-content');
