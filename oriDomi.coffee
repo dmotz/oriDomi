@@ -301,6 +301,7 @@ class OriDomi
       shader.style.opacity = '0'
       shader.style.top = '0'
       shader.style.left = '0'
+      shader.style.pointerEvents = 'none'
 
     # The content holder is a clone of the target element.
     # Every panel will contain one.
