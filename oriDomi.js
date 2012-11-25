@@ -761,10 +761,6 @@
       return this._setCursor();
     };
 
-    OriDomi.prototype.getInstance = function() {
-      return this;
-    };
-
     OriDomi.prototype.accordion = function(angle, anchor, options) {
       var deg, i, normalized, panel, _i, _len, _ref;
       normalized = this._normalizeArgs('accordion', arguments);
@@ -995,11 +991,7 @@
           }
           args = Array.prototype.slice.call(arguments);
           args.shift();
-          if (options === 'getInstance') {
-            return instance.getInstance();
-          } else {
-            instance[options].apply(instance, args);
-          }
+          instance[options].apply(instance, args);
         }
         return this;
       } else {
