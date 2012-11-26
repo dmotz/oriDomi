@@ -3,14 +3,14 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.1.5`
+# `0.2.0`
 
 # Copyright 2012, MIT License
 
 # Setup
 # =====
 
-# Enable strict mode in this scope to keep us in line.
+# Enable strict mode.
 'use strict'
 
 # Set a reference to the global object within this scope.
@@ -70,7 +70,7 @@ for key, value of css
   # If the returned value is false, warn the user that the browser doesn't support
   # oriDomi, set `oriDomiSupport` to false, and break out of the loop.
   unless css[key]
-    devMode and console.warn 'oriDomi: Browser does not support oriDomi'
+    console.warn 'oriDomi: Browser does not support oriDomi' if devMode
     oriDomiSupport = false
     break
 
@@ -116,7 +116,7 @@ css.transitionEnd = do ->
 extendObj = (target, source) ->
   # Check if the extension object is an object literal by casting it and comparing it.
   if source isnt Object source
-    devMode and console.warn 'oriDomi: Must pass an object to extend with'
+    console.warn 'oriDomi: Must pass an object to extend with' if devMode
     # Return the original target if its source isn't valid.
     return target
   # If the target isn't an object, set it to an empty object literal.
@@ -134,6 +134,11 @@ extendObj = (target, source) ->
 # Defaults
 # ========
 
+# Empty function to be used as placeholder for callback defaults
+# (instead of creating separate empty functions).
+noOp = ->
+
+
 # Map of oriDomi instance defaults.
 defaults =
   # The number of vertical panels (for folding left or right).
@@ -149,7 +154,7 @@ defaults =
   shading: 'hard'
   # Determines the duration of all animations in milliseconds.
   speed: 700
-  # This class is applied to elements that oriDomi has been invoked so they can be
+  # This CSS class is applied to elements that oriDomi has been invoked so they can be
   # easily targeted later if needed.
   oriDomiClass: 'oridomi'
   # This is a multiplier that determines the darkness of shading.
@@ -161,10 +166,24 @@ defaults =
   # To prevent a possible "flash of unstyled content" you can hide your target elements
   # and pass this setting as `true` to show them immediately after initializing them with oriDomi.
   showOnStart: false
-  # Currently, Firefox doesn't handle edge anti-aliasing well and oriDomi looks jagged.
-  # This setting forces Firefox to smooth edges, but results in poor performance,
-  # so it's not recommended until Firefox's transform performance improves.
+  # Currently, Firefox doesn't handle edge anti-aliasing well and oriDomi edges look jagged.
+  # This setting forces Firefox to smooth edges, but usually results in poor performance,
+  # so it's not recommended for animation-heavy use of oriDomi until Firefox's transform performance improves.
   forceAntialiasing: false
+  # Allow the user to fold the target by dragging a finger or the mouse.
+  touchEnabled: true
+  # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
+  touchSensitivity: .25
+  # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
+  # be used to manipulate objects outside of the oriDomi instance (e.g. sliding panels).
+  # x values are returned when folding left and right, y values for top and bottom.
+  # These are empty functions by default.
+  # Invoked with starting coordinate as first argument.
+  touchStartCallback: noOp
+  # Invoked with current movement distance.
+  touchMoveCallback: noOp
+  # Inkoked with ending point.
+  touchEndCallback: noOp
 
 
 # oriDomi Class
@@ -174,7 +193,7 @@ class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
     # If `devMode` is enabled, start a benchmark timer for the constructor.
-    devMode and console.time 'oridomiConstruction'
+    console.time 'oridomiConstruction' if devMode
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
 
@@ -187,7 +206,8 @@ class OriDomi
 
     # Return if the first argument isn't a DOM element.
     if not @el or @el.nodeType isnt 1
-      return devMode and console.warn 'oriDomi: First argument must be a DOM element'
+      console.warn 'oriDomi: First argument must be a DOM element' if devMode
+      return
 
     # Clone the target element and save a copy of it.
     @cleanEl = @el.cloneNode true
@@ -203,8 +223,7 @@ class OriDomi
 
     # Save the original CSS display of the target. If `none`, assume `block`.
     @displayStyle = @_elStyle.display
-    if @displayStyle is 'none'
-      @displayStyle = 'block'
+    @displayStyle = 'block' if @displayStyle is 'none'
 
     # To calculate the full dimensions of the element, create arrays of relevant metric keys.
     xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
@@ -246,8 +265,9 @@ class OriDomi
     # Eliminate padding and margins since the stage is already the full width and height.
     stage.style.padding = '0'
     stage.style.margin = '0'
-    # Apply 3D perspective to the stage prototype.
+    # Apply 3D perspective and preserve any parent perspective.
     stage.style[css.perspective] = @settings.perspective + 'px'
+    stage.style[css.transformStyle] = 'preserve-3d'
 
     # Loop through the anchors list and create a stage and empty panel set for each.
     for anchor in @anchors
@@ -281,6 +301,7 @@ class OriDomi
       shader.style.opacity = '0'
       shader.style.top = '0'
       shader.style.left = '0'
+      shader.style.pointerEvents = 'none'
 
     # The content holder is a clone of the target element.
     # Every panel will contain one.
@@ -317,7 +338,7 @@ class OriDomi
 
     # The bleed variable creates some overlap between the panels to prevent
     # cracks in the paper.
-    bleed = 2
+    bleed = 1.5
     # The panel element holds both its respective mask and all subsequent sibling panels.
     hPanel = document.createElement 'div'
     hPanel.className = 'oridomi-panel-h'
@@ -380,8 +401,7 @@ class OriDomi
         @panels[anchor][i] = panel
 
         # Append each panel to its previous sibling (unless it's the first panel).
-        unless i is 0
-          @panels[anchor][i - 1].appendChild panel
+        @panels[anchor][i - 1].appendChild panel unless i is 0
 
       # Append the first panel (containing all of its siblings) to its respective stage.
       @stages[anchor].appendChild @panels[anchor][0]
@@ -434,9 +454,7 @@ class OriDomi
           @shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
         @panels[anchor][i] = panel
-
-        unless i is 0
-          @panels[anchor][i - 1].appendChild panel
+        @panels[anchor][i - 1].appendChild panel unless i is 0
 
       @stages[anchor].appendChild @panels[anchor][0]
 
@@ -455,12 +473,19 @@ class OriDomi
     @el.style.outline = 'none'
     # Show the left stage to start with.
     @stages.left.style.display = 'block'
-    # Empty the target element.
+
+    # Create an element to hold stages.
     @stageEl = document.createElement 'div'
+    # Attach touch/drag event listeners.
+    @stageEl.addEventListener 'touchstart', @_onTouchStart, false
+    @stageEl.addEventListener 'mousedown', @_onTouchStart, false
+    @stageEl.addEventListener 'touchend', @_onTouchEnd, false
+    @stageEl.addEventListener 'mouseup', @_onTouchEnd, false
+
+    @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
-    for anchor in @anchors
-      @stageEl.appendChild @stages[anchor]
+    @stageEl.appendChild @stages[anchor] for anchor in @anchors
 
     # Show the target if applicable.
     if @settings.showOnStart
@@ -472,6 +497,12 @@ class OriDomi
     @el.appendChild @cleanEl
     @el.appendChild @stageEl
 
+    # These properties record starting angles for touch/drag events.
+    # Initialize both to zero.
+    [@_xLast, @_yLast] = [0, 0]
+    # This property determines the effect used during touch/drag events.
+    @lastOp = method: 'accordion', options: {}
+
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
     # Push this instance into the instances collection.
@@ -479,7 +510,7 @@ class OriDomi
     # If a callback was passed in the constructor options, run it.
     @_callback @settings
     # End the constructor benchmark if `devMode` is active.
-    devMode and console.timeEnd 'oridomiConstruction'
+    console.timeEnd 'oridomiConstruction' if devMode
 
 
   # Internal Methods
@@ -534,24 +565,25 @@ class OriDomi
     if isNaN angle
       0
     else if angle > 89
-      devMode and console.warn 'oriDomi: Maximum value is 89'
       89
     else if angle < -89
-      devMode and console.warn 'oriDomi: Minimum value is -89'
       -89
     else
       angle
 
 
-  # `_normalizeArgs` bootstraps every public method.
+  # `_normalizeArgs` normalizes every public method's arguments and makes sure the current
+  # axis unfolds if ordered to switch to another axis.
   _normalizeArgs: (method, args) ->
     @unfreeze() if @isFrozen
     # Get a valid angle.
     angle = @_normalizeAngle args[0]
     # Get the full anchor name.
-    anchor = @_getLonghandAnchor args[1]
+    anchor = @_getLonghandAnchor args[1] or @lastAnchor
     # Extend the given options with the method's defaults.
     options = extendObj args[2], @_methodDefaults[method]
+    # Store a record of this operation for future touch events.
+    @lastOp = method: method, options: options, negative: angle < 0
 
     # If the user is trying to transform using a different anchor, we must first
     # unfold the current anchor for transition purposes.
@@ -560,13 +592,12 @@ class OriDomi
       @reset =>
         # Show the stage element of the originally requested anchor.
         @_showStage anchor
-
+        # Since the anchor changed, update the mouse drag cursor.
+        @_setCursor() if @_touchEnabled
         # Defer this operation until the next event loop to prevent a sudden jump.
         setTimeout =>
           # `foldUp` is a special method that doesn't accept an angle argument.
-          if method is 'foldUp'
-            args.shift()
-
+          args.shift() if method is 'foldUp'
           # We can now call the originally requested method.
           @[method].apply @, args
 
@@ -664,6 +695,41 @@ class OriDomi
         'left'
 
 
+  # Allows other methods to change the tween duration or disable it altogether.
+  _setTweening: (speed) ->
+    # If the speed value is `true` reset the speed to the original settings.
+    # Set it to zero if `false`.
+    if typeof speed is 'boolean'
+      speed = if speed then @settings.speed + 'ms' else '0ms'
+
+    # To loop through the shaders, derive the correct pair from the current anchor.
+    if @lastAnchor is 'left' or @lastAnchor is 'right'
+      shaderPair = ['left', 'right']
+    else
+      shaderPair = ['top', 'bottom']
+
+    # Loop through the panels in this anchor and set the transition duration to the new speed.
+    for panel, i in @panels[@lastAnchor]
+      panel.style[css.transitionDuration] = speed
+      if @shading
+        @shaders[@lastAnchor][shaderPair[0]][i].style[css.transitionDuration] = speed
+        @shaders[@lastAnchor][shaderPair[1]][i].style[css.transitionDuration] = speed
+
+    # Return null and not the loop's result.
+    null
+
+
+  # Gives the element a resize cursor to prompt the user to drag the mouse.
+  _setCursor: ->
+    if @_touchEnabled
+      if @lastAnchor is 'left' or @lastAnchor is 'right'
+        @stageEl.style.cursor = 'ew-resize'
+      else
+        @stageEl.style.cursor = 'ns-resize'
+    else
+      @stageEl.style.cursor = 'default'
+
+
   # Map of defaults for each method. Some are empty for now.
   _methodDefaults:
     accordion:
@@ -680,6 +746,83 @@ class OriDomi
     foldUp: {}
 
 
+  # Touch / Drag Event Handlers
+  # ===========================
+
+
+  # This method is called when a finger or mouse button is pressed on the element.
+  _onTouchStart: (e) =>
+    return unless @_touchEnabled
+    e.preventDefault()
+    # Disable tweening to enable instant 1 to 1 movement.
+    @_setTweening false
+    # Derive the axis to fold on.
+    @_touchAxis = if @lastAnchor is 'left' or @lastAnchor is 'right' then 'x' else 'y'
+    # Set a reference to the last folded angle to accurately derive deltas.
+    @["_#{ @_touchAxis }Last"] = @lastAngle
+
+    # Determine the starting tap's coordinate for touch and mouse events.
+    if e.type is 'mousedown'
+      @["_#{ @_touchAxis }1"] = e["page#{ @_touchAxis.toUpperCase() }"]
+    else
+      @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+
+    # Add movement listener.
+    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
+    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
+
+    # Return that value to an external listener.
+    @settings.touchStartCallback @["_#{ @_touchAxis }1"]
+
+
+  # Called on touch/mouse movement.
+  _onTouchMove: (e) =>
+    return unless @_touchEnabled
+    e.preventDefault()
+    # Set a reference to the current x or y position.
+    if e.type is 'mousemove'
+      current = e["page#{ @_touchAxis.toUpperCase() }"]
+    else
+      current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+
+    # Calculate distance and multiply by `touchSensitivity`.
+    distance = (current - @["_#{ @_touchAxis }1"]) * @settings.touchSensitivity
+
+    # Calculate final delta based on starting angle, anchor, and what side of zero
+    # the last operation was on.
+    if @lastOp.negative
+      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+        delta = @["_#{ @_touchAxis }Last"] - distance
+      else
+        delta = @["_#{ @_touchAxis }Last"] + distance
+      delta = 0 if delta > 0
+    else
+      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+        delta = @["_#{ @_touchAxis }Last"] + distance
+      else
+        delta = @["_#{ @_touchAxis }Last"] - distance
+      delta = 0 if delta < 0
+
+    # Invoke the effect method with the delta as an angle argument.
+    @[@lastOp.method] delta, @lastAnchor, @lastOp.options
+    # Pass the delta to the movement callback.
+    @settings.touchMoveCallback delta
+
+
+  # Teardown process when touch/drag event ends.
+  _onTouchEnd: (e) =>
+    return unless @_touchEnabled
+    # Enable tweening again.
+    @_setTweening true
+
+    # Remove movement listeners.
+    @stageEl.removeEventListener 'touchmove', @_onTouchMove, false
+    @stageEl.removeEventListener 'mousemove', @_onTouchMove, false
+
+    # Pass callback final value.
+    @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+
+
   # Public Methods
   # ==============
 
@@ -687,13 +830,11 @@ class OriDomi
   # Reset handles resetting all panels back to zero degrees.
   reset: (callback) ->
     # If the stage is folded up, unfold it first.
-    if @isFoldedUp
-      return @unfold callback
+    return @unfold callback if @isFoldedUp
 
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform 0
-      if @shading
-        @_setShader i, @lastAnchor, 0
+      @_setShader i, @lastAnchor, 0 if @shading
 
     # When called internally, `reset` comes with a callback to advance to the next transformation.
     @_callback callback: callback
@@ -704,7 +845,7 @@ class OriDomi
   freeze: (callback) ->
     # Return if already frozen.
     if @isFrozen
-      callback() if typeof callback is 'function'
+      callback?()
     else
       # Make sure to reset folding first.
       @reset =>
@@ -712,7 +853,7 @@ class OriDomi
         # Swap the visibility of the elements.
         @stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
         @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
-        callback() if typeof callback is 'function'
+        callback?()
 
 
   # Restores the oriDomi version of the element for folding purposes.
@@ -727,24 +868,40 @@ class OriDomi
       @lastAngle = 0
 
 
-  # Removes the oriDomi element and deletes its instance from memory.
+  # Removes the oriDomi element and marks its instance for garbage collection.
   destroy: (callback) ->
     # First restore the original element.
     @freeze =>
+      # Remove event listeners.
+      @stageEl.removeEventListener 'touchstart', @_onTouchStart, false
+      @stageEl.removeEventListener 'mousedown', @_onTouchStart, false
+      @stageEl.removeEventListener 'touchend', @_onTouchEnd, false
+      @stageEl.removeEventListener 'mouseup', @_onTouchEnd, false
+
       # Remove the data reference if using jQuery.
-      if $
-        $.data @el, 'oriDomi', null
+      $.data @el, 'oriDomi', null if $
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
 
       # Reset original styles.
       changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-      for key in changedKeys
-        @el.style[key] = @_elStyle[key]
+      @el.style[key] = @_elStyle[key] for key in changedKeys
 
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
-      callback() if typeof callback is 'function'
+      callback?()
+
+
+  # Enables touch events and sets cursor.
+  enableTouch: ->
+    @_touchEnabled = true
+    @_setCursor()
+
+
+  # Disables touch events.
+  disableTouch: ->
+    @_touchEnabled = false
+    @_setCursor()
 
 
   # oriDomi's most basic effect. Transforms the target like its namesake.
@@ -759,7 +916,7 @@ class OriDomi
     for panel, i in @panels[anchor]
 
       # If it's an odd-numbered panel, reverse the angle.
-      if i % 2 isnt 0 and !options.twist
+      if i % 2 isnt 0 and not options.twist
         deg = -angle
       else
         deg = angle
@@ -799,9 +956,7 @@ class OriDomi
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle
-
-      if @shading
-        @_setShader i, anchor, 0
+      @_setShader i, anchor, 0 if @shading
 
     @_callback options
 
@@ -828,7 +983,7 @@ class OriDomi
   # `foldUp` folds up all panels in separate synchronous animations.
   foldUp: (anchor, callback) ->
     # Default to left anchor.
-    if not anchor
+    unless anchor
       anchor = 'left'
     # Check if callback is the first argument.
     else if typeof anchor is 'function'
@@ -849,8 +1004,7 @@ class OriDomi
     nextPanel = =>
       @panels[anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
       @panels[anchor][i].style[css.transform] = @_transform angle
-      if @shading
-        @_setShader i, anchor, angle
+      @_setShader i, anchor, angle if @shading
 
     # Called when each panel finishes folding in.
     onTransitionEnd = (e) =>
@@ -861,7 +1015,7 @@ class OriDomi
       # Decrement the iterator and check if we're on the first panel.
       if --i is 0
         # If so, invoke the callback directly if applicable.
-        callback() if typeof callback is 'function'
+        callback?()
       else
         # Otherwise, defer until the next event loop and fold back the next panel.
         setTimeout nextPanel, 0
@@ -874,9 +1028,7 @@ class OriDomi
   unfold: (callback) ->
     # If the target isn't folded up, there's no reason to call this method and
     # the callback is immediately invoked.
-    unless @isFoldedUp
-      if typeof callback is 'function'
-        callback()
+    callback?() unless @isFoldedUp
 
     # Reset `isFoldedUp`.
     @isFoldedUp = false
@@ -892,15 +1044,14 @@ class OriDomi
       setTimeout =>
         @panels[@lastAnchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
         @panels[@lastAnchor][i].style[css.transform] = @_transform angle
-        if @shading
-          @_setShader i, @lastAnchor, angle
+        @_setShader i, @lastAnchor, angle if @shading
       , 0
 
     onTransitionEnd = (e) =>
       @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       # Increment the iterator and check if we're past the last panel.
       if ++i is @panels[@lastAnchor].length
-        callback() if typeof callback is 'function'
+        callback?()
       else
         setTimeout nextPanel, 0
 
@@ -956,7 +1107,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '0.1.5'
+  @VERSION = '0.2.0'
 
 
   # External function to enable `devMode`.
@@ -983,21 +1134,23 @@ if $
 
       # Check if method exists and warn if it doesn't.
       unless typeof OriDomi::[options] is 'function'
-        return devMode and console.warn "oriDomi: No such method '#{ options }'"
+        console.warn "oriDomi: No such method '#{ options }'" if devMode
+        return
 
-      # Loop through selection.
+      # Loop through the jQuery selection.
       for el in @
         # Retrieve the instance of oriDomi attached to the element.
         instance = $.data el, 'oriDomi'
 
         # Warn if oriDomi hasn't been initialized on this element.
         unless instance?
-          return devMode and console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element"
+          console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element" if devMode
+          return
 
         # Convert arguments to a proper array and remove the first element.
         args = Array::slice.call arguments
         args.shift()
-        # Call method from instance.
+        # Call the requested method with arguments.
         instance[options].apply instance, args
 
       # Return selection.
