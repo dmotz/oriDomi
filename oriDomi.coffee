@@ -10,7 +10,7 @@
 # Setup
 # =====
 
-# Enable strict mode in this scope to keep us in line.
+# Enable strict mode.
 'use strict'
 
 # Set a reference to the global object within this scope.
@@ -338,7 +338,7 @@ class OriDomi
 
     # The bleed variable creates some overlap between the panels to prevent
     # cracks in the paper.
-    bleed = 2
+    bleed = 1.5
     # The panel element holds both its respective mask and all subsequent sibling panels.
     hPanel = document.createElement 'div'
     hPanel.className = 'oridomi-panel-h'

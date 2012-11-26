@@ -257,7 +257,7 @@
         hMask.appendChild(topShader);
         hMask.appendChild(bottomShader);
       }
-      bleed = 2;
+      bleed = 1.5;
       hPanel = document.createElement('div');
       hPanel.className = 'oridomi-panel-h';
       hPanel.style.width = '100%';
