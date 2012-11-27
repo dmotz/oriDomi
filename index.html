@@ -51,7 +51,7 @@
             <a href="http://oxism.com">Dan Motzenbecker</a>,
             <a href="http://twitter.com/dcmotz">@dcmotz</a>
         </p>
-        <h3 id="view-docs"><a href="docs/oriDomi.html">View the annotated source</a></h3>
+        <h3 id="view-docs"><a href="docs/oriDomi.html">Annotated source</a></h3>
         <h3 id="get-source"><a href="https://github.com/dmotz/oridomi">Github repository</a></h3>
 
     </header>
@@ -171,11 +171,13 @@ $domi.oriDomi('accordion', -30, 'right');
 
             <p>Methods include accordion, reveal, curl, collapse, ramp, foldUp, unfold and reset.</p>
 
-            <p>Keep in mind, you can pass shorthand anchor names such as l, r, t, b or 1, 2, 3, 4.</p>
+            <p>Keep in mind, you can pass shorthand anchor names such as
+                <code>'l'</code>, <code>'r'</code>, <code>'t'</code>, <code>'b'</code> or
+                <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>.</p>
 
 <pre>
 $domi.oriDomi('reveal', 44, 1,
-    { callback: function(){ alert('oriDomi'); } });
+    { callback: function(){ alert('oriDomi reveal finished!') } });
 </pre>
             <p>For a detailed look, read through the <a href="docs/oriDomi.html">annotated source</a>.</p>
 
@@ -189,7 +191,8 @@ $domi.oriDomi('reveal', 44, 1,
                 <li><b>oriDomi</b> only works in modern browsers that support CSS 3D transforms<br>
                 <span>If a browser doesn&rsquo;t support <b>oriDomi</b>, the DOM won&rsquo;t be touched.</span></li>
                 <li><b>oriDomi</b> works best in WebKit browsers.<br>
-                    <span>Firefox is supported, but antialiasing doesn&rsquo;t work well.</span>
+                    <span>Firefox is supported, but antialiasing doesn&rsquo;t work well yet.
+                        You can force antialiasing in Firefox with the <code>forceAntialiasing: true</code> option.</span>
                  </li>
                 <li>If you&rsquo;re targeting an element that has dimensions defined by media it contains (e.g. an image),
                     be sure to wait until the image is loaded before invoking <b>oriDomi</b>.<br>
