@@ -12,27 +12,32 @@
   color: #fff;
   text-shadow: none;
 }
-.clear {
-  clear: both;
-}
 a {
   color: #333;
+}
+html {
+  font-size: 100%;
 }
 body {
   background-color: #eee;
   color: #333;
   margin: 0 auto;
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, Times, FreeSerif, serif;
-  font-size: 90%;
   text-rendering: optimizeLegibility;
+  color: #444;
+}
+h1,
+h2,
+h3,
+h4 {
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
-  color: #444;
 }
 h2 {
   text-align: center;
   margin-bottom: 1rem;
   font-size: 1.7rem;
+  letter-spacing: -0.1rem;
 }
 h5 {
   text-align: center;
@@ -107,6 +112,12 @@ header > h3 {
 .menu ul li a:hover {
   color: #333;
   border-color: #aaa;
+}
+.menu ul li ul {
+  padding: 0;
+  padding-left: 1rem;
+  font-size: 0.7rem;
+  line-height: 1;
 }
 .fold-me,
 .menu {
@@ -210,7 +221,6 @@ pre {
   margin: 0 auto;
   padding: 10px;
   margin-bottom: 20px;
-  font-weight: bold;
   overflow: auto;
 }
 .demo1 {
@@ -392,16 +402,19 @@ p {
 #caveats {
   font-size: 1rem;
 }
-#caveats > ul {
+#caveats ul {
   margin: 0 auto;
 }
-#caveats > ul > li {
+#caveats ul li {
   margin-bottom: 2rem;
 }
-#caveats > ul > li > span {
-  color: #666;
+#caveats ul li span {
+  font-style: italic;
 }
-@media screen and (max-width:730px) {
+#caveats ul li span code {
+  font-style: normal;
+}
+@media screen and (max-width: 730px) {
   .menu {
     -webkit-transform: translate3d(-200px, 0, 0);
     -moz-transform: translate3d(-200px, 0, 0);
@@ -415,6 +428,14 @@ p {
     -o-transform: translate3d(200px, 0, 0);
     -ms-transform: translate3d(200px, 0, 0);
     transform: translate3d(200px, 0, 0);
+  }
+  .rotation,
+  .demo1 {
+    -webkit-animation: none !important;
+    -moz-animation: none !important;
+    -o-animation: none !important;
+    -ms-animation: none !important;
+    animation: none !important;
   }
 }
 @-moz-keyframes swivel {

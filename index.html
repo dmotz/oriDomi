@@ -3,18 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="author" content="Dan Motzenbecker">
-    <meta name="description" content="oriDomi - Fold up the DOM like paper.">
-    <meta name="keywords" content="oridomi, origami, javascript, jquery, plugin, library, web, coffeescript, dan motzenbecker">
-    <title>oriDomi - Fold up the DOM like paper.</title>
+    <meta name="description" content="oriDomi - Fold up the DOM like paper - origami for the web">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="oridomi, origami, javascript, jquery, plugin, library, coffeescript">
+    <title>oriDomi - Fold up the DOM like paper - origami for the web</title>
     <link href="demo/demo.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:100,900" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
     <div class="menu">
         <ul>
             <li><a href="#features">Features</a></li>
-            <li><a href="#examples">Examples</a></li>
+            <li>
+                <a href="#examples">Examples</a>
+                    <ul>
+                        <li><a href="#example-reveal">Reveal</a></li>
+                        <li><a href="#example-stairs">Stairs</a></li>
+                        <li><a href="#example-accordion">Accordion</a></li>
+                        <li><a href="#example-curl">Curl</a></li>
+                    </ul>
+            </li>
             <li><a href="#usage">Usage</a></li>
             <li><a href="#caveats">Caveats</a></li>
             <li><a href="#final">Final Thoughts</a></li>
@@ -41,7 +51,7 @@
             <a href="http://oxism.com">Dan Motzenbecker</a>,
             <a href="http://twitter.com/dcmotz">@dcmotz</a>
         </p>
-        <h3 id="view-docs"><a href="docs/oriDomi.html">View the annotated source</a></h3>
+        <h3 id="view-docs"><a href="docs/oriDomi.html">Annotated source</a></h3>
         <h3 id="get-source"><a href="https://github.com/dmotz/oridomi">Github repository</a></h3>
 
     </header>
@@ -66,7 +76,7 @@
         <h5>(touch or drag to fold)</h5>
 
         <ul>
-            <li>
+            <li id="example-reveal">
                 <article>
                     <h4>Reveal</h4>
                     <h5>(3 panels)</h5>
@@ -78,7 +88,7 @@ domi2.reveal(40);
 </pre>
             </li>
 
-            <li>
+            <li id="example-stairs">
                 <article>
                     <h4>Stairs</h4>
                     <h5>(5 panels)</h5>
@@ -90,7 +100,7 @@ domi3.stairs(-25, 'right');
 </pre>
             </li>
 
-            <li>
+            <li id="example-accordion">
                 <article>
                     <h4>Accordion</h4>
                     <h5>(6 panels)</h5>
@@ -102,7 +112,7 @@ domi4.accordion(-50);
 </pre>
             </li>
 
-            <li>
+            <li id="example-curl">
                 <article>
                     <h4>Curl</h4>
                     <h5>(10 panels)</h5>
@@ -116,8 +126,6 @@ domi5.curl(-60, 'top');
 
         </ul>
     </section>
-
-    <br class="clear">
 
     <section id="usage">
         <div>
@@ -163,11 +171,13 @@ $domi.oriDomi('accordion', -30, 'right');
 
             <p>Methods include accordion, reveal, curl, collapse, ramp, foldUp, unfold and reset.</p>
 
-            <p>Keep in mind, you can pass shorthand anchor names such as l, r, t, b or 1, 2, 3, 4.</p>
+            <p>Keep in mind, you can pass shorthand anchor names such as
+                <code>'l'</code>, <code>'r'</code>, <code>'t'</code>, <code>'b'</code> or
+                <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>.</p>
 
 <pre>
 $domi.oriDomi('reveal', 44, 1,
-    { callback: function(){ alert('oriDomi'); } });
+    { callback: function(){ alert('oriDomi reveal finished!') } });
 </pre>
             <p>For a detailed look, read through the <a href="docs/oriDomi.html">annotated source</a>.</p>
 
@@ -181,7 +191,8 @@ $domi.oriDomi('reveal', 44, 1,
                 <li><b>oriDomi</b> only works in modern browsers that support CSS 3D transforms<br>
                 <span>If a browser doesn&rsquo;t support <b>oriDomi</b>, the DOM won&rsquo;t be touched.</span></li>
                 <li><b>oriDomi</b> works best in WebKit browsers.<br>
-                    <span>Firefox is supported, but antialiasing doesn&rsquo;t work well.</span>
+                    <span>Firefox is supported, but antialiasing doesn&rsquo;t work well yet.
+                        You can force antialiasing in Firefox with the <code>forceAntialiasing: true</code> option.</span>
                  </li>
                 <li>If you&rsquo;re targeting an element that has dimensions defined by media it contains (e.g. an image),
                     be sure to wait until the image is loaded before invoking <b>oriDomi</b>.<br>
