@@ -414,7 +414,7 @@ p {
 #caveats ul li span code {
   font-style: normal;
 }
-@media screen and (max-width: 730px) {
+@media only screen and (max-width: 730px), only screen and (max-device-width : 480px) {
   .menu {
     -webkit-transform: translate3d(-200px, 0, 0);
     -moz-transform: translate3d(-200px, 0, 0);
