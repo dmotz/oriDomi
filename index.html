@@ -16,7 +16,15 @@
     <div class="menu">
         <ul>
             <li><a href="#features">Features</a></li>
-            <li><a href="#examples">Examples</a></li>
+            <li>
+                <a href="#examples">Examples</a>
+                    <ul>
+                        <li><a href="#example-reveal">Reveal</a></li>
+                        <li><a href="#example-stairs">Stairs</a></li>
+                        <li><a href="#example-accordion">Accordion</a></li>
+                        <li><a href="#example-curl">Curl</a></li>
+                    </ul>
+            </li>
             <li><a href="#usage">Usage</a></li>
             <li><a href="#caveats">Caveats</a></li>
             <li><a href="#final">Final Thoughts</a></li>
@@ -68,7 +76,7 @@
         <h5>(touch or drag to fold)</h5>
 
         <ul>
-            <li>
+            <li id="example-reveal">
                 <article>
                     <h4>Reveal</h4>
                     <h5>(3 panels)</h5>
@@ -80,7 +88,7 @@ domi2.reveal(40);
 </pre>
             </li>
 
-            <li>
+            <li id="example-stairs">
                 <article>
                     <h4>Stairs</h4>
                     <h5>(5 panels)</h5>
@@ -92,7 +100,7 @@ domi3.stairs(-25, 'right');
 </pre>
             </li>
 
-            <li>
+            <li id="example-accordion">
                 <article>
                     <h4>Accordion</h4>
                     <h5>(6 panels)</h5>
@@ -104,7 +112,7 @@ domi4.accordion(-50);
 </pre>
             </li>
 
-            <li>
+            <li id="example-curl">
                 <article>
                     <h4>Curl</h4>
                     <h5>(10 panels)</h5>
@@ -118,8 +126,6 @@ domi5.curl(-60, 'top');
 
         </ul>
     </section>
-
-    <br class="clear">
 
     <section id="usage">
         <div>
