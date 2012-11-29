@@ -80,6 +80,10 @@ header .rotation {
   -ms-transform-style: preserve-3d;
   transform-style: preserve-3d;
 }
+header .rotation:hover .demo1 {
+  color: #3fffed !important;
+  border-color: #3fffed !important;
+}
 header > h3 {
   display: inline-block;
   font-size: 1rem;
@@ -238,21 +242,11 @@ pre {
   -webkit-background-size: 21.875rem;
   -moz-background-size: 21.875rem;
   background-size: 21.875rem;
-  -webkit-animation: colors 7s ease-out 5s;
-  -moz-animation: colors 7s ease-out 5s;
-  -o-animation: colors 7s ease-out 5s;
-  -ms-animation: colors 7s ease-out 5s;
-  animation: colors 7s ease-out 5s;
-  -webkit-animation-direction: alternate;
-  -moz-animation-direction: alternate;
-  -o-animation-direction: alternate;
-  -ms-animation-direction: alternate;
-  animation-direction: alternate;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -o-animation-iteration-count: infinite;
-  -ms-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+  -webkit-transition: color 0.5s, border-color 0.5s;
+  -moz-transition: color 0.5s, border-color 0.5s;
+  -o-transition: color 0.5s, border-color 0.5s;
+  -ms-transition: color 0.5s, border-color 0.5s;
+  transition: color 0.5s, border-color 0.5s;
 }
 .demo1 > h1 {
   text-transform: uppercase;
@@ -440,7 +434,7 @@ p {
 #caveats ul li span code {
   font-style: normal;
 }
-@media only screen and (max-width: 730px), only screen and (max-device-width : 480px) {
+@media only screen and (max-width: 970px), only screen and (max-device-width : 480px) {
   .menu {
     -webkit-transform: translate3d(-200px, 0, 0);
     -moz-transform: translate3d(-200px, 0, 0);
@@ -462,6 +456,10 @@ p {
     -o-animation: none !important;
     -ms-animation: none !important;
     animation: none !important;
+  }
+  header .rotation:hover .demo1 {
+    color: #eee !important;
+    border-color: #eee !important;
   }
 }
 @-moz-keyframes swivel {

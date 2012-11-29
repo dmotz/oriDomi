@@ -68,6 +68,10 @@ header
     animation-iteration-count: infinite
     transform-style: preserve-3d
 
+    &:hover .demo1
+      color: #3fffed !important
+      border-color: #3fffed !important
+
   > h3
     display: inline-block
     font-size: 1rem
@@ -218,9 +222,7 @@ pre
   margin-bottom: 2.5rem
   background-image: url('./images/1.jpg')
   background-size: 21.875rem
-  animation: colors 7s ease-out 5s
-  animation-direction: alternate
-  animation-iteration-count: infinite
+  transition: color .5s, border-color .5s
 
   > h1
     text-transform: uppercase
@@ -437,13 +439,19 @@ p
 
 
 
-@media only screen and (max-width: 730px), only screen and (max-device-width : 480px)
+@media only screen and (max-width: 970px), only screen and (max-device-width : 480px)
   .menu
     transform: translate3d(-200px, 0, 0)
+
 
   .fold-me
     transform: translate3d(200px, 0, 0)
 
+
   .rotation, .demo1
     animation: none !important
 
+
+  header .rotation:hover .demo1
+    color: #eee !important
+    border-color: #eee !important

@@ -34,8 +34,7 @@ function init(){
         domi4.accordion(-50);
         domi5.curl(-60, 1);
     }, 3000);
-    
-    
+
     demo6.addEventListener('click', function(){
         domi6.isFoldedUp ? domi6.reset() : domi6.foldUp();
     }, false);
