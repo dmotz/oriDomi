@@ -539,9 +539,11 @@
     };
 
     OriDomi.prototype._showStage = function(anchor) {
-      this.stages[anchor].style.display = 'block';
-      this.stages[this.lastAnchor].style.display = 'none';
-      return this.lastAnchor = anchor;
+      if (anchor !== this.lastAnchor) {
+        this.stages[anchor].style.display = 'block';
+        this.stages[this.lastAnchor].style.display = 'none';
+        return this.lastAnchor = anchor;
+      }
     };
 
     OriDomi.prototype._getPanelType = function(anchor) {
