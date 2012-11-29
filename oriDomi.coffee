@@ -666,9 +666,10 @@ class OriDomi
   # This method shows the requested stage element and sets a reference to it as
   # the current stage.
   _showStage: (anchor) ->
-    @stages[anchor].style.display = 'block'
-    @stages[@lastAnchor].style.display = 'none'
-    @lastAnchor = anchor
+    if anchor isnt @lastAnchor
+      @stages[anchor].style.display = 'block'
+      @stages[@lastAnchor].style.display = 'none'
+      @lastAnchor = anchor
 
 
   # Simple method that returns the correct panel set based on an anchor.
