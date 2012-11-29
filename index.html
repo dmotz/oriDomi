@@ -23,6 +23,7 @@
                         <li><a href="#example-stairs">Stairs</a></li>
                         <li><a href="#example-accordion">Accordion</a></li>
                         <li><a href="#example-curl">Curl</a></li>
+                        <li><a href="#example-fold-up">Fold Up</a></li>
                     </ul>
             </li>
             <li><a href="#usage">Usage</a></li>
@@ -121,6 +122,22 @@ domi4.accordion(-50);
                 <div class="demo demo5">Tennis Court Oath</div>
 <pre>
 domi5.curl(-60, 'top');
+</pre>
+            </li>
+
+            <li id="example-fold-up">
+                <article>
+                    <h4>Fold Up</h4>
+                    <h5>(5 panels)</h5>
+                    <p>
+                        Folds the composition up one panel at a time.<br>
+                        Calling <code>reset()</code> after any effect returns to the initial state.
+                    </p>
+                </article>
+                <div class="demo demo6"><p>TV<br>Sabbatical.</p></div>
+                <p>Click to toggle folding.</p>
+<pre>
+domi6.isFoldedUp ? domi6.reset() : domi6.foldUp();
 </pre>
             </li>
 
