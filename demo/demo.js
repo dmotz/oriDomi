@@ -13,8 +13,6 @@ function init(){
         domi5 = new OriDomi(demo5, { hPanels: 10, vPanels: 1 }),
         foldMe = document.querySelector('.fold-me > p'),
         foldDomi = new OriDomi(foldMe, { vPanels: 1, hPanels: 4, perspective: 200, speed: 500 });
-        //menu = document.getElementsByClassName('menu')[0],
-        //menuDomi = new OriDomi(menu, { vPanels: 1, hPanels: 4, perspective: 200, speed: 500, touchEnabled: false, shadingIntensity: 7 });
 
     foldMe.addEventListener('mouseover', function(){
         foldDomi.accordion(-40, 1);
@@ -23,15 +21,6 @@ function init(){
     foldMe.addEventListener('mouseout', function(){
         foldDomi.reset();
     }, false);
-    /*
-    menu.addEventListener('mouseover', function(){
-        menuDomi.accordion(-10, 1);
-    }, false);
-
-    menu.addEventListener('mouseout', function(){
-        menuDomi.reset();
-    }, false);
-    */
 
     setTimeout(function(){
         domi1.reveal(40, 1);
