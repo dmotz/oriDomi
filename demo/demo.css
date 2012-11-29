@@ -51,12 +51,12 @@ header {
   border-top: 1px #333 solid;
   padding: 1rem;
   padding-bottom: 0;
-  -webkit-perspective: 1000px;
-  -moz-perspective: 1000px;
-  -ms-perspective: 1000px;
-  perspective: 1000px;
+  -webkit-perspective: 62.5rem;
+  -moz-perspective: 62.5rem;
+  -ms-perspective: 62.5rem;
+  perspective: 62.5rem;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 header .rotation {
   -webkit-animation: swivel 12s ease-out;
@@ -85,12 +85,12 @@ header > h3 {
   font-size: 1rem;
 }
 .menu {
-  left: 10px;
-  width: 120px;
+  left: 0.625rem;
+  width: 7.5rem;
 }
 .menu ul {
   background-color: #ddd;
-  padding: 10px;
+  padding: 0.625rem;
   list-style: none;
   -webkit-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
@@ -140,21 +140,21 @@ header > h3 {
 .fold-me {
   cursor: pointer;
   line-height: 1.5;
-  right: 10px;
+  right: 0.625rem;
 }
 .fold-me p {
-  padding: 10px;
-  padding-right: 40px;
-  width: 30px;
+  padding: 0.625rem;
+  padding-right: 2.5rem;
+  width: 1.875rem;
   background-color: #ddd;
   -webkit-border-radius: 0 0 5px 5px;
   border-radius: 0 0 5px 5px;
 }
 #tagline {
-  margin-bottom: 30px;
+  margin-bottom: 1.875rem;
   text-align: center;
   position: relative;
-  margin-top: -50px;
+  margin-top: -3.125rem;
   letter-spacing: -1px;
   z-index: -1;
 }
@@ -172,8 +172,8 @@ header > h3 {
   font-size: 1.1rem;
   line-height: 3;
   color: #fff;
-  margin-top: -30px;
-  margin-bottom: 2px;
+  margin-top: -1.875rem;
+  margin-bottom: 0.125rem;
 }
 #author > a {
   color: #fff;
@@ -194,7 +194,7 @@ ul > li {
   display: none;
 }
 section {
-  margin-bottom: 50px;
+  margin-bottom: 3.125rem;
   float: left;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -203,13 +203,13 @@ section {
 }
 section > div {
   margin: 0 auto;
-  max-width: 700px;
+  max-width: 43.75rem;
   padding: 0 1.5rem;
   text-shadow: 0 1px 0 #fff;
 }
 section p {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 pre {
   background-color: #333;
@@ -219,8 +219,8 @@ pre {
   text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
   font-size: 1rem;
   margin: 0 auto;
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 0.625rem;
+  margin-bottom: 1.25rem;
   overflow: auto;
 }
 .demo1 {
@@ -230,14 +230,14 @@ pre {
   text-align: center;
   background-color: #444;
   color: #fff;
-  padding: 10px 0;
-  border: 20px #eee solid;
+  padding: 0.625rem 0;
+  border: 1.25rem #eee solid;
   text-shadow: 0 -1px 0 rgba(0,0,0,0.1);
-  margin-bottom: 40px;
+  margin-bottom: 2.5rem;
   background-image: url("./images/1.jpg");
-  -webkit-background-size: 350px;
-  -moz-background-size: 350px;
-  background-size: 350px;
+  -webkit-background-size: 21.875rem;
+  -moz-background-size: 21.875rem;
+  background-size: 21.875rem;
   -webkit-animation: colors 7s ease-out 5s;
   -moz-animation: colors 7s ease-out 5s;
   -o-animation: colors 7s ease-out 5s;
@@ -256,18 +256,18 @@ pre {
 }
 .demo1 > h1 {
   text-transform: uppercase;
-  letter-spacing: -2px;
+  letter-spacing: -0.125rem;
   font-size: 4.375rem;
   line-height: 2;
 }
 .demo1 > h4 {
   font-size: 1.875rem;
   line-height: 0;
-  margin-bottom: 60px;
+  margin-bottom: 3.75rem;
 }
 h3 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 h3 > a {
   text-decoration: none;
@@ -299,7 +299,7 @@ h3 > a:hover {
   padding-bottom: 1rem;
 }
 #examples > ul > li pre {
-  max-width: 490px;
+  max-width: 30.625rem;
   margin-top: 2rem;
 }
 #examples > ul > li:nth-child(even) > article {
@@ -325,8 +325,8 @@ h3 > a:hover {
   color: #ccc;
   margin-bottom: 0.6rem;
 }
-#examples > ul > li span {
-  font-size: 1.1rem;
+#examples > ul > li p {
+  font-size: 1rem;
   line-height: 1.4;
 }
 .demo {
@@ -334,32 +334,32 @@ h3 > a:hover {
 }
 .demo2 {
   font-family: "Abril Fatface", "Hoefler Text", Constantia, Palatino, Georgia, serif;
-  font-size: 72px;
-  width: 400px;
-  height: 160px;
+  font-size: 4.5rem;
+  width: 25rem;
+  height: 10rem;
   text-align: center;
   line-height: 1;
   color: #ff676d;
   background-color: #6ac1ff;
-  padding: 40px 0;
+  padding: 2.5rem 0;
 }
 .demo3 {
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
   text-transform: uppercase;
-  font-size: 100px;
+  font-size: 6.25rem;
   background-color: #444;
   color: #fff;
-  width: 430px;
-  padding: 10px 15px;
+  width: 26.875rem;
+  padding: 0.625rem 0.9375rem;
   background-image: url("./images/3.jpeg");
-  -webkit-background-size: 500px;
-  -moz-background-size: 500px;
-  background-size: 500px;
+  -webkit-background-size: 31.25rem;
+  -moz-background-size: 31.25rem;
+  background-size: 31.25rem;
   text-align: center;
 }
 .demo4 {
-  width: 300px;
-  height: 200px;
+  width: 18.75rem;
+  height: 12.5rem;
   background-image: url("./images/4.gif");
 }
 .demo5 {
@@ -367,15 +367,15 @@ h3 > a:hover {
   font-weight: 900;
   font-style: italic;
   text-transform: uppercase;
-  font-size: 80px;
-  width: 400px;
+  font-size: 5rem;
+  width: 25rem;
   line-height: 1;
   text-align: center;
   background-color: #444;
   color: #e2bb7c;
-  border: 15px solid #e2bb7c;
-  letter-spacing: -5px;
-  padding: 50px 10px;
+  border: 0.9375rem solid #e2bb7c;
+  letter-spacing: -0.3125rem;
+  padding: 3.125rem 0.625rem;
 }
 #features {
   margin-bottom: 2rem;
@@ -391,7 +391,7 @@ h3 > a:hover {
 }
 #features ul > li::before {
   content: '•';
-  margin-right: 8px;
+  margin-right: 0.5rem;
 }
 p {
   font-size: 1rem;
