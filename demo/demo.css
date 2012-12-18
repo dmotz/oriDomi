@@ -57,6 +57,7 @@ header {
   perspective: 62.5rem;
   text-align: center;
   margin-bottom: 0.625rem;
+  overflow: hidden;
 }
 header .rotation {
   -webkit-animation: swivel 12s ease-out;
@@ -247,6 +248,7 @@ pre {
   -o-transition: color 0.5s, border-color 0.5s;
   -ms-transition: color 0.5s, border-color 0.5s;
   transition: color 0.5s, border-color 0.5s;
+  overflow: hidden;
 }
 .demo1 > h1 {
   text-transform: uppercase;
@@ -370,6 +372,10 @@ h3 > a:hover {
   border: 0.9375rem solid #e2bb7c;
   letter-spacing: -0.3125rem;
   padding: 3.125rem 0.625rem;
+}
+#example-curl {
+  position: relative;
+  overflow: hidden;
 }
 .demo6 {
   cursor: pointer;
