@@ -73,9 +73,24 @@ header
       color: #3fffed !important
       border-color: #3fffed !important
 
+  > h2
+    display: inline-block
+    font-size: 1.55rem
+    background-color: #333
+    padding: 0.5rem
+    padding-bottom: 0.3rem
+
+    > a
+      transition: color .3s
+      color: #ddd
+
+      &:hover
+        color: #3fffed
+
   > h3
     display: inline-block
     font-size: 1rem
+
 
 .menu
   left: 0.625rem
@@ -353,7 +368,7 @@ h3
   padding: 3.125rem 0.625rem
 
 
-#example-curl 
+#example-curl
   position: relative
   overflow: hidden
 
