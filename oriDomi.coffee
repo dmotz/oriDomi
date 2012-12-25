@@ -933,8 +933,7 @@ class OriDomi
         deg *= 2 unless i is 0
 
       # In stairs mode, keep all the angles on the same side of 0.
-      if options.stairs
-        deg = -deg
+      deg *= -1 if options.stairs
 
       # Set the CSS transformation.
       panel.style[css.transform] = @_transform deg, options.fracture
