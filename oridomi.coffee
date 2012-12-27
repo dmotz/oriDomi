@@ -14,7 +14,7 @@
 'use strict'
 
 # Set a reference to the global object within this scope.
-root = window
+root = @
 
 # An array to hold references to oriDomi instances so they can be easily freed
 # from memory via the `destroy()` method.
@@ -84,9 +84,11 @@ css.gradientProp = do ->
     # After setting a gradient background on the test div, attempt to retrieve it.
     unless testEl.style.backgroundImage.indexOf('gradient') is -1
       return hyphenated
-  # If none of the hyphenated values worked, return the un-prefixed version.
+  # If none of the hyphenated values worked, return the unprefixed version.
   'linear-gradient'
 
+# The default cursor style is set to `grab` to prompt the user to interact with the element.
+[css.grab, css.grabbing] = do ->
 # Invoke a functional scope to set a hyphenated version of the transform property.
 css.transformProp = do ->
   # Use a regex to pluck the prefix `testProp` found.
