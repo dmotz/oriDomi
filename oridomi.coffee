@@ -89,6 +89,19 @@ css.gradientProp = do ->
 
 # The default cursor style is set to `grab` to prompt the user to interact with the element.
 [css.grab, css.grabbing] = do ->
+  for prefix in prefixList
+    plainGrab = 'grab'
+    testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
+    # If the cursor was set correctly, return the prefixed pair.
+    return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
+  # Otherwise try the unprefixed version.
+  testEl.style.cursor = plainGrab
+  if testEl.style.cursor is plainGrab
+    [plainGrab, 'grabbing']
+  else
+    # Fallback to `move`.
+    ['move', 'move']
+
 # Invoke a functional scope to set a hyphenated version of the transform property.
 css.transformProp = do ->
   # Use a regex to pluck the prefix `testProp` found.
