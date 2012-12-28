@@ -1046,7 +1046,7 @@ class OriDomi
     nextPanel()
 
 
-  # Essentially the inverse of `foldUp`.
+  # The inverse of `foldUp`.
   unfold: (callback) ->
     # If the target isn't folded up, there's no reason to call this method and
     # the callback is immediately invoked.
@@ -1085,13 +1085,13 @@ class OriDomi
   # ===================
 
 
-  # Completely folds in target.
+  # Convenience proxy to accordion-fold instance to maximum angle.
   collapse: (anchor, options = {}) ->
     options.sticky = false
     @accordion -89, anchor, options
 
 
-  # Same as `collapse`, but uses negative angle for slightly different effect.
+  # Same as `collapse`, but uses positive angle for slightly different effect.
   collapseAlt: (anchor, options = {}) ->
     options.sticky = false
     @accordion 89, anchor, options
@@ -1138,6 +1138,7 @@ class OriDomi
 
   # External function to enable `devMode`.
   @devMode = -> devMode = true
+
 
 # Attach `OriDomi` constructor to `window`.
 root.OriDomi = OriDomi
