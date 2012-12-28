@@ -58,8 +58,7 @@ testProp = (prop) ->
   capProp = prop.charAt(0).toUpperCase() + prop.slice 1
   # Loop through the vendor prefix list and return when we find a match.
   for prefix in prefixList
-    if testEl.style[prefix + capProp]?
-      return prefix + capProp
+    return full if testEl.style[(full = prefix + capProp)]?
   # If no matches are found, return false to denote that the browser is missing this property.
   false
 
@@ -82,9 +81,8 @@ css.gradientProp = do ->
     hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
     testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
     # After setting a gradient background on the test div, attempt to retrieve it.
-    unless testEl.style.backgroundImage.indexOf('gradient') is -1
-      return hyphenated
-  # If none of the hyphenated values worked, return the unprefixed version.
+    return hyphenated unless testEl.style.backgroundImage.indexOf('gradient') is -1
+  # If none of the hyphenated values worked, return the un-prefixed version.
   'linear-gradient'
 
 # The default cursor style is set to `grab` to prompt the user to interact with the element.
@@ -105,8 +103,7 @@ css.gradientProp = do ->
 # Invoke a functional scope to set a hyphenated version of the transform property.
 css.transformProp = do ->
   # Use a regex to pluck the prefix `testProp` found.
-  prefix = css.transform.match /(\w+)Transform/i
-  if prefix
+  if prefix = css.transform.match /(\w+)Transform/i
     "-#{ prefix[1].toLowerCase() }-transform"
   else
     'transform'
@@ -135,13 +132,9 @@ extendObj = (target, source) ->
     # Return the original target if its source isn't valid.
     return target
   # If the target isn't an object, set it to an empty object literal.
-  if target isnt Object target
-    target = {}
+  target = {} if target isnt Object target
   # Loop through the extension object and copy its values to the target if they don't exist.
-  for prop of source
-    if not target[prop]?
-      target[prop] = source[prop]
-
+  (target[prop] = source[prop] unless target[prop]?) for prop of source
   # Return the extended target object.
   target
 
@@ -211,18 +204,14 @@ class OriDomi
     console.time 'oridomiConstruction' if devMode
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
-
     # If the constructor wasn't called with the `new` keyword, invoke it again.
-    unless @ instanceof OriDomi
-      return new oriDomi @el, @settings
+    return new oriDomi @el, @settings unless @ instanceof OriDomi
+    # Return if the first argument isn't a DOM element.
+    if not @el or @el.nodeType isnt 1
+      return console.warn 'oriDomi: First argument must be a DOM element' if devMode
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
-
-    # Return if the first argument isn't a DOM element.
-    if not @el or @el.nodeType isnt 1
-      console.warn 'oriDomi: First argument must be a DOM element' if devMode
-      return
 
     # Clone the target element and save a copy of it.
     @cleanEl = @el.cloneNode true
