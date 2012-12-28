@@ -519,8 +519,6 @@ class OriDomi
     @$el = $ @el if $
     # Push this instance into the instances collection.
     instances.push @
-    # If a callback was passed in the constructor options, run it.
-    @_callback @settings
     # End the constructor benchmark if `devMode` is active.
     console.timeEnd 'oridomiConstruction' if devMode
 
