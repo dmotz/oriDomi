@@ -3,7 +3,7 @@
   "description": "Fold up the DOM like paper.",
   "author": "Dan Motzenbecker <dan@oxism.com> (http://oxism.com)",
   "homepage": "http://oridomi.com",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "repository": {
     "type": "git",

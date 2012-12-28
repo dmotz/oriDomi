@@ -1003,7 +1003,7 @@
       return this.accordion(angle / 10, anchor, options);
     };
 
-    OriDomi.VERSION = '0.2.0';
+    OriDomi.VERSION = '0.2.1';
 
     OriDomi.isSupported = oriDomiSupport;
 
