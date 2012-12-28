@@ -746,10 +746,7 @@ class OriDomi
   # Gives the element a resize cursor to prompt the user to drag the mouse.
   _setCursor: ->
     if @_touchEnabled
-      if @lastAnchor is 'left' or @lastAnchor is 'right'
-        @stageEl.style.cursor = 'ew-resize'
-      else
-        @stageEl.style.cursor = 'ns-resize'
+      @stageEl.style.cursor = css.grab
     else
       @stageEl.style.cursor = 'default'
 
