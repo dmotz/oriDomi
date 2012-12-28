@@ -480,20 +480,8 @@ class OriDomi
 
     # Create an element to hold stages.
     @stageEl = document.createElement 'div'
-    # Array of event type pairs.
-    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
-                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
-    # Detect native `mouseleave` support.
-    mouseLeaveSupport = 'onmouseleave' of window
-    # Attach touch/drag event listeners in related pairs.
-    for eventPair in eventPairs
-      for eString in eventPair
-        unless eString is 'TouchLeave' and not mouseLeaveSupport
-          @stageEl.addEventListener eString.toLowerCase(), @['_on' + eventPair[0]], false
-        else
-          @stageEl.addEventListener 'mouseout', @['_onMouseOut'], false
-          break
 
+    # Enable touch events.
     @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
@@ -757,6 +745,33 @@ class OriDomi
   # Touch / Drag Event Handlers
   # ===========================
 
+  # Adds or removes handlers from the element based on the boolean argument given.
+  _setTouch: (toggle) ->
+    if toggle
+      return if @_touchEnabled
+      listenFn = 'addEventListener'
+      @_touchEnabled = true
+    else
+      return unless @_touchEnabled
+      listenFn = 'removeEventListener'
+      @_touchEnabled = false
+
+    @_setCursor()
+
+    # Array of event type pairs.
+    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
+                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
+    # Detect native `mouseleave` support.
+    mouseLeaveSupport = 'onmouseleave' of window
+    # Attach touch/drag event listeners in related pairs.
+    for eventPair in eventPairs
+      for eString in eventPair
+        unless eString is 'TouchLeave' and not mouseLeaveSupport
+          @stageEl[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
+        else
+          @stageEl[listenFn] 'mouseout', @['_onMouseOut'], false
+          break
+
 
   # This method is called when a finger or mouse button is pressed on the element.
   _onTouchStart: (e) =>
@@ -891,35 +906,27 @@ class OriDomi
     # First restore the original element.
     @freeze =>
       # Remove event listeners.
-      @stageEl.removeEventListener 'touchstart', @_onTouchStart, false
-      @stageEl.removeEventListener 'mousedown', @_onTouchStart, false
-      @stageEl.removeEventListener 'touchend', @_onTouchEnd, false
-      @stageEl.removeEventListener 'mouseup', @_onTouchEnd, false
-
+      @_setTouch false
       # Remove the data reference if using jQuery.
       $.data @el, 'oriDomi', null if $
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
-
       # Reset original styles.
       changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
       @el.style[key] = @_elStyle[key] for key in changedKeys
-
       # Free up this instance for garbage collection.
       instances[instances.indexOf @] = null
       callback?()
 
 
-  # Enables touch events and sets cursor.
+  # Enables touch events.
   enableTouch: ->
-    @_touchEnabled = true
-    @_setCursor()
+    @_setTouch true
 
 
   # Disables touch events.
   disableTouch: ->
-    @_touchEnabled = false
-    @_setCursor()
+    @_setTouch false
 
 
   # oriDomi's most basic effect. Transforms the target like its namesake.
