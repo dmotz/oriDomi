@@ -750,14 +750,12 @@ class OriDomi
     if toggle
       return if @_touchEnabled
       listenFn = 'addEventListener'
-      @_touchEnabled = true
     else
       return unless @_touchEnabled
       listenFn = 'removeEventListener'
-      @_touchEnabled = false
 
+    @_touchEnabled = toggle
     @_setCursor()
-
     # Array of event type pairs.
     eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
                   ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
