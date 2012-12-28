@@ -775,6 +775,10 @@ class OriDomi
   _onTouchStart: (e) =>
     return unless @_touchEnabled
     e.preventDefault()
+    # Set a property to track touch starts.
+    @_touchStarted = true
+    # Change the cursor to the active `grabbing` state.
+    @stageEl.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening false
     # Derive the axis to fold on.
@@ -788,17 +792,13 @@ class OriDomi
     else
       @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
-    # Add movement listener.
-    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
-    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
-
     # Return that value to an external listener.
     @settings.touchStartCallback @["_#{ @_touchAxis }1"]
 
 
   # Called on touch/mouse movement.
   _onTouchMove: (e) =>
-    return unless @_touchEnabled
+    return unless @_touchEnabled and @_touchStarted
     e.preventDefault()
     # Set a reference to the current x or y position.
     if e.type is 'mousemove'
@@ -831,17 +831,27 @@ class OriDomi
 
 
   # Teardown process when touch/drag event ends.
-  _onTouchEnd: (e) =>
+  _onTouchEnd: =>
     return unless @_touchEnabled
+    # Restore the initial touch status and cursor.
+    @_touchStarted = false
+    @stageEl.style.cursor = css.grab
     # Enable tweening again.
     @_setTweening true
-
-    # Remove movement listeners.
-    @stageEl.removeEventListener 'touchmove', @_onTouchMove, false
-    @stageEl.removeEventListener 'mousemove', @_onTouchMove, false
-
     # Pass callback final value.
     @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+
+
+  # End folding when the mouse or finger leaves the composition.
+  _onTouchLeave: =>
+    return unless @_touchEnabled and @_touchStarted
+    @_onTouchEnd()
+
+
+  # A fallback for browsers that don't support `mouseleave`.
+  _onMouseOut: (e) =>
+    return unless @_touchEnabled and @_touchStarted
+    @_onTouchEnd() if e.toElement and not @el.contains e.toElement
 
 
   # Public Methods
