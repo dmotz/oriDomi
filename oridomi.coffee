@@ -491,11 +491,19 @@ class OriDomi
 
     # Create an element to hold stages.
     @stageEl = document.createElement 'div'
-    # Attach touch/drag event listeners.
-    @stageEl.addEventListener 'touchstart', @_onTouchStart, false
-    @stageEl.addEventListener 'mousedown', @_onTouchStart, false
-    @stageEl.addEventListener 'touchend', @_onTouchEnd, false
-    @stageEl.addEventListener 'mouseup', @_onTouchEnd, false
+    # Array of event type pairs.
+    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
+                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
+    # Detect native `mouseleave` support.
+    mouseLeaveSupport = 'onmouseleave' of window
+    # Attach touch/drag event listeners in related pairs.
+    for eventPair in eventPairs
+      for eString in eventPair
+        unless eString is 'TouchLeave' and not mouseLeaveSupport
+          @stageEl.addEventListener eString.toLowerCase(), @['_on' + eventPair[0]], false
+        else
+          @stageEl.addEventListener 'mouseout', @['_onMouseOut'], false
+          break
 
     @enableTouch() if @settings.touchEnabled
 
