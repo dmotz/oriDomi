@@ -3,7 +3,7 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.2.0`
+# `0.2.1`
 
 # Copyright 2012, MIT License
 
@@ -14,7 +14,7 @@
 'use strict'
 
 # Set a reference to the global object within this scope.
-root = window
+root = @
 
 # An array to hold references to oriDomi instances so they can be easily freed
 # from memory via the `destroy()` method.
@@ -84,8 +84,23 @@ css.gradientProp = do ->
     # After setting a gradient background on the test div, attempt to retrieve it.
     unless testEl.style.backgroundImage.indexOf('gradient') is -1
       return hyphenated
-  # If none of the hyphenated values worked, return the un-prefixed version.
+  # If none of the hyphenated values worked, return the unprefixed version.
   'linear-gradient'
+
+# The default cursor style is set to `grab` to prompt the user to interact with the element.
+[css.grab, css.grabbing] = do ->
+  for prefix in prefixList
+    plainGrab = 'grab'
+    testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
+    # If the cursor was set correctly, return the prefixed pair.
+    return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
+  # Otherwise try the unprefixed version.
+  testEl.style.cursor = plainGrab
+  if testEl.style.cursor is plainGrab
+    [plainGrab, 'grabbing']
+  else
+    # Fallback to `move`.
+    ['move', 'move']
 
 # Invoke a functional scope to set a hyphenated version of the transform property.
 css.transformProp = do ->
@@ -476,11 +491,19 @@ class OriDomi
 
     # Create an element to hold stages.
     @stageEl = document.createElement 'div'
-    # Attach touch/drag event listeners.
-    @stageEl.addEventListener 'touchstart', @_onTouchStart, false
-    @stageEl.addEventListener 'mousedown', @_onTouchStart, false
-    @stageEl.addEventListener 'touchend', @_onTouchEnd, false
-    @stageEl.addEventListener 'mouseup', @_onTouchEnd, false
+    # Array of event type pairs.
+    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
+                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
+    # Detect native `mouseleave` support.
+    mouseLeaveSupport = 'onmouseleave' of window
+    # Attach touch/drag event listeners in related pairs.
+    for eventPair in eventPairs
+      for eString in eventPair
+        unless eString is 'TouchLeave' and not mouseLeaveSupport
+          @stageEl.addEventListener eString.toLowerCase(), @['_on' + eventPair[0]], false
+        else
+          @stageEl.addEventListener 'mouseout', @['_onMouseOut'], false
+          break
 
     @enableTouch() if @settings.touchEnabled
 
@@ -723,10 +746,7 @@ class OriDomi
   # Gives the element a resize cursor to prompt the user to drag the mouse.
   _setCursor: ->
     if @_touchEnabled
-      if @lastAnchor is 'left' or @lastAnchor is 'right'
-        @stageEl.style.cursor = 'ew-resize'
-      else
-        @stageEl.style.cursor = 'ns-resize'
+      @stageEl.style.cursor = css.grab
     else
       @stageEl.style.cursor = 'default'
 
@@ -755,6 +775,10 @@ class OriDomi
   _onTouchStart: (e) =>
     return unless @_touchEnabled
     e.preventDefault()
+    # Set a property to track touch starts.
+    @_touchStarted = true
+    # Change the cursor to the active `grabbing` state.
+    @stageEl.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening false
     # Derive the axis to fold on.
@@ -768,17 +792,13 @@ class OriDomi
     else
       @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
-    # Add movement listener.
-    @stageEl.addEventListener 'touchmove', @_onTouchMove, false
-    @stageEl.addEventListener 'mousemove', @_onTouchMove, false
-
     # Return that value to an external listener.
     @settings.touchStartCallback @["_#{ @_touchAxis }1"]
 
 
   # Called on touch/mouse movement.
   _onTouchMove: (e) =>
-    return unless @_touchEnabled
+    return unless @_touchEnabled and @_touchStarted
     e.preventDefault()
     # Set a reference to the current x or y position.
     if e.type is 'mousemove'
@@ -811,17 +831,27 @@ class OriDomi
 
 
   # Teardown process when touch/drag event ends.
-  _onTouchEnd: (e) =>
+  _onTouchEnd: =>
     return unless @_touchEnabled
+    # Restore the initial touch status and cursor.
+    @_touchStarted = false
+    @stageEl.style.cursor = css.grab
     # Enable tweening again.
     @_setTweening true
-
-    # Remove movement listeners.
-    @stageEl.removeEventListener 'touchmove', @_onTouchMove, false
-    @stageEl.removeEventListener 'mousemove', @_onTouchMove, false
-
     # Pass callback final value.
     @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+
+
+  # End folding when the mouse or finger leaves the composition.
+  _onTouchLeave: =>
+    return unless @_touchEnabled and @_touchStarted
+    @_onTouchEnd()
+
+
+  # A fallback for browsers that don't support `mouseleave`.
+  _onMouseOut: (e) =>
+    return unless @_touchEnabled and @_touchStarted
+    @_onTouchEnd() if e.toElement and not @el.contains e.toElement
 
 
   # Public Methods
@@ -1107,12 +1137,15 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '0.2.0'
+  @VERSION = '0.2.1'
+
+
+  # Externally check if oriDomi is supported by the browser.
+  @isSupported = oriDomiSupport
 
 
   # External function to enable `devMode`.
-  @devMode = ->
-    devMode = true
+  @devMode = -> devMode = true
 
 # Attach `OriDomi` constructor to `window`.
 root.OriDomi = OriDomi

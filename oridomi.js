@@ -2,10 +2,10 @@
 (function() {
   'use strict';
 
-  var $, OriDomi, css, defaults, devMode, extendObj, instances, key, noOp, oriDomiSupport, prefixList, root, testEl, testProp, value,
+  var $, OriDomi, css, defaults, devMode, extendObj, instances, key, noOp, oriDomiSupport, prefixList, root, testEl, testProp, value, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  root = window;
+  root = this;
 
   instances = [];
 
@@ -69,6 +69,24 @@
     }
     return 'linear-gradient';
   })();
+
+  _ref = (function() {
+    var grabValue, plainGrab, prefix, _i, _len;
+    for (_i = 0, _len = prefixList.length; _i < _len; _i++) {
+      prefix = prefixList[_i];
+      plainGrab = 'grab';
+      testEl.style.cursor = (grabValue = "-" + (prefix.toLowerCase()) + "-" + plainGrab);
+      if (testEl.style.cursor === grabValue) {
+        return [grabValue, "-" + (prefix.toLowerCase()) + "-grabbing"];
+      }
+    }
+    testEl.style.cursor = plainGrab;
+    if (testEl.style.cursor === plainGrab) {
+      return [plainGrab, 'grabbing'];
+    } else {
+      return ['move', 'move'];
+    }
+  })(), css.grab = _ref[0], css.grabbing = _ref[1];
 
   css.transformProp = (function() {
     var prefix;
@@ -137,8 +155,12 @@
   OriDomi = (function() {
 
     function OriDomi(el, options) {
-      var anchor, bleed, bottomShader, content, contentHolder, hMask, hPanel, i, leftShader, metric, panel, rightShader, shader, stage, topShader, vMask, vPanel, xMetrics, xOffset, yMetrics, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _m, _n, _o, _p, _q, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var anchor, bleed, bottomShader, content, contentHolder, eString, eventPair, eventPairs, hMask, hPanel, i, leftShader, metric, mouseLeaveSupport, panel, rightShader, shader, stage, topShader, vMask, vPanel, xMetrics, xOffset, yMetrics, yOffset, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _len5, _len6, _len7, _len8, _m, _n, _o, _p, _q, _r, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9, _s;
       this.el = el;
+      this._onMouseOut = __bind(this._onMouseOut, this);
+
+      this._onTouchLeave = __bind(this._onTouchLeave, this);
+
       this._onTouchEnd = __bind(this._onTouchEnd, this);
 
       this._onTouchMove = __bind(this._onTouchMove, this);
@@ -165,7 +187,7 @@
       this.cleanEl.style.margin = '0';
       this.cleanEl.style.position = 'absolute';
       this.cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)';
-      _ref = this.settings, this.shading = _ref.shading, this.shadingIntensity = _ref.shadingIntensity, this.vPanels = _ref.vPanels, this.hPanels = _ref.hPanels;
+      _ref1 = this.settings, this.shading = _ref1.shading, this.shadingIntensity = _ref1.shadingIntensity, this.vPanels = _ref1.vPanels, this.hPanels = _ref1.hPanels;
       this._elStyle = root.getComputedStyle(this.el);
       this.displayStyle = this._elStyle.display;
       if (this.displayStyle === 'none') {
@@ -201,18 +223,18 @@
       stage.style.margin = '0';
       stage.style[css.perspective] = this.settings.perspective + 'px';
       stage.style[css.transformStyle] = 'preserve-3d';
-      _ref1 = this.anchors;
-      for (_k = 0, _len2 = _ref1.length; _k < _len2; _k++) {
-        anchor = _ref1[_k];
+      _ref2 = this.anchors;
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        anchor = _ref2[_k];
         this.panels[anchor] = [];
         this.stages[anchor] = stage.cloneNode(false);
         this.stages[anchor].className = 'oridomi-stage-' + anchor;
       }
       if (this.shading) {
         this.shaders = {};
-        _ref2 = this.anchors;
-        for (_l = 0, _len3 = _ref2.length; _l < _len3; _l++) {
-          anchor = _ref2[_l];
+        _ref3 = this.anchors;
+        for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+          anchor = _ref3[_l];
           this.shaders[anchor] = {};
           if (anchor === 'left' || anchor === 'right') {
             this.shaders[anchor].left = [];
@@ -274,10 +296,10 @@
         hPanel.style.outline = '1px solid transparent';
       }
       hPanel.appendChild(hMask);
-      _ref3 = ['top', 'bottom'];
-      for (_m = 0, _len4 = _ref3.length; _m < _len4; _m++) {
-        anchor = _ref3[_m];
-        for (i = _n = 0, _ref4 = this.hPanels; 0 <= _ref4 ? _n < _ref4 : _n > _ref4; i = 0 <= _ref4 ? ++_n : --_n) {
+      _ref4 = ['top', 'bottom'];
+      for (_m = 0, _len4 = _ref4.length; _m < _len4; _m++) {
+        anchor = _ref4[_m];
+        for (i = _n = 0, _ref5 = this.hPanels; 0 <= _ref5 ? _n < _ref5 : _n > _ref5; i = 0 <= _ref5 ? ++_n : --_n) {
           panel = hPanel.cloneNode(true);
           content = panel.getElementsByClassName('oridomi-content')[0];
           if (anchor === 'top') {
@@ -324,10 +346,10 @@
       vPanel.style.height = '100%';
       vPanel.style[css.origin] = 'left';
       vPanel.appendChild(vMask);
-      _ref5 = ['left', 'right'];
-      for (_o = 0, _len5 = _ref5.length; _o < _len5; _o++) {
-        anchor = _ref5[_o];
-        for (i = _p = 0, _ref6 = this.vPanels; 0 <= _ref6 ? _p < _ref6 : _p > _ref6; i = 0 <= _ref6 ? ++_p : --_p) {
+      _ref6 = ['left', 'right'];
+      for (_o = 0, _len5 = _ref6.length; _o < _len5; _o++) {
+        anchor = _ref6[_o];
+        for (i = _p = 0, _ref7 = this.vPanels; 0 <= _ref7 ? _p < _ref7 : _p > _ref7; i = 0 <= _ref7 ? ++_p : --_p) {
           panel = vPanel.cloneNode(true);
           content = panel.getElementsByClassName('oridomi-content')[0];
           if (anchor === 'left') {
@@ -368,16 +390,26 @@
       this.el.style.outline = 'none';
       this.stages.left.style.display = 'block';
       this.stageEl = document.createElement('div');
-      this.stageEl.addEventListener('touchstart', this._onTouchStart, false);
-      this.stageEl.addEventListener('mousedown', this._onTouchStart, false);
-      this.stageEl.addEventListener('touchend', this._onTouchEnd, false);
-      this.stageEl.addEventListener('mouseup', this._onTouchEnd, false);
+      eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'], ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']];
+      mouseLeaveSupport = 'onmouseleave' in window;
+      for (_q = 0, _len6 = eventPairs.length; _q < _len6; _q++) {
+        eventPair = eventPairs[_q];
+        for (_r = 0, _len7 = eventPair.length; _r < _len7; _r++) {
+          eString = eventPair[_r];
+          if (!(eString === 'TouchLeave' && !mouseLeaveSupport)) {
+            this.stageEl.addEventListener(eString.toLowerCase(), this['_on' + eventPair[0]], false);
+          } else {
+            this.stageEl.addEventListener('mouseout', this['_onMouseOut'], false);
+            break;
+          }
+        }
+      }
       if (this.settings.touchEnabled) {
         this.enableTouch();
       }
-      _ref7 = this.anchors;
-      for (_q = 0, _len6 = _ref7.length; _q < _len6; _q++) {
-        anchor = _ref7[_q];
+      _ref8 = this.anchors;
+      for (_s = 0, _len8 = _ref8.length; _s < _len8; _s++) {
+        anchor = _ref8[_s];
         this.stageEl.appendChild(this.stages[anchor]);
       }
       if (this.settings.showOnStart) {
@@ -387,7 +419,7 @@
       this.el.innerHTML = '';
       this.el.appendChild(this.cleanEl);
       this.el.appendChild(this.stageEl);
-      _ref8 = [0, 0], this._xLast = _ref8[0], this._yLast = _ref8[1];
+      _ref9 = [0, 0], this._xLast = _ref9[0], this._yLast = _ref9[1];
       this.lastOp = {
         method: 'accordion',
         options: {}
@@ -423,7 +455,7 @@
     };
 
     OriDomi.prototype._transform = function(angle, fracture) {
-      var axes, _ref;
+      var axes, _ref1;
       switch (this.lastAnchor) {
         case 'left':
           axes = [0, 1, 0, angle];
@@ -438,7 +470,7 @@
           axes = [1, 0, 0, angle];
       }
       if (fracture) {
-        _ref = [1, 1, 1], axes[0] = _ref[0], axes[1] = _ref[1], axes[2] = _ref[2];
+        _ref1 = [1, 1, 1], axes[0] = _ref1[0], axes[1] = _ref1[1], axes[2] = _ref1[2];
       }
       return "rotate3d(" + axes[0] + ", " + axes[1] + ", " + axes[2] + ", " + axes[3] + "deg)";
     };
@@ -582,7 +614,7 @@
     };
 
     OriDomi.prototype._setTweening = function(speed) {
-      var i, panel, shaderPair, _i, _len, _ref;
+      var i, panel, shaderPair, _i, _len, _ref1;
       if (typeof speed === 'boolean') {
         speed = speed ? this.settings.speed + 'ms' : '0ms';
       }
@@ -591,9 +623,9 @@
       } else {
         shaderPair = ['top', 'bottom'];
       }
-      _ref = this.panels[this.lastAnchor];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        panel = _ref[i];
+      _ref1 = this.panels[this.lastAnchor];
+      for (i = _i = 0, _len = _ref1.length; _i < _len; i = ++_i) {
+        panel = _ref1[i];
         panel.style[css.transitionDuration] = speed;
         if (this.shading) {
           this.shaders[this.lastAnchor][shaderPair[0]][i].style[css.transitionDuration] = speed;
@@ -605,11 +637,7 @@
 
     OriDomi.prototype._setCursor = function() {
       if (this._touchEnabled) {
-        if (this.lastAnchor === 'left' || this.lastAnchor === 'right') {
-          return this.stageEl.style.cursor = 'ew-resize';
-        } else {
-          return this.stageEl.style.cursor = 'ns-resize';
-        }
+        return this.stageEl.style.cursor = css.grab;
       } else {
         return this.stageEl.style.cursor = 'default';
       }
@@ -634,6 +662,8 @@
         return;
       }
       e.preventDefault();
+      this._touchStarted = true;
+      this.stageEl.style.cursor = css.grabbing;
       this._setTweening(false);
       this._touchAxis = this.lastAnchor === 'left' || this.lastAnchor === 'right' ? 'x' : 'y';
       this["_" + this._touchAxis + "Last"] = this.lastAngle;
@@ -642,14 +672,12 @@
       } else {
         this["_" + this._touchAxis + "1"] = e.targetTouches[0]["page" + (this._touchAxis.toUpperCase())];
       }
-      this.stageEl.addEventListener('touchmove', this._onTouchMove, false);
-      this.stageEl.addEventListener('mousemove', this._onTouchMove, false);
       return this.settings.touchStartCallback(this["_" + this._touchAxis + "1"]);
     };
 
     OriDomi.prototype._onTouchMove = function(e) {
       var current, delta, distance;
-      if (!this._touchEnabled) {
+      if (!(this._touchEnabled && this._touchStarted)) {
         return;
       }
       e.preventDefault();
@@ -682,24 +710,40 @@
       return this.settings.touchMoveCallback(delta);
     };
 
-    OriDomi.prototype._onTouchEnd = function(e) {
+    OriDomi.prototype._onTouchEnd = function() {
       if (!this._touchEnabled) {
         return;
       }
+      this._touchStarted = false;
+      this.stageEl.style.cursor = css.grab;
       this._setTweening(true);
-      this.stageEl.removeEventListener('touchmove', this._onTouchMove, false);
-      this.stageEl.removeEventListener('mousemove', this._onTouchMove, false);
       return this.settings.touchEndCallback(this["_" + this._touchAxis + "Last"]);
     };
 
+    OriDomi.prototype._onTouchLeave = function() {
+      if (!(this._touchEnabled && this._touchStarted)) {
+        return;
+      }
+      return this._onTouchEnd();
+    };
+
+    OriDomi.prototype._onMouseOut = function(e) {
+      if (!(this._touchEnabled && this._touchStarted)) {
+        return;
+      }
+      if (e.toElement && !this.el.contains(e.toElement)) {
+        return this._onTouchEnd();
+      }
+    };
+
     OriDomi.prototype.reset = function(callback) {
-      var i, panel, _i, _len, _ref;
+      var i, panel, _i, _len, _ref1;
       if (this.isFoldedUp) {
         return this.unfold(callback);
       }
-      _ref = this.panels[this.lastAnchor];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        panel = _ref[i];
+      _ref1 = this.panels[this.lastAnchor];
+      for (i = _i = 0, _len = _ref1.length; _i < _len; i = ++_i) {
+        panel = _ref1[i];
         panel.style[css.transform] = this._transform(0);
         if (this.shading) {
           this._setShader(i, this.lastAnchor, 0);
@@ -766,15 +810,15 @@
     };
 
     OriDomi.prototype.accordion = function(angle, anchor, options) {
-      var deg, i, normalized, panel, _i, _len, _ref;
+      var deg, i, normalized, panel, _i, _len, _ref1;
       normalized = this._normalizeArgs('accordion', arguments);
       if (!normalized) {
         return;
       }
       angle = normalized[0], anchor = normalized[1], options = normalized[2];
-      _ref = this.panels[anchor];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        panel = _ref[i];
+      _ref1 = this.panels[anchor];
+      for (i = _i = 0, _len = _ref1.length; _i < _len; i = ++_i) {
+        panel = _ref1[i];
         if (i % 2 !== 0 && !options.twist) {
           deg = -angle;
         } else {
@@ -803,16 +847,16 @@
     };
 
     OriDomi.prototype.curl = function(angle, anchor, options) {
-      var i, normalized, panel, _i, _len, _ref;
+      var i, normalized, panel, _i, _len, _ref1;
       normalized = this._normalizeArgs('curl', arguments);
       if (!normalized) {
         return;
       }
       angle = normalized[0], anchor = normalized[1], options = normalized[2];
       angle /= this._getPanelType(anchor);
-      _ref = this.panels[anchor];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        panel = _ref[i];
+      _ref1 = this.panels[anchor];
+      for (i = _i = 0, _len = _ref1.length; _i < _len; i = ++_i) {
+        panel = _ref1[i];
         panel.style[css.transform] = this._transform(angle);
         if (this.shading) {
           this._setShader(i, anchor, 0);
@@ -822,16 +866,16 @@
     };
 
     OriDomi.prototype.ramp = function(angle, anchor, options) {
-      var i, normalized, panel, _i, _len, _ref;
+      var i, normalized, panel, _i, _len, _ref1;
       normalized = this._normalizeArgs('ramp', arguments);
       if (!normalized) {
         return;
       }
       angle = normalized[0], anchor = normalized[1], options = normalized[2];
       this.panels[anchor][1].style[css.transform] = this._transform(angle);
-      _ref = this.panels[anchor];
-      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        panel = _ref[i];
+      _ref1 = this.panels[anchor];
+      for (i = _i = 0, _len = _ref1.length; _i < _len; i = ++_i) {
+        panel = _ref1[i];
         if (i > 1) {
           this.panels[anchor][i].style[css.transform] = this._transform(0);
         }
@@ -959,7 +1003,9 @@
       return this.accordion(angle / 10, anchor, options);
     };
 
-    OriDomi.VERSION = '0.2.0';
+    OriDomi.VERSION = '0.2.1';
+
+    OriDomi.isSupported = oriDomiSupport;
 
     OriDomi.devMode = function() {
       return devMode = true;
