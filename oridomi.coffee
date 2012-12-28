@@ -1131,9 +1131,12 @@ class OriDomi
   @VERSION = '0.2.0'
 
 
+  # Externally check if oriDomi is supported by the browser.
+  @isSupported = oriDomiSupport
+
+
   # External function to enable `devMode`.
-  @devMode = ->
-    devMode = true
+  @devMode = -> devMode = true
 
 # Attach `OriDomi` constructor to `window`.
 root.OriDomi = OriDomi
