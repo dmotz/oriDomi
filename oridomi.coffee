@@ -862,7 +862,7 @@ class OriDomi
   reset: (callback) ->
     # If the stage is folded up, unfold it first.
     return @unfold callback if @isFoldedUp
-
+    @lastAngle = 0
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transform] = @_transform 0
       @_setShader i, @lastAnchor, 0 if @shading
