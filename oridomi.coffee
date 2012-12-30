@@ -212,6 +212,8 @@ class OriDomi
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
+    # Create an array to act as an animation queue.
+    @_queue = []
 
     # Clone the target element and save a copy of it.
     @cleanEl = @el.cloneNode true
