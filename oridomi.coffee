@@ -225,10 +225,6 @@ class OriDomi
     # Record the current global styling of the target element.
     @_elStyle = root.getComputedStyle @el
 
-    # Save the original CSS display of the target. If `none`, assume `block`.
-    @displayStyle = @_elStyle.display
-    @displayStyle = 'block' if @displayStyle is 'none'
-
     # To calculate the full dimensions of the element, create arrays of relevant metric keys.
     xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
     yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
