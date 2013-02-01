@@ -52,14 +52,14 @@ css =
 
 # This function checks for the presence of CSS properties on the test div.
 testProp = (prop) ->
-  # If the un-prefixed property is present, return it.
-  return prop if testEl.style[prop]?
   # Capitalize the property name for camel-casing.
   capProp = prop.charAt(0).toUpperCase() + prop.slice 1
   # Loop through the vendor prefix list and return when we find a match.
   for prefix in prefixList
     if testEl.style[prefix + capProp]?
       return prefix + capProp
+  # If the un-prefixed property is present, return it.
+  return prop if testEl.style[prop]?
   # If no matches are found, return false to denote that the browser is missing this property.
   false
 
