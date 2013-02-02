@@ -132,10 +132,7 @@ css.transitionEnd = do ->
 # It is simple and one dimensional.
 extendObj = (target, source) ->
   # Check if the extension object is an object literal by casting it and comparing it.
-  if source isnt Object source
-    console.warn 'oriDomi: Must pass an object to extend with' if devMode
-    # Return the original target if its source isn't valid.
-    return target
+  return target if source isnt Object source
   # If the target isn't an object, set it to an empty object literal.
   target = {} if target isnt Object target
   # Loop through the extension object and copy its values to the target if they don't exist.
