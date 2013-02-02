@@ -249,9 +249,9 @@ class OriDomi
     # manipulation of the target's inner contents later.
     @isFrozen = false
     # Set an array of anchor names.
-    @anchors = ['left', 'right', 'top', 'bottom']
+    @_anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
-    @lastAnchor = @anchors[0]
+    @lastAnchor = @_anchors[0]
     # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
@@ -272,7 +272,7 @@ class OriDomi
     stage.style[css.transformStyle] = 'preserve-3d'
 
     # Loop through the anchors list and create a stage and empty panel set for each.
-    for anchor in @anchors
+    for anchor in @_anchors
       @panels[anchor] = []
       @stages[anchor] = stage.cloneNode false
       @stages[anchor].className = 'oridomi-stage-' + anchor
@@ -283,8 +283,8 @@ class OriDomi
       # Loop through each anchor and create a nested object literal.
       # For the left and right anchors, create arrays to hold the left and right
       # shader for each panel. Do the same for top and bottom.
-      for anchor in @anchors
         @shaders[anchor] = {}
+      for anchor in @_anchors
         if anchor is 'left' or anchor is 'right'
           @shaders[anchor].left = []
           @shaders[anchor].right = []
