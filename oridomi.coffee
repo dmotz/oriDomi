@@ -279,18 +279,18 @@ class OriDomi
 
     # If shading is enabled, create an object literal to hold shaders.
     if @shading
-      @shaders = {}
+      @_shaders = {}
       # Loop through each anchor and create a nested object literal.
       # For the left and right anchors, create arrays to hold the left and right
       # shader for each panel. Do the same for top and bottom.
-        @shaders[anchor] = {}
       for anchor in @_anchors
+        @_shaders[anchor] = {}
         if anchor is 'left' or anchor is 'right'
-          @shaders[anchor].left = []
-          @shaders[anchor].right = []
+          @_shaders[anchor].left = []
+          @_shaders[anchor].right = []
         else
-          @shaders[anchor].top = []
-          @shaders[anchor].bottom = []
+          @_shaders[anchor].top = []
+          @_shaders[anchor].bottom = []
 
       # Create a shader div prototype to clone.
       shader = document.createElement 'div'
@@ -396,8 +396,8 @@ class OriDomi
 
         # Store references to the shader divs in the `shaders` object.
         if @shading
-          @shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
-          @shaders[anchor].bottom[i] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
+          @_shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
+          @_shaders[anchor].bottom[i] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
 
         # Store a reference to this panel in the `panels` object.
         @panels[anchor][i] = panel
@@ -452,8 +452,8 @@ class OriDomi
         content.style.left = xOffset + 'px'
 
         if @shading
-          @shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
-          @shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
+          @_shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
+          @_shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
 
         @panels[anchor][i] = panel
         @panels[anchor][i - 1].appendChild panel unless i is 0
@@ -483,7 +483,7 @@ class OriDomi
     @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
-    @stageEl.appendChild @stages[anchor] for anchor in @anchors
+    @stageEl.appendChild @stages[anchor] for anchor in @_anchors
 
     # Show the target if applicable.
     if @settings.showOnStart
@@ -646,11 +646,11 @@ class OriDomi
 
     # Only manipulate shader opacity for the current axis.
     if anchor is 'left' or anchor is 'right'
-      @shaders[anchor].left[i].style.opacity = a
-      @shaders[anchor].right[i].style.opacity = b
+      @_shaders[anchor].left[i].style.opacity = a
+      @_shaders[anchor].right[i].style.opacity = b
     else
-      @shaders[anchor].top[i].style.opacity = a
-      @shaders[anchor].bottom[i].style.opacity = b
+      @_shaders[anchor].top[i].style.opacity = a
+      @_shaders[anchor].bottom[i].style.opacity = b
 
 
   # This is a simple method used by the constructor to set CSS gradient styles.
