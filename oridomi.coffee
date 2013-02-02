@@ -33,6 +33,12 @@ devMode = false
 # not support oriDomi.
 oriDomiSupport = true
 
+# Function used to warn the developer that the browser does not support oriDomi.
+supportWarning = (prop) ->
+  if devMode
+    console.warn "oriDomi: Browser does not support oriDomi. Missing support for `#{ prop }`."
+    oriDomiSupport = false
+
 # Create a div for testing CSS3 properties.
 testEl = document.createElement 'div'
 
@@ -69,8 +75,7 @@ for key, value of css
   # If the returned value is false, warn the user that the browser doesn't support
   # oriDomi, set `oriDomiSupport` to false, and break out of the loop.
   unless css[key]
-    console.warn 'oriDomi: Browser does not support oriDomi' if devMode
-    oriDomiSupport = false
+    supportWarning value
     break
 
 # CSS3 gradients are used for shading.
