@@ -32,15 +32,15 @@
 
   testProp = function(prop) {
     var capProp, prefix, _i, _len;
-    if (testEl.style[prop] != null) {
-      return prop;
-    }
     capProp = prop.charAt(0).toUpperCase() + prop.slice(1);
     for (_i = 0, _len = prefixList.length; _i < _len; _i++) {
       prefix = prefixList[_i];
       if (testEl.style[prefix + capProp] != null) {
         return prefix + capProp;
       }
+    }
+    if (testEl.style[prop] != null) {
+      return prop;
     }
     return false;
   };
@@ -1003,7 +1003,7 @@
       return this.accordion(angle / 10, anchor, options);
     };
 
-    OriDomi.VERSION = '0.2.1';
+    OriDomi.VERSION = '0.2.2';
 
     OriDomi.isSupported = oriDomiSupport;
 

@@ -3,7 +3,7 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.2.1`
+# `0.2.2`
 
 # Copyright 2012, MIT License
 
@@ -1138,7 +1138,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '0.2.1'
+  @VERSION = '0.2.2'
 
 
   # Externally check if oriDomi is supported by the browser.
