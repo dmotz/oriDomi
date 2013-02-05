@@ -245,12 +245,6 @@ class OriDomi
     @panelWidth = @width / @vPanels
     @panelHeight = @height / @hPanels
 
-    # Set our current fold angle at `0` and `isFoldedUp` as `false`.
-    @lastAngle = 0
-    @isFoldedUp = false
-    # `isFrozen` records if the oriDomi effect is temporarily disabled for easier
-    # manipulation of the target's inner contents later.
-    @isFrozen = false
     # Set an array of anchor names.
     @_anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
