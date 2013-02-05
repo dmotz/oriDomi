@@ -54,6 +54,7 @@ css =
   transitionDuration: 'transitionDuration'
   transitionEasing: 'transitionTimingFunction'
   perspective: 'perspective'
+  perspectiveOrigin: 'perspectiveOrigin'
   backface: 'backfaceVisibility'
 
 # This function checks for the presence of CSS properties on the test div.
