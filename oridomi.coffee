@@ -514,6 +514,18 @@ class OriDomi
   # Internal Methods
   # ================
 
+
+  # This method tests if the called action is identical to the previous one.
+  # If two identical operations are called in a row, the transition callback
+  # wouldn't be called due to no animation taking place. This method reasons if
+  # movement has taken place, preventing this pitfall of transition listeners.
+  _isIdenticalOperation: (op) ->
+    return false if @lastOp.angle isnt op.angle
+    for k, v of op.options
+      return false if op.options[k] isnt @lastOp.options[k] and k isnt 'callback'
+    true
+
+
   # `_callback` normalizes callback handling for all public methods.
   _callback: (options) ->
     if typeof options.callback is 'function'
