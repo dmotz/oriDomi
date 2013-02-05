@@ -520,7 +520,7 @@ class OriDomi
 
 
   # This method tests if the called action is identical to the previous one.
-  # If two identical operations are called in a row, the transition callback
+  # If two identical operations were called in a row, the transition callback
   # wouldn't be called due to no animation taking place. This method reasons if
   # movement has taken place, preventing this pitfall of transition listeners.
   _isIdenticalOperation: (op) ->
