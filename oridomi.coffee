@@ -165,6 +165,9 @@ defaults =
   shading: 'hard'
   # Determines the duration of all animations in milliseconds.
   speed: 700
+  # Configurable maximum angle for effects. With most effects, exceeding 90/-90 usually
+  # makes the element wrap around and pass through itself leading to some glitchy visuals.
+  maxAngle: 90
   # This CSS class is applied to elements that oriDomi has been invoked so they can be
   # easily targeted later if needed.
   oriDomiClass: 'oridomi'
@@ -567,15 +570,15 @@ class OriDomi
 
 
   # `_normalizeAngle` validates a given angle by making sure it's a float and by
-  # keeping it within a range of -89/89 degrees. Fully 90 degree angles tend to look glitchy.
+  # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
     if isNaN angle
       0
-    else if angle > 89
-      89
-    else if angle < -89
-      -89
+    else if angle > @settings.maxAngle
+      @settings.maxAngle
+    else if angle < -@settings.maxAngle
+      -@settings.maxAngle
     else
       angle
 
@@ -1098,13 +1101,13 @@ class OriDomi
   # Convenience proxy to accordion-fold instance to maximum angle.
   collapse: (anchor, options = {}) ->
     options.sticky = false
-    @accordion -89, anchor, options
+    @accordion -@settings.maxAngle, anchor, options
 
 
   # Same as `collapse`, but uses positive angle for slightly different effect.
   collapseAlt: (anchor, options = {}) ->
     options.sticky = false
-    @accordion 89, anchor, options
+    @accordion @settings.maxAngle, anchor, options
 
 
   # Simply proxy for calling `accordion` with `sticky` enabled.
