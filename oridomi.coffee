@@ -499,7 +499,7 @@ class OriDomi
     # Initialize both to zero.
     [@_xLast, @_yLast] = [0, 0]
     # This property determines the effect used during touch/drag events.
-    @lastOp = method: 'accordion', options: {}
+    @lastOp = method: 'accordion', angle: 0, options: {}
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
