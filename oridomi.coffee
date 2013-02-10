@@ -500,7 +500,7 @@ class OriDomi
 
     # These properties record starting angles for touch/drag events.
     # Initialize both to zero.
-    [@_xLast, @_yLast] = [0, 0]
+    @_xLast = @_yLast = 0
     # This property determines the effect used during touch/drag events.
     @lastOp = method: 'accordion', angle: 0, options: {}
 
