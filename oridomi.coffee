@@ -528,19 +528,25 @@ class OriDomi
 
 
   # `_callback` normalizes callback handling for all public methods.
-  _callback: (options) ->
-    if typeof options.callback is 'function'
-      # Create a local callback for the animation's end.
-      onTransitionEnd = (e) =>
-        # Remove the event listener immediately to prevent bubbling.
-        e.currentTarget.removeEventListener css.transitionEnd, onTransitionEnd, false
-        # Invoke the callback.
-        options.callback()
+  _callback: (operation) ->
+    # If there was no transformation, invoke the callback immediately.
+    if @_touchStarted or @_isIdenticalOperation operation
+      @_conclude operation.options.callback
+    # Otherwise, attach an event listener to be called on the transition's end.
+    else
+      @panels[@lastAnchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
-      # If there was no transformation (0 degrees) invoke the callback immediately.
-      if @lastAngle is 0
-        options.callback()
-      # Otherwise, attach an event listener to be called on the transition's end.
+    @lastOp = operation
+
+
+  # Handler called when a CSS transition ends.
+  _onTransitionEnd: (e) =>
+    # Remove the event listener immediately to prevent bubbling.
+    e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, false
+    # Initialize transition teardown process.
+    @_conclude @lastOp.options.callback
+
+
       else
         @panels[@lastAnchor][0].addEventListener css.transitionEnd, onTransitionEnd, false
 
