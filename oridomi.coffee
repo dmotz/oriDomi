@@ -655,7 +655,7 @@ class OriDomi
     # have alternating directions.
     if @shading is 'hard'
       opacity *= .15
-      if @lastAngle < 0
+      if @lastOp.angle < 0
         angle = abs
       else
         angle = -abs
