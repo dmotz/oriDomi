@@ -776,8 +776,6 @@ class OriDomi
       twist: false
     curl:
       twist: false
-    ramp: {}
-    foldUp: {}
 
 
   # Touch / Drag Event Handlers
