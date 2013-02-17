@@ -132,6 +132,7 @@ css.transitionEnd = do ->
 # This function is used to extend option object literals with a set of defaults.
 # It is simple and one dimensional.
 extendObj = (target, source) ->
+  return {} if !target and !source
   # Check if the extension object is an object literal by casting it and comparing it.
   return target if source isnt Object source
   # If the target isn't an object, set it to an empty object literal.
