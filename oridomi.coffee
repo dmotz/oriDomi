@@ -502,7 +502,7 @@ class OriDomi
     # Initialize both to zero.
     @_xLast = @_yLast = 0
     # This property determines the effect used during touch/drag events.
-    @lastOp = method: 'accordion', angle: 0, options: {}
+    @lastOp = @_defaultOp = method: 'accordion', angle: 0, options: {}
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
@@ -536,7 +536,10 @@ class OriDomi
     else
       @panels[@lastAnchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
-    @lastOp = operation
+    if operation.method is 'reset'
+      @lastOp = @_defaultOp
+    else
+      @lastOp = operation
 
 
   # Handler called when a CSS transition ends.
