@@ -749,8 +749,8 @@ class OriDomi
     for panel, i in @panels[@lastAnchor]
       panel.style[css.transitionDuration] = speed
       if @shading
-        @shaders[@lastAnchor][shaderPair[0]][i].style[css.transitionDuration] = speed
-        @shaders[@lastAnchor][shaderPair[1]][i].style[css.transitionDuration] = speed
+        for side in shaderPair
+          @_shaders[@lastAnchor][side][i].style[css.transitionDuration] = speed
 
     # Return null and not the loop's result.
     null
