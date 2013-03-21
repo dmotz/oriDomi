@@ -1220,8 +1220,7 @@ if root.jQuery? or root.$?.data?
       for el in @
         # If the element in the selection already has an instance of oriDomi
         # attached to it, return the instance.
-        instance = $.data el, 'oriDomi'
-        if instance
+        if instance = $.data el, 'oriDomi'
           return instance
         else
           # Create an instance of oriDomi and attach it to the element.
