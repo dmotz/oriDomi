@@ -21,7 +21,7 @@
         }
     ],
     "bugs": "https://github.com/dmotz/oriDomi/issues",
-    "homepage": "https://github.com/dmotz/oriDomi",
+    "homepage": "http://oridomi.com",
     "docs": "http://oridomi.com",
     "dependencies": {
         "jquery": ">=1.5"
