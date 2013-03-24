@@ -3,14 +3,12 @@
 # #### by [Dan Motzenbecker](http://oxism.com)
 # Fold up the DOM like paper.
 
-# `0.2.1`
+# `0.3.0`
 
-# Copyright 2012, MIT License
+# Copyright 2013, MIT License
 
 # Setup
 # =====
-
-# Enable strict mode.
 'use strict'
 
 # Set a reference to the global object within this scope.
@@ -1166,7 +1164,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '0.2.1'
+  @VERSION = '0.3.0'
 
 
   # Externally check if oriDomi is supported by the browser.
