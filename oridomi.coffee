@@ -203,12 +203,13 @@ class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
     # If the browser doesn't support oriDomi, return the element unmodified.
-    return @el unless oriDomiSupport
+    return @ unless oriDomiSupport
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     return new oriDomi @el, @settings unless @ instanceof OriDomi
     # Return if the first argument isn't a DOM element.
     if not @el or @el.nodeType isnt 1
-      return console.warn 'oriDomi: First argument must be a DOM element' if devMode
+      console.warn 'oriDomi: First argument must be a DOM element' if devMode
+      return @
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
