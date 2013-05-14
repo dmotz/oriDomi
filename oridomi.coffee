@@ -252,11 +252,11 @@ class OriDomi
     # Each stage needs its own perspective origin so 90 degree folds hide the element.
     perspectiveOrigins = ['0% 50%', '100% 50%', '50% 0%', '50% 100%']
     # Loop through the anchors list and create a stage and empty panel set for each.
-    for anchor, n in @_anchors
+    for anchor, i in @_anchors
       @panels[anchor] = []
       stage = @stages[anchor] = stage.cloneNode false
       stage.className = 'oridomi-stage-' + anchor
-      stage.style[css.perspectiveOrigin] = perspectiveOrigins[n]
+      stage.style[css.perspectiveOrigin] = perspectiveOrigins[i]
 
     # If shading is enabled, create an object literal to hold shaders.
     if @shading
