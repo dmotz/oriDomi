@@ -286,6 +286,7 @@ class OriDomi
     # Every panel will contain one.
     contentHolder = @el.cloneNode true
     contentHolder.classList.add 'oridomi-content'
+    contentHolder.style.width = contentHolder.style.height = '100%'
     contentHolder.style.margin = '0'
     contentHolder.style.position = 'relative'
     contentHolder.style.float = 'none'
