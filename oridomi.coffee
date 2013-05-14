@@ -510,22 +510,25 @@ class OriDomi
 
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
-  _transform: (angle, fracture) ->
-    switch @lastAnchor
-      when 'left'
-        axes = [0, 1, 0, angle]
-      when 'right'
-        axes = [0, 1, 0, -angle]
-      when 'top'
-        axes = [1, 0, 0, -angle]
-      when 'bottom'
-        axes = [1, 0, 0, angle]
-
-    # `fracture` is a special option that splits up the panels by rotating them on all axes.
+  _transform: (angle, anchor, fracture) ->
     if fracture
-      [axes[0], axes[1], axes[2]] = [1, 1, 1]
+      axes = [angle, angle, angle]
+    else
+      switch anchor
+        when 'left'
+          axes = [0, angle, 0]
+          translate = 'translateX(-1px)'
+        when 'right'
+          axes = [0, -angle, 0]
+          translate = 'translateX(1px)'
+        when 'top'
+          axes = [-angle, 0, 0]
+          translate = 'translateY(-1px)'
+        when 'bottom'
+          axes = [angle, 0, 0]
+          translate = 'translateY(1px)'
 
-    "rotate3d(#{ axes[0] }, #{ axes[1] }, #{ axes[2] }, #{ axes[3] }deg)"
+    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) #{ translate }"
 
 
   # `_normalizeAngle` validates a given angle by making sure it's a float and by
