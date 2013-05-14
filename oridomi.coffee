@@ -336,49 +336,7 @@ class OriDomi
     # Add the horizontal mask prototype to the horizontal panel prototype.
     hPanel.appendChild hMask
 
-    # Loop through just the horizontal anchors.
-    for anchor in ['top', 'bottom']
-      # Loop through the number of horizontal panels.
-      for i in [0...@hPanels]
-        # Clone a copy of the panel prototype for manipulation.
-        panel = hPanel.cloneNode true
-        # Set a reference to its inner content.
-        content = panel.getElementsByClassName('oridomi-content')[0]
-
-        if anchor is 'top'
-          # The `yOffset` shifts the content of the panel down so they appear contiguous.
-          yOffset = -(i * @panelHeight)
-          # This conditional pushes each panel's position down so they stack on top of each other.
-          if i is 0
-            panel.style.top = '0'
-          else
-            panel.style.top = @panelHeight + 'px'
-        else
-          # For bottom panels, make sure the transform origin is `'bottom'`.
-          panel.style[css.origin] = 'bottom'
-          # For the bottom `yOffset` and top position, we need to work backwards.
-          yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
-
-          if i is 0
-            panel.style.top = @panelHeight * (@vPanels - 1) - bleed + 'px'
-          else
-            panel.style.top = -@panelHeight + 'px'
-
-        content.style.top = yOffset + 'px'
-
-        # Store references to the shader divs in the `shaders` object.
-        if @shading
-          @_shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
-          @_shaders[anchor].bottom[i] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
-
-        # Store a reference to this panel in the `panels` object.
-        @panels[anchor][i] = panel
-
-        # Append each panel to its previous sibling (unless it's the first panel).
-        @panels[anchor][i - 1].appendChild panel unless i is 0
-
-      # Append the first panel (containing all of its siblings) to its respective stage.
-      @stages[anchor].appendChild @panels[anchor][0]
+    @_createPanels 'y', hPanel
 
     # Now that the horizontal panels are done, we can clone the `hMask` for the vertical mask prototype.
     vMask = hMask.cloneNode true
@@ -402,36 +360,7 @@ class OriDomi
     vPanel.appendChild vMask
 
     # Repeat a similar panel creation process for vertical panels.
-    for anchor in ['left', 'right']
-      for i in [0...@vPanels]
-        panel = vPanel.cloneNode true
-        content = panel.getElementsByClassName('oridomi-content')[0]
-
-        if anchor is 'left'
-          xOffset = -(i * @panelWidth)
-          if i is 0
-            panel.style.left = '0'
-          else
-            panel.style.left = @panelWidth + 'px'
-        else
-          panel.style[css.origin] = 'right'
-          xOffset = -((@vPanels * @panelWidth) - (@panelWidth * (i + 1)))
-          if i is 0
-            panel.style.left = @panelWidth * (@vPanels - 1) - 1 + 'px'
-          else
-            panel.style.left = -@panelWidth + 'px'
-
-        content.style.left = xOffset + 'px'
-
-        if @shading
-          @_shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
-          @_shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
-
-        @panels[anchor][i] = panel
-        @panels[anchor][i - 1].appendChild panel unless i is 0
-
-      @stages[anchor].appendChild @panels[anchor][0]
-
+    @_createPanels 'x', vPanel
 
     # Add a special class to the target element.
     @el.classList.add @settings.oriDomiClass
@@ -479,6 +408,49 @@ class OriDomi
 
   # Internal Methods
   # ================
+
+
+  _createPanels: (axis, proto) ->
+    if axis is 'x'
+      anchors = ['left', 'right']
+      count   = @vPanels
+      metric  = 'width'
+    else
+      anchors = ['top', 'bottom']
+      count   = @hPanels
+      metric  = 'height'
+
+    percent = 100 / count
+
+    for anchor, n in anchors
+      for i in [0...count]
+        panel = proto.cloneNode true
+        panel.style[metric] = percent + '%' if i is 0
+        content = panel.getElementsByClassName('oridomi-content')[0]
+        content.style[metric] = count * 100 + '%'
+
+        if n is 0
+          content.style[anchor] = -i * 100 + '%'
+          if i is 0
+            panel.style[anchor] = '0'
+          else
+            panel.style[anchor] = '100%'
+        else
+          content.style[anchors[0]] = -(count - i - 1) * 100 + '%'
+          panel.style[css.origin] = anchor
+          if i is 0
+            panel.style[anchors[0]] = 100 - percent + '%'
+          else
+            panel.style[anchors[0]] = '-100%'
+
+        if @shading
+          for a in anchors
+            @_shaders[anchor][a][i] = panel.getElementsByClassName("oridomi-shader-#{ a }")[0]
+
+        @panels[anchor][i] = panel
+        @panels[anchor][i - 1].appendChild panel unless i is 0
+
+      @stages[anchor].appendChild @panels[anchor][0]
 
 
   # This method tests if the called action is identical to the previous one.
