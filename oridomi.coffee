@@ -238,8 +238,7 @@ class OriDomi
     # Create a stage div to serve as a prototype.
     stage = document.createElement 'div'
     # The stage should occupy the full width and height of the target element.
-    stage.style.width = @width + 'px'
-    stage.style.height = @height + 'px'
+    stage.style.width = stage.style.height = '100%'
     # By default, each stage is hidden and absolutely positioned so they stack
     # on top of each other.
     stage.style.display = 'none'
