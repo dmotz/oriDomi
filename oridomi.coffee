@@ -535,12 +535,13 @@ class OriDomi
   # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
+    max   = @settings.maxAngle
     if isNaN angle
       0
-    else if angle > @settings.maxAngle
-      @settings.maxAngle
-    else if angle < -@settings.maxAngle
-      -@settings.maxAngle
+    else if angle > max
+      max
+    else if angle < -max
+      -max
     else
       angle
 
