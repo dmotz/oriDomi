@@ -373,13 +373,16 @@ class OriDomi
     @stages.left.style.display = 'block'
 
     # Create an element to hold stages.
-    @stageEl = document.createElement 'div'
+    @stageHolder = document.createElement 'div'
+    @stageHolder.style.width = @stageHolder.style.height = '100%'
+    @stageHolder.style.position = 'absolute'
+    @stageHolder.style[css.transform] = 'translateY(-100%)'
 
     # Enable touch events.
     @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
-    @stageEl.appendChild @stages[anchor] for anchor in @_anchors
+    @stageHolder.appendChild @stages[anchor] for anchor in @_anchors
 
     # Show the target if applicable.
     if @settings.showOnStart
@@ -389,7 +392,7 @@ class OriDomi
     # Hide the original content and insert the oriDomi version.
     @el.innerHTML = ''
     @el.appendChild @cleanEl
-    @el.appendChild @stageEl
+    @el.appendChild @stageHolder
 
     # These properties record starting angles for touch/drag events.
     # Initialize both to zero.
