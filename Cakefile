@@ -10,12 +10,12 @@ print = (fn) ->
 
 
 task 'build', 'Build, minify, and generate docs for oriDomi', ->
-  exec 'coffee -c oridomi.coffee', print ->
+  exec 'coffee -mc oridomi.coffee', print ->
     exec 'uglifyjs -o oridomi.min.js oridomi.js', print()
     exec 'docco oridomi.coffee', print()
 
 
 task 'watch', 'Build oriDomi continuously', ->
-  watcher = spawn 'coffee', ['-wc', 'oridomi.coffee']
+  watcher = spawn 'coffee', ['-mwc', 'oridomi.coffee']
   watcher.stdout.on 'data', output
   watcher.stderr.on 'data', output
