@@ -14,10 +14,6 @@
 # Set a reference to the global object within this scope.
 root = @
 
-# An array to hold references to oriDomi instances so they can be easily freed
-# from memory via the `destroy()` method.
-instances = []
-
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to false so oriDomi knows we are working without jQuery.
 # oriDomi doesn't require it to work, but offers a useful plugin bridge.
@@ -947,8 +943,6 @@ class OriDomi
       # Reset original styles.
       changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
       @el.style[key] = @_elStyle[key] for key in changedKeys
-      # Free up this instance for garbage collection.
-      instances[instances.indexOf @] = null
       callback?()
 
 
