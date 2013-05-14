@@ -244,8 +244,7 @@ class OriDomi
     stage.style.display = 'none'
     stage.style.position = 'absolute'
     # Eliminate padding and margins since the stage is already the full width and height.
-    stage.style.padding = '0'
-    stage.style.margin = '0'
+    stage.style.margin = stage.style.padding = '0'
     # Apply 3D perspective and preserve any parent perspective.
     stage.style[css.perspective] = @settings.perspective + 'px'
     stage.style[css.transformStyle] = 'preserve-3d'
