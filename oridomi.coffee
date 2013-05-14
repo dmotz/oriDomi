@@ -202,8 +202,6 @@ defaults =
 class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
-    # If `devMode` is enabled, start a benchmark timer for the constructor.
-    console.time 'oridomiConstruction' if devMode
     # If the browser doesn't support oriDomi, return the element unmodified.
     return @el unless oriDomiSupport
     # If the constructor wasn't called with the `new` keyword, invoke it again.
@@ -502,10 +500,6 @@ class OriDomi
 
     # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
-    # Push this instance into the instances collection.
-    instances.push @
-    # End the constructor benchmark if `devMode` is active.
-    console.timeEnd 'oridomiConstruction' if devMode
 
 
   # Internal Methods
