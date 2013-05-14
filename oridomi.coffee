@@ -318,8 +318,7 @@ class OriDomi
     # The panel element holds both its respective mask and all subsequent sibling panels.
     hPanel = document.createElement 'div'
     hPanel.className = 'oridomi-panel-h'
-    hPanel.style.width = '100%'
-    hPanel.style.height = @panelHeight + bleed + 'px'
+    hPanel.style.width = hPanel.style.height = '100%'
     hPanel.style.padding = '0'
     hPanel.style.position = 'relative'
     # The panel element is the target of the transforms.
@@ -332,8 +331,7 @@ class OriDomi
 
     # Apply a transparent border to force edge smoothing on Firefox.
     # (This setting hurts performance significantly.)
-    if @settings.forceAntialiasing
-      hPanel.style.outline = '1px solid transparent'
+    hPanel.style.outline = '1px solid transparent' if @settings.forceAntialiasing
 
     # Add the horizontal mask prototype to the horizontal panel prototype.
     hPanel.appendChild hMask
