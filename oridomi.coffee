@@ -219,8 +219,7 @@ class OriDomi
     # Clone the target element and save a copy of it.
     @cleanEl = @el.cloneNode true
     @cleanEl.style.margin = '0'
-    @cleanEl.style.position = 'absolute'
-    # A much faster version of `display: none` when using hardware acceleration.
+    # A faster version of `display: none` when using hardware acceleration.
     @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
     # Destructure some instance variables from the settings object.
