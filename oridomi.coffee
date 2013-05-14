@@ -354,8 +354,6 @@ class OriDomi
     # Clone the `hPanel` prototype and adjust its styling for vertical use.
     vPanel = hPanel.cloneNode false
     vPanel.className = 'oridomi-panel-v'
-    vPanel.style.width = @panelWidth + bleed + 'px'
-    vPanel.style.height = '100%'
     vPanel.style[css.origin] = 'left'
     vPanel.appendChild vMask
 
@@ -367,8 +365,6 @@ class OriDomi
 
     # Remove its padding and set a fixed width and height.
     @el.style.padding = '0'
-    @el.style.width = @width + 'px'
-    @el.style.height = @height + 'px'
     # Remove its background, border, and outline.
     @el.style.backgroundColor = 'transparent'
     @el.style.backgroundImage = 'none'
