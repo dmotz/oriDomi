@@ -297,8 +297,7 @@ class OriDomi
     hMask.className = 'oridomi-mask-h'
     hMask.style.position = 'absolute'
     hMask.style.overflow = 'hidden'
-    hMask.style.width = '100%'
-    hMask.style.height = '100%'
+    hMask.style.width = hMask.style.height = '100%'
     # Adding `translate3d(0, 0, 0)` prevents flickering during transforms.
     hMask.style[css.transform] = 'translate3d(0, 0, 0)'
     # Add the `contentHolder` div to the mask prototype.
