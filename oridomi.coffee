@@ -278,11 +278,8 @@ class OriDomi
       shader.style[css.transitionDuration] = @settings.speed + 'ms'
       shader.style[css.transitionEasing] = @settings.easingMethod
       shader.style.position = 'absolute'
-      shader.style.width = '100%'
-      shader.style.height = '100%'
-      shader.style.opacity = '0'
-      shader.style.top = '0'
-      shader.style.left = '0'
+      shader.style.width = shader.style.height = '100%'
+      shader.style.opacity = shader.style.top = shader.style.left = '0'
       shader.style.pointerEvents = 'none'
 
     # The content holder is a clone of the target element.
