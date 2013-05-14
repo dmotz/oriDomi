@@ -228,21 +228,6 @@ class OriDomi
     # Record the current global styling of the target element.
     @_elStyle = root.getComputedStyle @el
 
-    # To calculate the full dimensions of the element, create arrays of relevant metric keys.
-    xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
-    yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
-
-    # Add up values for width and height using `_getMetric()`.
-    @width = 0
-    @height = 0
-    @width += @_getMetric metric for metric in xMetrics
-    @height += @_getMetric metric for metric in yMetrics
-
-    # Calculate the panel width and panel height by dividing the total width and
-    # height by the requested number of panels in each axis.
-    @panelWidth = @width / @vPanels
-    @panelHeight = @height / @hPanels
-
     # Set an array of anchor names.
     @_anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
