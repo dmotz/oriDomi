@@ -367,9 +367,7 @@ class OriDomi
     @el.style.padding = '0'
     # Remove its background, border, and outline.
     @el.style.backgroundColor = 'transparent'
-    @el.style.backgroundImage = 'none'
-    @el.style.border = 'none'
-    @el.style.outline = 'none'
+    @el.style.backgroundImage = @el.style.border = @el.style.outline = 'none'
     # Show the left stage to start with.
     @stages.left.style.display = 'block'
 
