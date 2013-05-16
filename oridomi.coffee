@@ -598,46 +598,6 @@ class OriDomi
       angle
 
 
-  # `_normalizeArgs` normalizes every public method's arguments and makes sure the current
-  # axis unfolds if ordered to switch to another axis.
-  _normalizeArgs: (method, args) ->
-    @unfreeze() if @isFrozen
-    # Get a valid angle.
-    angle = @_normalizeAngle args[0]
-    # Get the full anchor name.
-    anchor = @_getLonghandAnchor args[1] or @lastAnchor
-    # Extend the given options with the method's defaults.
-    options = extendObj args[2], @_methodDefaults[method]
-    # Store a record of this operation for future touch events.
-    @lastOp = method: method, options: options, negative: angle < 0
-
-    # If the user is trying to transform using a different anchor, we must first
-    # unfold the current anchor for transition purposes.
-    if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0) or @isFoldedUp
-      # Call `reset` and pass a callback to be run when the unfolding is complete.
-      @reset =>
-        # Show the stage element of the originally requested anchor.
-        @_showStage anchor
-        # Since the anchor changed, update the mouse drag cursor.
-        @_setCursor() if @_touchEnabled
-        # Defer this operation until the next event loop to prevent a sudden jump.
-        setTimeout =>
-          # `foldUp` is a special method that doesn't accept an angle argument.
-          args.shift() if method is 'foldUp'
-          # We can now call the originally requested method.
-          @[method].apply @, args
-
-        , 0
-
-      # Return `false` here to inform the caller method to abort its operation
-      # and wait to be called when the stage is ready.
-      false
-    else
-      # Set an instance reference to the last called angle and return the normalized arguments.
-      @lastAngle = angle
-      [angle, anchor, options]
-
-
   # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
   _setShader: (i, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
