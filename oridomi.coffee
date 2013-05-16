@@ -754,20 +754,6 @@ class OriDomi
       @stageEl.style.cursor = 'default'
 
 
-  # Map of defaults for each method. Some are empty for now.
-  _methodDefaults:
-    accordion:
-      # Sticky keeps the first panel flat on the page.
-      sticky: false
-      # Stairs creates a stairway effect.
-      stairs: false
-      # Twist and fracture are similar effects that result in wild non-origami-like splits.
-      fracture: false
-      twist: false
-    curl:
-      twist: false
-
-
   # Touch / Drag Event Handlers
   # ===========================
 
