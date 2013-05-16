@@ -783,7 +783,7 @@ class OriDomi
 
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
-    if @lastOp.negative
+    if @lastOp.angle < 0
       if @lastOp.anchor is 'right' or @lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] - distance
       else
