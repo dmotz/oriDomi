@@ -954,7 +954,6 @@ class OriDomi
       @panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
       @_setShader i, anchor, 0 if @shading
 
-    @_callback options
 
 
   # `foldUp` folds up all panels in separate synchronous animations.
