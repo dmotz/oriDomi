@@ -702,8 +702,7 @@ class OriDomi
         for side in shaderPair
           @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed
 
-    # Return null and not the loop's result.
-    null
+    @
 
 
   # Gives the element a resize cursor to prompt the user to drag the mouse.
