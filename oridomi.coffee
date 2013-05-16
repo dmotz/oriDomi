@@ -885,6 +885,11 @@ class OriDomi
       changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
       @el.style[key] = @_elStyle[key] for key in changedKeys
       callback?()
+  # Empties the queue should you want to cancel scheduled animations.
+  emptyQueue: ->
+    @_queue = []
+    setTimeout (=> @_inTrans = false), 1
+    @
 
 
   # Enables touch events.
