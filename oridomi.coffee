@@ -923,7 +923,7 @@ class OriDomi
       deg *= -1 if options.stairs
 
       # Set the CSS transformation.
-      panel.style[css.transform] = @_transform deg, options.fracture
+      panel.style[css.transform] = @_transform deg, anchor, options.fracture
       # Apply shaders.
       if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
@@ -936,14 +936,14 @@ class OriDomi
     angle /=  @_getPanelType anchor
 
     for panel, i in @panels[anchor]
-      panel.style[css.transform] = @_transform angle
+      panel.style[css.transform] = @_transform angle, anchor
       @_setShader i, anchor, 0 if @shading
 
 
   # `ramp` lifts up all panels after the first one.
   ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
-    @panels[anchor][1].style[css.transform] = @_transform angle
+    @panels[anchor][1].style[css.transform] = @_transform angle, anchor
 
     # For all but the first two panels, set the angle to 0.
     for panel, i in @panels[anchor]
