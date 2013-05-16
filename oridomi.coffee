@@ -514,19 +514,19 @@ class OriDomi
     switch anchor
       when 'left'
         axes = [0, angle, 0]
-        translate = 'X(-1px)'
+        translate = 'X(-1'
       when 'right'
         axes = [0, -angle, 0]
-        translate = 'X(1px)'
+        translate = 'X(1'
       when 'top'
         axes = [-angle, 0, 0]
-        translate = 'Y(-1px)'
+        translate = 'Y(-1'
       when 'bottom'
         axes = [angle, 0, 0]
-        translate = 'Y(1px)'
+        translate = 'Y(1'
 
     axes = [angle, angle, angle] if fracture
-    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) translate#{ translate }"
+    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) translate#{ translate }px)"
 
 
   # `_normalizeAngle` validates a given angle by making sure it's a float and by
