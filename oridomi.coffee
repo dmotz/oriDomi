@@ -517,7 +517,7 @@ class OriDomi
 
 
   # `_callback` normalizes callback handling for all public methods.
-  _callback: (operation) ->
+  _setCallback: (operation) ->
     # If there was no transformation, invoke the callback immediately.
     if @_touchStarted or @_isIdenticalOperation operation
       @_conclude operation.options.callback
