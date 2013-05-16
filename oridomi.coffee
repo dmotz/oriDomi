@@ -196,6 +196,46 @@ defaults =
   touchEndCallback: noOp
 
 
+prep = (fn) ->
+  ->
+    if @_touchStarted
+      fn.apply @, arguments
+    else
+      args = arguments
+      options = {}
+      angle = anchor = null
+      switch fn.length
+        when 1
+          options.callback = args[0]
+        when 2
+          if typeof args[0] is 'function'
+            options.callback = args[0]
+          else
+            anchor = args[0]
+            options.callback = args[1]
+        when 3
+          angle = args[0]
+          if args.length is 2
+            if typeof args[1] is 'object'
+              options = args[1]
+            else if typeof args[1] is 'function'
+              options.callback = args[1]
+            else
+              anchor = args[1]
+          else if args.length is 3
+            anchor = args[1]
+            if typeof args[2] is 'object'
+              options = args[2]
+            else if typeof args[2] is 'function'
+              options.callback = args[2]
+
+      angle  or= 0
+      anchor or= @lastOp.anchor
+      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), options]
+      @_step()
+      @
+
+
 # oriDomi Class
 # =============
 
@@ -449,6 +489,20 @@ class OriDomi
         @panels[anchor][i - 1].appendChild panel unless i is 0
 
       @stages[anchor].appendChild @panels[anchor][0]
+
+
+  _step: =>
+    return if @_inTrans or !@_queue.length
+    @_inTrans = true
+    [fn, angle, anchor, options] = @_queue.shift()
+    @unfreeze() if @isFrozen
+    if anchor isnt @lastOp.anchor
+      @_stageReset anchor, =>
+        @_setCallback {angle, anchor, options, fn}
+        fn.call @, angle, anchor, options
+    else
+      @_setCallback {angle, anchor, options, fn}
+      fn.call @, angle, anchor, options
 
 
   # This method tests if the called action is identical to the previous one.
@@ -898,17 +952,11 @@ class OriDomi
     @_setTouch false
 
 
-  # oriDomi's most basic effect. Transforms the target like its namesake.
-  accordion: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'accordion', arguments
-    # If `_normalizeArgs` returns false, we need to abort for a reset operation.
-    return unless normalized
-    # Otherwise, destructure the normalized arguments into some local variables.
-    [angle, anchor, options] = normalized
 
+  # oriDomi's most basic effect. Transforms the target like its namesake.
+  accordion: prep (angle, anchor, options) ->
     # Loop through the panels in this stage.
     for panel, i in @panels[anchor]
-
       # If it's an odd-numbered panel, reverse the angle.
       if i % 2 isnt 0 and not options.twist
         deg = -angle
@@ -934,16 +982,10 @@ class OriDomi
       if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
-    # Ask `_callback` to check for a callback.
-    @_callback options
-
 
   # `curl` appears to bend rather than fold the paper. Its curves can appear smoother
   # with higher panel counts.
-  curl: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'curl', arguments
-    return unless normalized
-    [angle, anchor, options] = normalized
+  curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
     angle /=  @_getPanelType anchor
 
@@ -951,24 +993,16 @@ class OriDomi
       panel.style[css.transform] = @_transform angle
       @_setShader i, anchor, 0 if @shading
 
-    @_callback options
-
 
   # `ramp` lifts up all panels after the first one.
-  ramp: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'ramp', arguments
-    return unless normalized
-    [angle, anchor, options] = normalized
+  ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
     @panels[anchor][1].style[css.transform] = @_transform angle
 
     # For all but the first two panels, set the angle to 0.
     for panel, i in @panels[anchor]
-      if i > 1
-        @panels[anchor][i].style[css.transform] = @_transform 0
-
-      if @shading
-        @_setShader i, anchor, 0
+      @panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
+      @_setShader i, anchor, 0 if @shading
 
     @_callback options
 
