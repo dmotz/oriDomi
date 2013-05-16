@@ -558,11 +558,6 @@ class OriDomi
     , 0
 
 
-  # `_getMetric` returns an integer of pixels for a style key.
-  _getMetric: (metric) ->
-    parseInt @_elStyle[metric], 10
-
-
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
   _transform: (angle, anchor, fracture) ->
     switch anchor
