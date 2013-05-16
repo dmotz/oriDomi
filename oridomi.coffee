@@ -720,10 +720,10 @@ class OriDomi
   # Adds or removes handlers from the element based on the boolean argument given.
   _setTouch: (toggle) ->
     if toggle
-      return if @_touchEnabled
+      return @ if @_touchEnabled
       listenFn = 'addEventListener'
     else
-      return unless @_touchEnabled
+      return @ unless @_touchEnabled
       listenFn = 'removeEventListener'
 
     @_touchEnabled = toggle
