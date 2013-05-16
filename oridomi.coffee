@@ -511,24 +511,22 @@ class OriDomi
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
   _transform: (angle, anchor, fracture) ->
-    if fracture
-      axes = [angle, angle, angle]
-    else
-      switch anchor
-        when 'left'
-          axes = [0, angle, 0]
-          translate = 'translateX(-1px)'
-        when 'right'
-          axes = [0, -angle, 0]
-          translate = 'translateX(1px)'
-        when 'top'
-          axes = [-angle, 0, 0]
-          translate = 'translateY(-1px)'
-        when 'bottom'
-          axes = [angle, 0, 0]
-          translate = 'translateY(1px)'
+    switch anchor
+      when 'left'
+        axes = [0, angle, 0]
+        translate = 'X(-1px)'
+      when 'right'
+        axes = [0, -angle, 0]
+        translate = 'X(1px)'
+      when 'top'
+        axes = [-angle, 0, 0]
+        translate = 'Y(-1px)'
+      when 'bottom'
+        axes = [angle, 0, 0]
+        translate = 'Y(1px)'
 
-    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) #{ translate }"
+    axes = [angle, angle, angle] if fracture
+    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) translate#{ translate }"
 
 
   # `_normalizeAngle` validates a given angle by making sure it's a float and by
