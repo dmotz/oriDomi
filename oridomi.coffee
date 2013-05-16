@@ -737,10 +737,11 @@ class OriDomi
     for eventPair in eventPairs
       for eString in eventPair
         unless eString is 'TouchLeave' and not mouseLeaveSupport
-          @stageEl[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
+          @stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
         else
-          @stageEl[listenFn] 'mouseout', @['_onMouseOut'], false
+          @stageHolder[listenFn] 'mouseout', @_onMouseOut, false
           break
+    @
 
 
   # This method is called when a finger or mouse button is pressed on the element.
