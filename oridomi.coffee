@@ -230,7 +230,7 @@ class OriDomi
     # Set an array of anchor names.
     @_anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
-    @lastAnchor = @_anchors[0]
+    @lastOp = anchor: @_anchors[0]
     # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
@@ -638,10 +638,10 @@ class OriDomi
   # This method shows the requested stage element and sets a reference to it as
   # the current stage.
   _showStage: (anchor) ->
-    if anchor isnt @lastAnchor
+    if anchor isnt @lastOp.anchor
       @stages[anchor].style.display = 'block'
-      @stages[@lastAnchor].style.display = 'none'
-      @lastAnchor = anchor
+      @stages[@lastOp.anchor].style.display = 'none'
+      @lastOp.anchor = anchor
 
 
   # Simple method that returns the correct panel set based on an anchor.
@@ -676,17 +676,17 @@ class OriDomi
       speed = if speed then @settings.speed + 'ms' else '0ms'
 
     # To loop through the shaders, derive the correct pair from the current anchor.
-    if @lastAnchor is 'left' or @lastAnchor is 'right'
+    if @lastOp.anchor is 'left' or @lastOp.anchor is 'right'
       shaderPair = ['left', 'right']
     else
       shaderPair = ['top', 'bottom']
 
     # Loop through the panels in this anchor and set the transition duration to the new speed.
-    for panel, i in @panels[@lastAnchor]
+    for panel, i in @panels[@lastOp.anchor]
       panel.style[css.transitionDuration] = speed
       if @shading
         for side in shaderPair
-          @_shaders[@lastAnchor][side][i].style[css.transitionDuration] = speed
+          @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed
 
     # Return null and not the loop's result.
     null
@@ -755,7 +755,7 @@ class OriDomi
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening false
     # Derive the axis to fold on.
-    @_touchAxis = if @lastAnchor is 'left' or @lastAnchor is 'right' then 'x' else 'y'
+    @_touchAxis = if @lastOp.anchor is 'left' or @lastOp.anchor is 'right' then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
     @["_#{ @_touchAxis }Last"] = @lastAngle
 
@@ -785,13 +785,13 @@ class OriDomi
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
     if @lastOp.negative
-      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+      if @lastOp.anchor is 'right' or @lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] - distance
       else
         delta = @["_#{ @_touchAxis }Last"] + distance
       delta = 0 if delta > 0
     else
-      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+      if @lastOp.anchor is 'right' or @lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] + distance
       else
         delta = @["_#{ @_touchAxis }Last"] - distance
@@ -1032,24 +1032,25 @@ class OriDomi
 
     nextPanel = =>
       # Show the panel again.
-      @panels[@lastAnchor][i].style.display = 'block'
+      @panels[@lastOp.anchor][i].style.display = 'block'
       # Wait for the next event loop so the transition listener works.
       setTimeout =>
-        @panels[@lastAnchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
-        @panels[@lastAnchor][i].style[css.transform] = @_transform angle
-        @_setShader i, @lastAnchor, angle if @shading
+        @panels[@lastOp.anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
+        @panels[@lastOp.anchor][i].style[css.transform] = @_transform angle, anchor
+        @_setShader i, @lastOp.anchor, angle if @shading
       , 0
 
     onTransitionEnd = (e) =>
-      @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
+      @panels[@lastOp.anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
       # Increment the iterator and check if we're past the last panel.
-      if ++i is @panels[@lastAnchor].length
+      if ++i is @panels[@lastOp.anchor].length
         callback?()
       else
         setTimeout nextPanel, 0
 
     # Start the sequence.
     nextPanel()
+    @
 
 
   # Convenience Methods
