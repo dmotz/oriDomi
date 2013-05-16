@@ -708,9 +708,9 @@ class OriDomi
   # Gives the element a resize cursor to prompt the user to drag the mouse.
   _setCursor: ->
     if @_touchEnabled
-      @stageEl.style.cursor = css.grab
+      @stageHolder.style.cursor = css.grab
     else
-      @stageEl.style.cursor = 'default'
+      @stageHolder.style.cursor = 'default'
 
 
   # Touch / Drag Event Handlers
