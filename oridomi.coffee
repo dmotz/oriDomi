@@ -145,6 +145,7 @@ extendObj = (target, source) ->
 # (instead of creating separate empty functions).
 noOp = ->
 
+modifiedStyleKeys = ['padding', 'backgroundColor', 'backgroundImage', 'border', 'outline']
 
 # Map of oriDomi instance defaults.
 defaults =
@@ -251,6 +252,11 @@ class OriDomi
       console.warn 'oriDomi: First argument must be a DOM element' if devMode
       return @
 
+    # Record the current global styling of the target element.
+    elStyle = root.getComputedStyle @el
+    @_originalStyle = {}
+    @_originalStyle[key] = elStyle[key] for key in modifiedStyleKeys
+
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
     # Create an array to act as an animation queue.
@@ -264,8 +270,6 @@ class OriDomi
 
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
-    # Record the current global styling of the target element.
-    @_elStyle = root.getComputedStyle @el
 
     # Set an array of anchor names.
     @_anchors = ['left', 'right', 'top', 'bottom']
@@ -869,9 +873,11 @@ class OriDomi
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
       # Reset original styles.
-      changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-      @el.style[key] = @_elStyle[key] for key in changedKeys
+      @el.style[key] = val for key, val of @_originalStyle
       callback?()
+    null
+
+
   # Empties the queue should you want to cancel scheduled animations.
   emptyQueue: ->
     @_queue = []
