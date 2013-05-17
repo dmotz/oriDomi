@@ -733,6 +733,8 @@ class OriDomi
   _onTouchStart: (e) =>
     return unless @_touchEnabled
     e.preventDefault()
+    # Clear queued animations.
+    @emptyQueue()
     # Set a property to track touch starts.
     @_touchStarted = true
     # Change the cursor to the active `grabbing` state.
