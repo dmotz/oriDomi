@@ -542,18 +542,9 @@ class OriDomi
   # `_conclude` is used to handle the end process of transitions and to initialize
   # queued operations.
   _conclude: (cb) =>
-    # Empty the previous operation from the queue and invoke the next one in line.
-    # Defer until the next event loop.
     setTimeout =>
-      @_inTransition = false
-      next = @_queue.shift()
-      # Invoke the next operation if present.
-      if typeof next is 'function'
-        # In this case, `next` is a timeout supplied by `wait()`.
-        next()
-      else
-        @[next[0]].apply @, next[1] if next
-      # Invoke any supplied callback.
+      @_inTrans = false
+      @_step()
       cb?()
     , 0
 
