@@ -811,6 +811,19 @@ class OriDomi
   # Public Methods
   # ==============
 
+  _stageReset: (anchor, cb) =>
+    fn = (e) =>
+      e.currentTarget.removeEventListener css.transitionEnd, fn, false if e
+      @_showStage anchor
+      setTimeout cb, 1
+
+    return fn() if @lastOp.angle is 0
+    @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
+
+    for panel, i in @panels[@lastOp.anchor]
+      panel.style[css.transform] = @_transform 0, @lastOp.anchor
+      @_setShader i, @lastOp.anchor, 0 if @shading
+    @
 
 
 
