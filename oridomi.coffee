@@ -899,6 +899,12 @@ class OriDomi
     @_setTouch false
 
 
+  # Setter method for `maxAngle`.
+  constrainAngle: (angle) ->
+    @settings.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
+    @
+
+
   wait: (ms) ->
     fn = => setTimeout @_conclude, ms
     if @_inTrans
