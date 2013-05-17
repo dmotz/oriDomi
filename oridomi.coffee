@@ -836,7 +836,7 @@ class OriDomi
       callback?()
     else
       # Make sure to reset folding first.
-      @reset =>
+      @_stageReset @lastOp.anchor, =>
         @isFrozen = true
         # Swap the visibility of the elements.
         @stageHolder.style[css.transform] = 'translate3d(-9999px, 0, 0)'
