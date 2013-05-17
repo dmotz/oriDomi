@@ -523,7 +523,7 @@ class OriDomi
       @_conclude operation.options.callback
     # Otherwise, attach an event listener to be called on the transition's end.
     else
-      @panels[@lastAnchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
+      @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
     if operation.method is 'reset'
       @lastOp = @_defaultOp
