@@ -524,10 +524,7 @@ class OriDomi
     else
       @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
-    if operation.method is 'reset'
-      @lastOp = @_defaultOp
-    else
-      @lastOp = operation
+    @lastOp = operation
 
 
   # Handler called when a CSS transition ends.
