@@ -897,6 +897,14 @@ class OriDomi
     @_setTouch false
 
 
+  wait: (ms) ->
+    fn = => setTimeout @_conclude, ms
+    if @_inTrans
+      @_queue.push [fn, @lastOp.angle, @lastOp.anchor, @lastOp.options]
+    else
+      fn()
+    @
+
 
   # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: prep (angle, anchor, options) ->
