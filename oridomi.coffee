@@ -738,13 +738,13 @@ class OriDomi
     # Set a property to track touch starts.
     @_touchStarted = true
     # Change the cursor to the active `grabbing` state.
-    @stageEl.style.cursor = css.grabbing
+    @stageHolder.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening false
     # Derive the axis to fold on.
     @_touchAxis = if @lastOp.anchor is 'left' or @lastOp.anchor is 'right' then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
-    @["_#{ @_touchAxis }Last"] = @lastAngle
+    @["_#{ @_touchAxis }Last"] = @lastOp.angle
 
     # Determine the starting tap's coordinate for touch and mouse events.
     if e.type is 'mousedown'
@@ -784,8 +784,11 @@ class OriDomi
         delta = @["_#{ @_touchAxis }Last"] - distance
       delta = 0 if delta < 0
 
+
+    delta = @_normalizeAngle delta
+    @lastOp.angle = delta
     # Invoke the effect method with the delta as an angle argument.
-    @[@lastOp.method] delta, @lastAnchor, @lastOp.options
+    @lastOp.fn.call @, delta, @lastOp.anchor, @lastOp.options
     # Pass the delta to the movement callback.
     @settings.touchMoveCallback delta
 
@@ -794,8 +797,8 @@ class OriDomi
   _onTouchEnd: =>
     return unless @_touchEnabled
     # Restore the initial touch status and cursor.
-    @_touchStarted = false
-    @stageEl.style.cursor = css.grab
+    @_touchStarted = @_inTrans = false
+    @stageHolder.style.cursor = css.grab
     # Enable tweening again.
     @_setTweening true
     # Pass callback final value.
