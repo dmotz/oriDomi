@@ -838,9 +838,9 @@ class OriDomi
       @isFrozen = false
       # Swap the visibility of the elements.
       @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-      @stageHolder.style[css.transform] = 'translate3d(0, 0, 0)'
+      @stageHolder.style[css.transform] = 'translateY(-100%)'
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
-      @lastAngle = 0
+      @lastOp.angle = 0
 
 
   # Removes the oriDomi element and marks its instance for garbage collection.
