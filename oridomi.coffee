@@ -825,17 +825,7 @@ class OriDomi
   # ==============
 
 
-  # Reset handles resetting all panels back to zero degrees.
-  reset: (callback) ->
-    # If the stage is folded up, unfold it first.
-    return @unfold callback if @isFoldedUp
-    @lastAngle = 0
-    for panel, i in @panels[@lastAnchor]
-      panel.style[css.transform] = @_transform 0
-      @_setShader i, @lastAnchor, 0 if @shading
 
-    # When called internally, `reset` comes with a callback to advance to the next transformation.
-    @_callback callback: callback
 
 
   # Disables oriDomi slicing by showing the original, untouched target element.
@@ -1033,6 +1023,12 @@ class OriDomi
 
   # Convenience Methods
   # ===================
+
+
+
+  # Reset handles resetting all panels back to zero degrees.
+  reset: (callback) ->
+    @accordion 0, {callback}
 
 
   # Convenience proxy to accordion-fold instance to maximum angle.
