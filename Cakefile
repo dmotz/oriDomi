@@ -1,5 +1,15 @@
 {exec, spawn} = require 'child_process'
 
+tgthr = (fns, cb) ->
+  res = {}
+  out = (k) ->
+    ->
+      delete fns[k]
+      res[k] = arguments
+      cb res unless Object.keys(fns).length
+  v out k for k, v of fns
+
+
 output = (data) -> console.log data.toString()
 
 print = (fn) ->
