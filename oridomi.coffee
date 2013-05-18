@@ -284,8 +284,8 @@ class OriDomi
     stage.style.width = stage.style.height = '100%'
     # By default, each stage is hidden and absolutely positioned so they stack
     # on top of each other.
-    stage.style.display = 'none'
     stage.style.position = 'absolute'
+    stage.style[css.transform] = 'translate3d(-9999px, 0, 0)'
     # Eliminate padding and margins since the stage is already the full width and height.
     stage.style.margin = stage.style.padding = '0'
     # Apply 3D perspective and preserve any parent perspective.
@@ -301,6 +301,7 @@ class OriDomi
       stage.className = 'oridomi-stage-' + anchor
       stage.style[css.perspectiveOrigin] = perspectiveOrigins[i]
 
+    @stages.left.style[css.transform]   = 'translate3d(0, 0, 0)'
     # If shading is enabled, create an object literal to hold shaders.
     if @shading
       @_shaders = {}
@@ -641,10 +642,19 @@ class OriDomi
   # the current stage.
   _showStage: (anchor) ->
     if anchor isnt @lastOp.anchor
-      @stages[anchor].style.display = 'block'
-      @stages[@lastOp.anchor].style.display = 'none'
+      @stages[@lastOp.anchor].style[css.transform] = 'translate3d(-9999px, 0, 0)'
       @lastOp.anchor = anchor
       @lastOp.reset  = true
+      @stages[anchor].style[css.transform] = 'translate3d(' + do =>
+        switch anchor
+          when 'left'
+            '0, 0, 0)'
+          when 'right'
+            "-#{ @vPanels * .5 }px, 0, 0)"
+          when 'top'
+            '0, 0, 0)'
+          when 'bottom'
+            "0, #{ @hPanels * .5 }px, 0)"
 
 
   _stageReset: (anchor, cb) =>
