@@ -25,13 +25,13 @@ devMode = false
 
 # This variable is set to true and negated later if the browser does
 # not support oriDomi.
-oriDomiSupport = true
+isSupported = true
 
 # Function used to warn the developer that the browser does not support oriDomi.
 supportWarning = (prop) ->
   if devMode
     console.warn "oriDomi: Browser does not support oriDomi. Missing support for `#{ prop }`."
-    oriDomiSupport = false
+    isSupported = false
 
 # Create a div for testing CSS3 properties.
 testEl = document.createElement 'div'
@@ -69,7 +69,7 @@ testProp = (prop) ->
 for key, value of css
   css[key] = testProp value
   # If the returned value is false, warn the user that the browser doesn't support
-  # oriDomi, set `oriDomiSupport` to false, and break out of the loop.
+  # oriDomi, set `isSupported` to false and break out of the loop.
   unless css[key]
     supportWarning value
     break
@@ -244,7 +244,7 @@ class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
     # If the browser doesn't support oriDomi, return the element unmodified.
-    return @ unless oriDomiSupport
+    return @ unless isSupported
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     return new oriDomi @el, @settings unless @ instanceof OriDomi
     # Return if the first argument isn't a DOM element.
@@ -1051,7 +1051,6 @@ class OriDomi
   # ===================
 
 
-
   # Reset handles resetting all panels back to zero degrees.
   reset: (callback) ->
     @accordion 0, {callback}
@@ -1105,7 +1104,7 @@ class OriDomi
 
 
   # Externally check if oriDomi is supported by the browser.
-  @isSupported = oriDomiSupport
+  @isSupported = isSupported
 
 
   # External function to enable `devMode`.
@@ -1125,7 +1124,7 @@ if root.jQuery? or root.$?.data?
   # Attach an `oriDomi` method to `$`'s prototype.
   $::oriDomi = (options) ->
     # Return selection if oriDomi is unsupported by the browser.
-    return @ unless oriDomiSupport
+    return @ unless isSupported
 
     # If `options` is a string, assume it's a method call.
     if typeof options is 'string'
