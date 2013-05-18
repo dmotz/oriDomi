@@ -1112,8 +1112,10 @@ class OriDomi
   @devMode = -> devMode = true
 
 
-# Attach `OriDomi` constructor to `window`.
-root.OriDomi = OriDomi
+# Export constructor on `window` and `module.exports` (if applicable).
+root.OriDomi   = OriDomi
+module.exports = OriDomi if module?.exports?
+
 
 
 # Plugin Bridge
