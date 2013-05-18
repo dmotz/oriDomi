@@ -514,9 +514,10 @@ class OriDomi
   # wouldn't be called due to no animation taking place. This method reasons if
   # movement has taken place, preventing this pitfall of transition listeners.
   _isIdenticalOperation: (op) ->
-    return false if @lastOp.angle isnt op.angle
-    for k, v of op.options
-      return false if op.options[k] isnt @lastOp.options[k] and k isnt 'callback'
+    return true  unless @lastOp.fn
+    return false if @lastOp.reset
+    return false if @lastOp[key] isnt op[key] for key in ['angle', 'anchor', 'fn']
+    return false if v isnt @lastOp.options[k] and k isnt 'callback' for k, v of op.options
     true
 
 
@@ -529,7 +530,7 @@ class OriDomi
     else
       @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
-    @lastOp = operation
+    (@lastOp = operation).reset = false
 
 
   # Handler called when a CSS transition ends.
@@ -643,6 +644,7 @@ class OriDomi
       @stages[anchor].style.display = 'block'
       @stages[@lastOp.anchor].style.display = 'none'
       @lastOp.anchor = anchor
+      @lastOp.reset  = true
 
 
   _stageReset: (anchor, cb) =>
