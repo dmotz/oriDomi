@@ -499,13 +499,14 @@ class OriDomi
     @_inTrans = true
     [fn, angle, anchor, options] = @_queue.shift()
     @unfreeze() if @isFrozen
-    if anchor isnt @lastOp.anchor
-      @_stageReset anchor, =>
-        @_setCallback {angle, anchor, options, fn}
-        fn.call @, angle, anchor, options
-    else
+    next = =>
       @_setCallback {angle, anchor, options, fn}
       fn.call @, angle, anchor, options
+
+    if anchor isnt @lastOp.anchor
+      @_stageReset anchor, next
+    else
+      next()
 
 
   # This method tests if the called action is identical to the previous one.
