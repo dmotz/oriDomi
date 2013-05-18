@@ -1123,7 +1123,7 @@ root.OriDomi = OriDomi
 # Only create bridge if jQuery (or an imitation supporting `data()`) exists.
 if root.jQuery? or root.$?.data?
   # Attach an `oriDomi` method to `$`'s prototype.
-  $.fn.oriDomi = (options) ->
+  $::oriDomi = (options) ->
     # Return selection if oriDomi is unsupported by the browser.
     return @ unless oriDomiSupport
 
