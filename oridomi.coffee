@@ -41,15 +41,15 @@ prefixList = ['Webkit', 'Moz', 'O', 'ms']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
 css =
-  transform: 'transform'
-  origin: 'transformOrigin'
-  transformStyle: 'transformStyle'
-  transitionProp: 'transitionProperty'
+  transform:          'transform'
+  origin:             'transformOrigin'
+  transformStyle:     'transformStyle'
+  transitionProp:     'transitionProperty'
   transitionDuration: 'transitionDuration'
-  transitionEasing: 'transitionTimingFunction'
-  perspective: 'perspective'
-  perspectiveOrigin: 'perspectiveOrigin'
-  backface: 'backfaceVisibility'
+  transitionEasing:   'transitionTimingFunction'
+  perspective:        'perspective'
+  perspectiveOrigin:  'perspectiveOrigin'
+  backface:           'backfaceVisibility'
 
 # This function checks for the presence of CSS properties on the test div.
 testProp = (prop) ->
