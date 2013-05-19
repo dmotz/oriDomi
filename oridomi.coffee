@@ -959,6 +959,8 @@ class OriDomi
       if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
+    @
+
 
   # `curl` appears to bend rather than fold the paper. Its curves can appear smoother
   # with higher panel counts.
@@ -969,6 +971,8 @@ class OriDomi
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle, anchor
       @_setShader i, anchor, 0 if @shading
+
+    @
 
 
   # `ramp` lifts up all panels after the first one.
@@ -981,6 +985,7 @@ class OriDomi
       @panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
       @_setShader i, anchor, 0 if @shading
 
+    @
 
 
   # `foldUp` folds up all panels in separate synchronous animations.
