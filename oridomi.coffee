@@ -230,7 +230,7 @@ prep = (fn) ->
             else if typeof args[2] is 'function'
               options.callback = args[2]
 
-      angle  or= 0
+      angle  or= @lastOp.angle or 0
       anchor or= @lastOp.anchor
       @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), options]
       @_step()
