@@ -587,6 +587,24 @@ class OriDomi
       angle
 
 
+  # Allows other methods to change the tween duration or disable it altogether.
+  _setTweening: (speed) ->
+    # To loop through the shaders, derive the correct pair from the current anchor.
+    if @lastOp.anchor is 'left' or @lastOp.anchor is 'right'
+      shaderPair = ['left', 'right']
+    else
+      shaderPair = ['top', 'bottom']
+
+    # Loop through the panels in this anchor and set the transition duration to the new speed.
+    for panel, i in @panels[@lastOp.anchor]
+      panel.style[css.transitionDuration] = speed + 'ms'
+      if @shading
+        for side in shaderPair
+          @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed + 'ms'
+
+    @
+
+
   # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
   _setShader: (i, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
@@ -745,7 +763,7 @@ class OriDomi
     # Change the cursor to the active `grabbing` state.
     @stageHolder.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
-    @setSpeed false
+    @_setTweening 0
     # Derive the axis to fold on.
     @_touchAxis = if @lastOp.anchor is 'left' or @lastOp.anchor is 'right' then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
@@ -805,7 +823,7 @@ class OriDomi
     @_touchStarted = @_inTrans = false
     @stageHolder.style.cursor = css.grab
     # Enable tweening again.
-    @setSpeed true
+    @_setTweening @settings.speed
     # Pass callback final value.
     @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
@@ -826,27 +844,9 @@ class OriDomi
   # ==============
 
 
-  # Allows other methods to change the tween duration or disable it altogether.
   setSpeed: (speed) ->
-    # If the speed value is `true` reset the speed to the original settings.
-    # Set it to zero if `false`.
-    if typeof speed is 'boolean'
-      speed = if speed then @settings.speed + 'ms' else '0ms'
-
-    # To loop through the shaders, derive the correct pair from the current anchor.
-    if @lastOp.anchor is 'left' or @lastOp.anchor is 'right'
-      shaderPair = ['left', 'right']
-    else
-      shaderPair = ['top', 'bottom']
-
-    # Loop through the panels in this anchor and set the transition duration to the new speed.
-    for panel, i in @panels[@lastOp.anchor]
-      panel.style[css.transitionDuration] = speed
-      if @shading
-        for side in shaderPair
-          @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed
-
-    @
+    @settings.speed = speed
+    @_setTweening true
 
 
   # Disables oriDomi slicing by showing the original, untouched target element.
