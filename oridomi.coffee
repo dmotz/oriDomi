@@ -502,7 +502,9 @@ class OriDomi
     @unfreeze() if @isFrozen
     next = =>
       @_setCallback {angle, anchor, options, fn}
-      fn.call @, angle, anchor, options
+      args = [angle, anchor, options]
+      args.shift() if fn.length < 3
+      fn.apply @, args
 
     if anchor isnt @lastOp.anchor
       @_stageReset anchor, next
@@ -687,6 +689,7 @@ class OriDomi
     for panel, i in @panels[@lastOp.anchor]
       panel.style[css.transform] = @_transform 0, @lastOp.anchor
       @_setShader i, @lastOp.anchor, 0 if @shading
+
     @
 
 
