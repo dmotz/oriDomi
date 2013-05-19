@@ -757,7 +757,7 @@ class OriDomi
 
   # This method is called when a finger or mouse button is pressed on the element.
   _onTouchStart: (e) =>
-    return unless @_touchEnabled
+    return if !@_touchEnabled or @isFoldedUp
     e.preventDefault()
     # Clear queued animations.
     @emptyQueue()
