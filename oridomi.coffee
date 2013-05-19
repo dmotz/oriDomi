@@ -517,8 +517,8 @@ class OriDomi
   _isIdenticalOperation: (op) ->
     return true  unless @lastOp.fn
     return false if @lastOp.reset
-    return false if @lastOp[key] isnt op[key] for key in ['angle', 'anchor', 'fn']
-    return false if v isnt @lastOp.options[k] and k isnt 'callback' for k, v of op.options
+    (return false if @lastOp[key] isnt op[key]) for key in ['angle', 'anchor', 'fn']
+    (return false if v isnt @lastOp.options[k] and k isnt 'callback') for k, v of op.options
     true
 
 
