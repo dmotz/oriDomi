@@ -414,8 +414,6 @@ class OriDomi
     @el.style.backgroundColor = 'transparent'
     @el.style.backgroundImage = @el.style.border = @el.style.outline = 'none'
     @el.style.position = 'relative'
-    # Show the left stage to start with.
-    @stages.left.style.display = 'block'
 
     # Create an element to hold stages.
     @stageHolder = document.createElement 'div'
@@ -478,7 +476,7 @@ class OriDomi
           else
             panel.style[anchor] = '100%'
         else
-          content.style[anchors[0]] = -(count - i - 1) * 100 + '%'
+          content.style[anchors[0]] = (count - i - 1) * -100 + '%'
           panel.style[css.origin] = anchor
           if i is 0
             panel.style[anchors[0]] = 100 - percent + '%'
