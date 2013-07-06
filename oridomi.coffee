@@ -11,13 +11,10 @@
 # =====
 'use strict'
 
-# Set a reference to the global object within this scope.
-root = @
-
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to false so oriDomi knows we are working without jQuery.
 # oriDomi doesn't require it to work, but offers a useful plugin bridge.
-$ = root.$ or false
+$ = if window.$?.data then window.$ else false
 
 # `devMode` determines whether oriDomi is vocal in the console with warnings and benchmarks.
 # Turn it on externally by calling `OriDomi.devMode()`.
@@ -253,7 +250,7 @@ class OriDomi
       return @
 
     # Record the current global styling of the target element.
-    elStyle = root.getComputedStyle @el
+    elStyle = window.getComputedStyle @el
     @_originalStyle = {}
     @_originalStyle[key] = elStyle[key] for key in modifiedStyleKeys
 
@@ -1129,8 +1126,8 @@ class OriDomi
 
 
 # Export constructor on `window` and `module.exports` (if applicable).
-root.OriDomi   = OriDomi
-module.exports = OriDomi if module?.exports?
+window.OriDomi = OriDomi
+module.exports = OriDomi if module?.exports
 
 
 
@@ -1139,7 +1136,7 @@ module.exports = OriDomi if module?.exports?
 
 
 # Only create bridge if jQuery (or an imitation supporting `data()`) exists.
-if root.jQuery? or root.$?.data?
+if $
   # Attach an `oriDomi` method to `$`'s prototype.
   $::oriDomi = (options) ->
     # Return selection if oriDomi is unsupported by the browser.
