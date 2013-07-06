@@ -21,6 +21,7 @@ announce = (name, fn) -> ->
   fn.apply @, arguments
 
 
+print = (cb) ->
   (err, stdout, stderr) ->
     throw err if err
     console.log stdout, stderr
@@ -29,9 +30,9 @@ announce = (name, fn) -> ->
 
 build = (cb) ->
   tgthr
-    compile: (cb) -> compile cb
-    minify:  (cb) -> minify  cb
-    docs:    (cb) -> docs    cb
+    compile: (cb) -> compile null, cb
+    minify:  (cb) -> minify  null, cb
+    docs:    (cb) -> docs    null, cb
   , ->
     console.log 'Build succeeded.'
     cb?()
@@ -43,22 +44,22 @@ watch = ->
   watcher.stderr.on 'data', output
 
 
-compile = (cb) -> exec 'coffee -mc oridomi.coffee', print cb
-
-
-minify  = (cb) -> exec 'uglifyjs --screw-ie8 -c unused=false -vmo oridomi.min.js oridomi.js', print cb
-
-
-docs    = (cb) -> exec 'docco oridomi.coffee', print cb
-
-
-size = ->
+size    = ->
   tgthr
     coffee: (cb) -> fs.stat 'oridomi.coffee', cb
     js:     (cb) -> fs.stat 'oridomi.js',     cb
     mini:   (cb) -> fs.stat 'oridomi.min.js', cb
   , (stats) ->      console.log key + ':\t' + stat[1].size for key, stat of stats
 
+
+compile = announce 'compile', (args, cb) ->
+  exec 'coffee -mc oridomi.coffee', print cb
+
+minify  = announce 'minify',  (args, cb) ->
+  exec 'uglifyjs --screw-ie8 -c unused=false -vmo oridomi.min.js oridomi.js', print cb
+
+docs    = announce 'docs',    (args, cb) ->
+  exec 'docco oridomi.coffee', print cb
 
 task 'build',   'compile, minify, and generate annotated source', build
 task 'watch',   'compile continuously',                           watch
