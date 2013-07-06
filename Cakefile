@@ -33,6 +33,7 @@ build = (cb) ->
     compile: (cb) -> compile null, cb
     minify:  (cb) -> minify  null, cb
     docs:    (cb) -> docs    null, cb
+    demo:    (cb) -> demo    null, cb
   , ->
     console.log 'Build succeeded.'
     cb?()
@@ -61,10 +62,15 @@ minify  = announce 'minify',  (args, cb) ->
 docs    = announce 'docs',    (args, cb) ->
   exec 'docco oridomi.coffee', print cb
 
+demo    = announce 'demo',    (args, cb) ->
+  exec 'stylus --include /usr/local/share/npm/lib/node_modules/nib/lib/ ./demo/demo.styl', print cb
+
+
 task 'build',   'compile, minify, and generate annotated source', build
 task 'watch',   'compile continuously',                           watch
 task 'compile', 'compile .coffee to .js',                         compile
 task 'minify',  'compress .js for production',                    minify
 task 'docs',    'generate annotated source page in ./docs',       docs
 task 'size',    'output filesize stats',                          size
+task 'demo',    'compile demo site stylesheet',                   demo
 
