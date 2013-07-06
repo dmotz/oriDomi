@@ -30,8 +30,7 @@ print = (cb) ->
 
 build = (cb) ->
   tgthr
-    compile: (cb) -> compile null, cb
-    minify:  (cb) -> minify  null, cb
+    compile: (cb) -> compile null, -> minify null, cb
     docs:    (cb) -> docs    null, cb
     demo:    (cb) -> demo    null, cb
   , ->
