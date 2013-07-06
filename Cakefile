@@ -17,7 +17,7 @@ output = (data) -> console.log data.toString()
 
 
 announce = (name, fn) -> ->
-  console.log "Running #{ name }"
+  console.log "Running #{ name }..."
   fn.apply @, arguments
 
 
