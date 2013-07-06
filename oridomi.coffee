@@ -1096,8 +1096,7 @@ class OriDomi
 
   # Proxy to enable stairs mode on `accordion`.
   stairs: (angle, anchor, options = {}) ->
-    options.stairs = true
-    options.sticky = true
+    options.stairs = options.sticky =  true
     @accordion angle, anchor, options
 
 
@@ -1109,8 +1108,7 @@ class OriDomi
 
   # `twist: true` proxy.
   twist: (angle, anchor, options = {}) ->
-    options.fracture = true
-    options.twist = true
+    options.fracture = options.twist = true
     @accordion angle / 10, anchor, options
 
 
