@@ -39,12 +39,12 @@ build = (cb) ->
 
 
 watch = ->
-  watcher = spawn 'coffee', ['-mwc', 'oridomi.coffee']
+  watcher = spawn 'coffee', '-mwc oridomi.coffee'.split ' '
   watcher.stdout.on 'data', output
   watcher.stderr.on 'data', output
 
 
-size    = ->
+size = ->
   tgthr
     coffee: (cb) -> fs.stat 'oridomi.coffee', cb
     js:     (cb) -> fs.stat 'oridomi.js',     cb
