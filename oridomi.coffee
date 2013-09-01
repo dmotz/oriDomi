@@ -34,7 +34,7 @@ supportWarning = (prop) ->
 testEl = document.createElement 'div'
 
 # Set a list of browser prefixes for testing CSS3 properties.
-prefixList = ['Webkit', 'Moz', 'O', 'ms']
+prefixList = ['Webkit', 'Moz', 'ms']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
 css =
