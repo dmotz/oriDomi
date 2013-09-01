@@ -51,7 +51,7 @@ css =
 # This function checks for the presence of CSS properties on the test div.
 testProp = (prop) ->
   # Capitalize the property name for camel-casing.
-  capProp = prop.charAt(0).toUpperCase() + prop.slice 1
+  capProp = prop[0].toUpperCase() + prop[1...]
   # Loop through the vendor prefix list and return when we find a match.
   for prefix in prefixList
     return full if testEl.style[(full = prefix + capProp)]?
