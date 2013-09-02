@@ -1,5 +1,5 @@
-# oriDomi
-# Cakefile
+# oriDomi Cakefile
+# Dan Motzenbecker
 
 fs            = require 'fs'
 {exec, spawn} = require 'child_process'
@@ -11,9 +11,6 @@ tgthr = (fns, cb) ->
     res[k] = arguments
     cb res unless Object.keys(fns).length
   v out k for k, v of fns
-
-
-output = (data) -> console.log data.toString()
 
 
 announce = (name, fn) -> ->
@@ -39,9 +36,9 @@ build = (cb) ->
 
 
 watch = ->
-  watcher = spawn 'coffee', '-mwc oridomi.coffee'.split ' '
-  watcher.stdout.on 'data', output
-  watcher.stderr.on 'data', output
+  coffee = spawn 'coffee', '-mwc oridomi.coffee'.split ' '
+  coffee.stdout.pipe process.stdout
+  coffee.stderr.pipe process.stderr
 
 
 size = ->
