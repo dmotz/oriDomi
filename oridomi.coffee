@@ -108,17 +108,11 @@ css.transformProp = do ->
 
 # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
 css.transitionEnd = do ->
-  switch css.transitionProp
-    when 'transitionProperty'
-      'transitionEnd'
-    when 'WebkitTransitionProperty'
-      'webkitTransitionEnd'
-    when 'MozTransitionProperty'
-      'transitionend'
-    when 'OTransitionProperty'
-      'oTransitionEnd'
-    when 'MSTransitionProperty'
-      'msTransitionEnd'
+  switch css.transitionProp.toLowerCase()
+    when 'transitionproperty'       then 'transitionEnd'
+    when 'webkittransitionproperty' then 'webkitTransitionEnd'
+    when 'moztransitionproperty'    then 'transitionend'
+    when 'mstransitionproperty'     then 'msTransitionEnd'
 
 
 # This function is used to extend option object literals with a set of defaults.
