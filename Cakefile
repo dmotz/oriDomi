@@ -62,7 +62,7 @@ docs    = announce 'docs',    (args, cb) ->
   exec 'docco oridomi.coffee', print cb
 
 demo    = announce 'demo',    (args, cb) ->
-  exec 'stylus --include /usr/local/share/npm/lib/node_modules/nib/lib/ ./demo/demo.styl', print cb
+  exec 'stylus -u nib ./demo/demo.styl', print cb
 
 
 task 'build',   'compile, minify, and generate annotated source', build
