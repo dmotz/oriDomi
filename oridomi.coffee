@@ -12,9 +12,9 @@
 'use strict'
 
 # Set a reference to jQuery (or another `$`-aliased DOM library).
-# If it doesn't exist, set to false so oriDomi knows we are working without jQuery.
+# If it doesn't exist, set to null so oriDomi knows we are working without jQuery.
 # oriDomi doesn't require it to work, but offers a useful plugin bridge.
-$ = if window.$?.data then window.$ else false
+$ = if window.$?.data then window.$ else null
 
 # `devMode` determines whether oriDomi is vocal in the console with warnings and benchmarks.
 # Turn it on externally by calling `OriDomi.devMode()`.
