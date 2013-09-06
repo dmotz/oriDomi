@@ -47,6 +47,7 @@ css =
   perspective:        'perspective'
   perspectiveOrigin:  'perspectiveOrigin'
   backface:           'backfaceVisibility'
+  boxSizing:          'boxSizing'
 
 # This function checks for the presence of CSS properties on the test div.
 testProp = (prop) ->
