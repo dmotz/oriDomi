@@ -327,6 +327,7 @@ class OriDomi
     contentHolder.style.margin = '0'
     contentHolder.style.position = 'relative'
     contentHolder.style.float = 'none'
+    contentHolder.style[css.boxSizing] = 'border-box'
 
     # Create a prototype mask div to clone.
     # Masks serve to display only a small offset portion of the content they hold.
