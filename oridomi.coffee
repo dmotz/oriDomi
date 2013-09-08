@@ -37,15 +37,20 @@ testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'ms']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-  origin:             'transformOrigin'
-  transformStyle:     'transformStyle'
-  transitionProp:     'transitionProperty'
-  transitionDuration: 'transitionDuration'
-  transitionEasing:   'transitionTimingFunction'
-  perspective:        'perspective'
-  perspectiveOrigin:  'perspectiveOrigin'
-  backface:           'backfaceVisibility'
-  boxSizing:          'boxSizing'
+css = new ->
+  @[key] = key for key in [
+    'transform'
+    'transformOrigin'
+    'transformStyle'
+    'transitionProperty'
+    'transitionDuration'
+    'transitionTimingFunction'
+    'perspective'
+    'perspectiveOrigin'
+    'backfaceVisibility'
+    'boxSizing'
+  ]
+  @
 
 # This function checks for the presence of CSS properties on the test div.
 testProp = (prop) ->
