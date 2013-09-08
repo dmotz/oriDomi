@@ -1,9 +1,9 @@
-# [oriDomi](http://oridomi.com)
-# =============================
-# #### by [Dan Motzenbecker](http://oxism.com)
-# Fold up the DOM like paper.
+# # oriDomi
+# ### Fold up the DOM like paper.
+# 0.3.0
 
-# `0.3.0`
+# [http://oridomi.com](http://oridomi.com)
+# #### by [Dan Motzenbecker](http://oxism.com)
 
 # Copyright 2013, MIT License
 
