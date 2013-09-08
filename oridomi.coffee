@@ -119,6 +119,29 @@ css.transitionEnd = do ->
     when 'mstransitionproperty'     then 'msTransitionEnd'
 
 
+baseName  = 'oridomi'
+elClasses =
+  active:       'active'
+  clone:        'clone'
+  holder:       'holder'
+  stage:        'stage'
+  stageLeft:    'stage-left'
+  stageRight:   'stage-right'
+  stageTop:     'stage-top'
+  stageBottom:  'stage-bottom'
+  content:      'content'
+  mask:         'mask'
+  maskH:        'mask-h'
+  maskV:        'mask-v'
+  panel:        'panel'
+  panelH:       'panel-h'
+  panelV:       'panel-v'
+  shader:       'shader'
+  shaderTop:    'shader-top'
+  shaderBottom: 'shader-bottom'
+
+elClasses[key] = 'oridomi-' + val for k, v of elClasses
+
 # This function is used to extend option object literals with a set of defaults.
 # It is simple and one dimensional.
 extendObj = (target, source) ->
