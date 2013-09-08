@@ -12,6 +12,45 @@
 # Helper Functions
 # ================
 
+# Function used to warn the developer that the browser does not support oriDomi.
+supportWarning = (prop) ->
+  if devMode
+    console.warn "oriDomi: Browser does not support oriDomi. Missing support for `#{ prop }`."
+    isSupported = false
+
+
+# This function checks for the presence of CSS properties on the test div.
+testProp = (prop) ->
+  # Loop through the vendor prefix list and return when we find a match.
+  for prefix in prefixList
+    return full if testEl.style[(full = prefix + capitalize prop)]?
+
+  # If the un-prefixed property is present, return it.
+  return prop if testEl.style[prop]?
+  # If no matches are found, return false to denote that the browser is missing this property.
+  false
+
+
+# This function is used to extend option object literals with a set of defaults.
+# It is simple and one dimensional.
+extendObj = (target, source) ->
+  return {} if !target and !source
+  # Check if the extension object is an object literal by casting it and comparing it.
+  return target if source isnt Object source
+  # If the target isn't an object, set it to an empty object literal.
+  target = {} if target isnt Object target
+  # Loop through the extension object and copy its values to the target if they don't exist.
+  (target[prop] = source[prop] unless target[prop]?) for prop of source
+  # Return the extended target object.
+  target
+
+
+# Empty function to be used as placeholder for callback defaults
+# (instead of creating separate empty functions).
+noOp = ->
+
+
+
 # Setup
 # =====
 
@@ -28,11 +67,6 @@ devMode = false
 # not support oriDomi.
 isSupported = true
 
-# Function used to warn the developer that the browser does not support oriDomi.
-supportWarning = (prop) ->
-  if devMode
-    console.warn "oriDomi: Browser does not support oriDomi. Missing support for `#{ prop }`."
-    isSupported = false
 
 # Create a div for testing CSS3 properties.
 testEl = document.createElement 'div'
@@ -55,20 +89,6 @@ css = new ->
     'boxSizing'
   ]
   @
-
-# This function checks for the presence of CSS properties on the test div.
-testProp = (prop) ->
-  # Capitalize the property name for camel-casing.
-  capProp = prop[0].toUpperCase() + prop[1...]
-  # Loop through the vendor prefix list and return when we find a match.
-  for prefix in prefixList
-    return full if testEl.style[(full = prefix + capProp)]?
-
-  # If the un-prefixed property is present, return it.
-  return prop if testEl.style[prop]?
-  # If no matches are found, return false to denote that the browser is missing this property.
-  false
-
 
 # Loop through the CSS hash and replace each value with the result of `testProp()`.
 for key, value of css
@@ -146,26 +166,11 @@ elClasses =
 
 elClasses[key] = 'oridomi-' + val for k, v of elClasses
 
-# This function is used to extend option object literals with a set of defaults.
-# It is simple and one dimensional.
-extendObj = (target, source) ->
-  return {} if !target and !source
-  # Check if the extension object is an object literal by casting it and comparing it.
-  return target if source isnt Object source
-  # If the target isn't an object, set it to an empty object literal.
-  target = {} if target isnt Object target
-  # Loop through the extension object and copy its values to the target if they don't exist.
-  (target[prop] = source[prop] unless target[prop]?) for prop of source
-  # Return the extended target object.
-  target
 
 
 # Defaults
 # ========
 
-# Empty function to be used as placeholder for callback defaults
-# (instead of creating separate empty functions).
-noOp = ->
 
 modifiedStyleKeys = ['padding', 'backgroundColor', 'backgroundImage', 'border', 'outline']
 
