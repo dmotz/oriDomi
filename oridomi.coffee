@@ -31,6 +31,9 @@ testProp = (prop) ->
   false
 
 
+capitalize = (s) ->
+  s[0].toUpperCase() + s[1...]
+
 # This function is used to extend option object literals with a set of defaults.
 # It is simple and one dimensional.
 extendObj = (target, source) ->
