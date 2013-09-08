@@ -112,7 +112,7 @@ css.transformProp = do ->
 
 # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
 css.transitionEnd = do ->
-  switch css.transitionProp.toLowerCase()
+  switch css.transitionProperty.toLowerCase()
     when 'transitionproperty'       then 'transitionEnd'
     when 'webkittransitionproperty' then 'webkitTransitionEnd'
     when 'moztransitionproperty'    then 'transitionend'
