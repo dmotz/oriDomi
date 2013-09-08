@@ -37,8 +37,6 @@ testEl = document.createElement 'div'
 prefixList = ['Webkit', 'Moz', 'ms']
 
 # A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-css =
-  transform:          'transform'
   origin:             'transformOrigin'
   transformStyle:     'transformStyle'
   transitionProp:     'transitionProperty'
