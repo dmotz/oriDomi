@@ -307,19 +307,20 @@ prep = (fn) ->
 class OriDomi
   # The constructor takes two arguments: a target element and an options object literal.
   constructor: (@el, options) ->
-    # If the browser doesn't support oriDomi, return the element unmodified.
-    return @ unless isSupported
+    # If the browser doesn't support oriDomi, immediately return.
+    return unless isSupported
     # If the constructor wasn't called with the `new` keyword, invoke it again.
     return new oriDomi @el, @settings unless @ instanceof OriDomi
-    # Return if the first argument isn't a DOM element.
-    if not @el or @el.nodeType isnt 1
+    # Find an element if the first argument is a selector.
+    @el = document.querySelector @el if typeof @el is 'string'
+    # Return if the element doesn't exist.
+    unless @el and @el.nodeType is 1
       console.warn 'oriDomi: First argument must be a DOM element' if devMode
-      return @
-
     # Record the current global styling of the target element.
     elStyle = window.getComputedStyle @el
     @_originalStyle = {}
     @_originalStyle[key] = elStyle[key] for key in modifiedStyleKeys
+      return
 
     # Extend any passed options with the defaults map.
     @settings = extendObj options, defaults
