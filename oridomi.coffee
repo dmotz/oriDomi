@@ -31,6 +31,18 @@ testProp = (prop) ->
   false
 
 
+addStyle = (selector, rules) ->
+  style = ".#{ selector }{"
+  for prop, val of rules
+    if prop of css
+      prop = css[prop]
+      prop = '-' + prop if prop.match /^(webkit|moz|ms)/i
+
+    style += "#{ prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() }:#{ val };"
+
+  styleBuffer += style + '}'
+
+
 capitalize = (s) ->
   s[0].toUpperCase() + s[1...]
 
