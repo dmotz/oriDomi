@@ -7,9 +7,13 @@
 
 # Copyright 2013, MIT License
 
+'use strict'
+
+# Helper Functions
+# ================
+
 # Setup
 # =====
-'use strict'
 
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to null so oriDomi knows we are working without jQuery.
