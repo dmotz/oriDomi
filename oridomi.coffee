@@ -43,8 +43,13 @@ addStyle = (selector, rules) ->
   styleBuffer += style + '}'
 
 
+getGradient = (anchor) ->
+  "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
+
+
 capitalize = (s) ->
   s[0].toUpperCase() + s[1...]
+
 
 createEl = (className) ->
   el = document.createElement 'div'
@@ -697,12 +702,6 @@ class OriDomi
     else
       @_shaders[anchor].top[i].style.opacity = a
       @_shaders[anchor].bottom[i].style.opacity = b
-
-
-  # This is a simple method used by the constructor to set CSS gradient styles.
-  # It accepts an anchor argument to start the gradient slope.
-  _getShaderGradient: (anchor) ->
-    "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
   # This method shows the requested stage element and sets a reference to it as
