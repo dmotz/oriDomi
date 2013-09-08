@@ -101,6 +101,9 @@ devMode = false
 # not support oriDomi.
 isSupported = true
 
+anchorList  = ['left', 'right', 'top', 'bottom']
+anchorListV = anchorList[..1]
+anchorListH = anchorList[2..]
 
 # Create a div for testing CSS3 properties.
 testEl = document.createElement 'div'
