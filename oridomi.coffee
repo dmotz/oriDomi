@@ -58,11 +58,11 @@ createEl = (className) ->
 
 
 hideEl = (el) ->
-  el.styleEl[css.transform] = 'translate3d(-9999px, 0, 0)'
+  el.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
 
 showEl = (el) ->
-  el.styleEl[css.transform] = 'translate3d(0, 0, 0)'
+  el.style[css.transform] = 'translate3d(0, 0, 0)'
 
 
 # This function is used to extend option object literals with a set of defaults.
