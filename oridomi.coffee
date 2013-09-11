@@ -211,15 +211,93 @@ elClasses =
 
 
 elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
+styleBuffer  = ''
+
+addStyle elClasses.active,
+  backgroundColor: 'transparent'
+  backgroundImage: 'none'
+  padding:         '0'
+  boxSizing:       'border-box'
+  border:          'none'
+  outline:         'none'
+  position:        'relative'
+
+addStyle elClasses.clone, margin: '0'
+
+addStyle elClasses.holder,
+  width:     '100%'
+  height:    '100%'
+  position:  'absolute'
+  transform: 'translateY(-100%)'
+
+addStyle elClasses.stage,
+  width:          '100%'
+  height:         '100%'
+  position:       'absolute'
+  transform:      'translate3d(-9999px, 0, 0)'
+  margin:         '0'
+  padding:        '0'
+  transformStyle: 'preserve-3d'
+
+for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
+  addStyle elClasses['stage' + k], perspectiveOrigin: v
+
+addStyle elClasses.shader,
+  width:              '100%'
+  height:             '100%'
+  position:           'absolute'
+  opacity:            '0'
+  top:                '0'
+  left:               '0'
+  pointerEvents:      'none'
+  transitionProperty: 'opacity'
+
+for anchor in anchorList
+  addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
+
+addStyle elClasses.content,
+  width:     '100%'
+  height:    '100%'
+  margin:    '0'
+  position:  'relative'
+  float:     'none'
+  boxSizing: 'border-box'
+
+addStyle elClasses.mask,
+  width:     '100%'
+  height:    '100%'
+  position:  'absolute'
+  overflow:  'hidden'
+  transform: 'translate3d(0, 0, 0)'
+
+addStyle elClasses.panel,
+  width:              '100%'
+  height:             '100%'
+  padding:            '0'
+  position:           'relative'
+  transitionProperty: css.transformProp
+  transformOrigin:    'left'
+  transformStyle:     'preserve-3d'
+  backfaceVisibility: 'hidden'
+
+addStyle elClasses.panelH, transformOrigin: 'top'
+
+
+styleEl      = document.createElement 'style'
+styleEl.type = 'text/css'
+
+if styleEl.styleSheet
+  styleEl.styleSheet.cssText = styleBuffer
+else
+  styleEl.appendChild document.createTextNode styleBuffer
+
+document.head.appendChild styleEl
 
 
 # Defaults
 # ========
 
-
-modifiedStyleKeys = ['padding', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-
-# Map of oriDomi instance defaults.
+# Object literal of oriDomi instance defaults.
 defaults =
   # The number of vertical panels (for folding left or right).
   vPanels: 3
