@@ -419,9 +419,8 @@ class OriDomi
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
 
     # Set an array of anchor names.
-    @_anchors = ['left', 'right', 'top', 'bottom']
     # oriDomi starts oriented with the left anchor.
-    @lastOp = anchor: @_anchors[0]
+    @lastOp = anchor: anchorList[0]
     # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
@@ -573,7 +572,7 @@ class OriDomi
     @enableTouch() if @settings.touchEnabled
 
     # Append each stage to the target element.
-    @stageHolder.appendChild @stages[anchor] for anchor in @_anchors
+    @stageHolder.appendChild @stages[anchor] for anchor in anchorList
 
     # Show the target if applicable.
     if @settings.showOnStart
@@ -600,11 +599,11 @@ class OriDomi
 
   _createPanels: (axis, proto) ->
     if axis is 'x'
-      anchors = ['left', 'right']
+      anchors = anchorListV
       count   = @vPanels
       metric  = 'width'
     else
-      anchors = ['top', 'bottom']
+      anchors = anchorListH
       count   = @hPanels
       metric  = 'height'
 
@@ -738,10 +737,7 @@ class OriDomi
   # Allows other methods to change the tween duration or disable it altogether.
   _setTweening: (speed) ->
     # To loop through the shaders, derive the correct pair from the current anchor.
-    if @lastOp.anchor is 'left' or @lastOp.anchor is 'right'
-      shaderPair = ['left', 'right']
-    else
-      shaderPair = ['top', 'bottom']
+    shaderPair = if @lastOp.anchor in anchorListV then anchorListV else anchorListH
 
     # Loop through the panels in this anchor and set the transition duration to the new speed.
     for panel, i in @panels[@lastOp.anchor]
@@ -773,28 +769,23 @@ class OriDomi
 
     # This block makes sure left and top shaders appear for negative angles and right
     # and bottom shaders appear for positive ones.
-    switch anchor
-      when 'left', 'top'
-        if angle < 0
-          a = opacity
-          b = 0
-        else
-          a = 0
-          b = opacity
-      when 'right', 'bottom'
-        if angle < 0
-          a = 0
-          b = opacity
-        else
-          a = opacity
-          b = 0
-
-    # Only manipulate shader opacity for the current axis.
-    if anchor is 'left' or anchor is 'right'
-      @_shaders[anchor].left[i].style.opacity = a
+    if anchor in anchorListV
+      if angle < 0
+        a = opacity
+        b = 0
+      else
+        a = 0
+        b = opacity
+      @_shaders[anchor].left[i].style.opacity  = a
       @_shaders[anchor].right[i].style.opacity = b
     else
-      @_shaders[anchor].top[i].style.opacity = a
+      if angle < 0
+        a = 0
+        b = opacity
+      else
+        a = opacity
+        b = 0
+      @_shaders[anchor].top[i].style.opacity    = a
       @_shaders[anchor].bottom[i].style.opacity = b
 
 
@@ -835,10 +826,7 @@ class OriDomi
 
   # Simple method that returns the correct panel set based on an anchor.
   _getPanelType: (anchor) ->
-    if anchor is 'left' or anchor is 'right'
-      @vPanels
-    else
-      @hPanels
+    if anchor in anchorListV then @vPanels else @hPanels
 
 
   # Converts a shorthand anchor name to a full one.
@@ -908,7 +896,7 @@ class OriDomi
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening 0
     # Derive the axis to fold on.
-    @_touchAxis = if @lastOp.anchor is 'left' or @lastOp.anchor is 'right' then 'x' else 'y'
+    @_touchAxis = if @lastOp.anchor in anchorListV then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
     @["_#{ @_touchAxis }Last"] = @lastOp.angle
 
