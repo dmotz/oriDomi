@@ -352,37 +352,38 @@ prep = (fn) ->
     if @_touchStarted
       fn.apply @, arguments
     else
-      args = arguments
-      options = {}
-      angle = anchor = null
+      [a0, a1, a2] = arguments
+      opt          = {}
+      angle        = anchor = null
+
       switch fn.length
         when 1
-          options.callback = args[0]
+          opt.callback = a0
         when 2
-          if typeof args[0] is 'function'
-            options.callback = args[0]
+          if typeof a0 is 'function'
+            opt.callback = a0
           else
-            anchor = args[0]
-            options.callback = args[1]
+            anchor       = a0
+            opt.callback = a1
         when 3
-          angle = args[0]
-          if args.length is 2
-            if typeof args[1] is 'object'
-              options = args[1]
-            else if typeof args[1] is 'function'
-              options.callback = args[1]
+          angle = a0
+          if arguments.length is 2
+            if typeof a1 is 'object'
+              opt = a1
+            else if typeof a1 is 'function'
+              opt.callback = a1
             else
-              anchor = args[1]
-          else if args.length is 3
-            anchor = args[1]
-            if typeof args[2] is 'object'
-              options = args[2]
-            else if typeof args[2] is 'function'
-              options.callback = args[2]
+              anchor = a1
+          else if arguments.length is 3
+            anchor = a1
+            if typeof a2 is 'object'
+              opt = a2
+            else if typeof a2 is 'function'
+              opt.callback = a2
 
       angle  or= @lastOp.angle or 0
       anchor or= @lastOp.anchor
-      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), options]
+      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
       @_step()
       @
 
