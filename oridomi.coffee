@@ -324,10 +324,6 @@ class OriDomi
     # Return if the element doesn't exist.
     unless @el and @el.nodeType is 1
       console.warn 'oriDomi: First argument must be a DOM element' if devMode
-    # Record the current global styling of the target element.
-    elStyle = window.getComputedStyle @el
-    @_originalStyle = {}
-    @_originalStyle[key] = elStyle[key] for key in modifiedStyleKeys
       return
 
     # Extend any passed options with the defaults map.
@@ -959,7 +955,7 @@ class OriDomi
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cleanEl.innerHTML
       # Reset original styles.
-      @el.style[key] = val for key, val of @_originalStyle
+      @el.classList.remove elClasses.active
       callback?()
     null
 
