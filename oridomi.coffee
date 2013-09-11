@@ -410,10 +410,7 @@ class OriDomi
     @_queue = []
 
     # Clone the target element and save a copy of it.
-    @cleanEl = @el.cloneNode true
-    @cleanEl.style.margin = '0'
-    # A faster version of `display: none` when using hardware acceleration.
-    @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+    hideEl @cloneEl = @el.cloneNode true
 
     # Destructure some instance variables from the settings object.
     {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
@@ -581,7 +578,7 @@ class OriDomi
 
     # Hide the original content and insert the oriDomi version.
     @el.innerHTML = ''
-    @el.appendChild @cleanEl
+    @el.appendChild @cloneEl
     @el.appendChild @stageHolder
 
     # These properties record starting angles for touch/drag events.
@@ -1019,7 +1016,7 @@ class OriDomi
       # Remove the data reference if using jQuery.
       $.data @el, 'oriDomi', null if $
       # Remove the oriDomi element from the DOM.
-      @el.innerHTML = @cleanEl.innerHTML
+      @el.innerHTML = @cloneEl.innerHTML
       # Reset original styles.
       @el.classList.remove elClasses.active
       callback?()
