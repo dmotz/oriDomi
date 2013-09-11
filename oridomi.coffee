@@ -204,11 +204,13 @@ elClasses =
   panelH:       'panel-h'
   panelV:       'panel-v'
   shader:       'shader'
+  shaderLeft:   'shader-left'
+  shaderRight:  'shader-right'
   shaderTop:    'shader-top'
   shaderBottom: 'shader-bottom'
 
-elClasses[key] = 'oridomi-' + val for k, v of elClasses
 
+elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
 
 
 # Defaults
