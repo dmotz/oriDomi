@@ -397,7 +397,7 @@ class OriDomi
     # If the browser doesn't support oriDomi, immediately return.
     return unless isSupported
     # If the constructor wasn't called with the `new` keyword, invoke it again.
-    return new oriDomi @el, @settings unless @ instanceof OriDomi
+    return new OriDomi @el, options unless @ instanceof OriDomi
     # Find an element if the first argument is a selector.
     @el = document.querySelector @el if typeof @el is 'string'
     # Return if the element doesn't exist.
