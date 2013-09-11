@@ -57,6 +57,12 @@ createEl = (className) ->
   el
 
 
+cloneEl = (parent, deep, className) ->
+  el = parent.cloneNode deep
+  el.classList.add elClasses[className]
+  el
+
+
 hideEl = (el) ->
   el.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
