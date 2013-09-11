@@ -85,10 +85,50 @@ extendObj = (target, source) ->
   target
 
 
+prep = (fn) ->
+  ->
+    if @_touchStarted
+      fn.apply @, arguments
+    else
+      [a0, a1, a2] = arguments
+      opt          = {}
+      angle        = anchor = null
+
+      switch fn.length
+        when 1
+          opt.callback = a0
+        when 2
+          if typeof a0 is 'function'
+            opt.callback = a0
+          else
+            anchor       = a0
+            opt.callback = a1
+        when 3
+          angle = a0
+          if arguments.length is 2
+            if typeof a1 is 'object'
+              opt = a1
+            else if typeof a1 is 'function'
+              opt.callback = a1
+            else
+              anchor = a1
+          else if arguments.length is 3
+            anchor = a1
+            if typeof a2 is 'object'
+              opt = a2
+            else if typeof a2 is 'function'
+              opt.callback = a2
+
+      angle  or= @lastOp.angle or 0
+      anchor or= @lastOp.anchor
+      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
+      @_step()
+      @
+
+
 # Empty function to be used as placeholder for callback defaults
 # (instead of creating separate empty functions).
 noOp = ->
-
 
 
 # Setup
@@ -345,47 +385,6 @@ defaults =
   touchMoveCallback: noOp
   # Inkoked with ending point.
   touchEndCallback: noOp
-
-
-prep = (fn) ->
-  ->
-    if @_touchStarted
-      fn.apply @, arguments
-    else
-      [a0, a1, a2] = arguments
-      opt          = {}
-      angle        = anchor = null
-
-      switch fn.length
-        when 1
-          opt.callback = a0
-        when 2
-          if typeof a0 is 'function'
-            opt.callback = a0
-          else
-            anchor       = a0
-            opt.callback = a1
-        when 3
-          angle = a0
-          if arguments.length is 2
-            if typeof a1 is 'object'
-              opt = a1
-            else if typeof a1 is 'function'
-              opt.callback = a1
-            else
-              anchor = a1
-          else if arguments.length is 3
-            anchor = a1
-            if typeof a2 is 'object'
-              opt = a2
-            else if typeof a2 is 'function'
-              opt.callback = a2
-
-      angle  or= @lastOp.angle or 0
-      anchor or= @lastOp.anchor
-      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
-      @_step()
-      @
 
 
 # oriDomi Class
