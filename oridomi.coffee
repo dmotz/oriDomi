@@ -321,7 +321,8 @@ addStyle elClasses.panel,
   backfaceVisibility: 'hidden'
 
 addStyle elClasses.panelH, transformOrigin: 'top'
-
+addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
+addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
 
 styleEl      = document.createElement 'style'
 styleEl.type = 'text/css'
