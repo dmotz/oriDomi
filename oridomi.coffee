@@ -793,7 +793,7 @@ class OriDomi
   # the current stage.
   _showStage: (anchor) ->
     if anchor isnt @lastOp.anchor
-      @stages[@lastOp.anchor].style[css.transform] = 'translate3d(-9999px, 0, 0)'
+      hideEl @stages[@lastOp.anchor]
       @lastOp.anchor = anchor
       @lastOp.reset  = true
       @stages[anchor].style[css.transform] = 'translate3d(' + do =>
@@ -991,8 +991,8 @@ class OriDomi
       @_stageReset @lastOp.anchor, =>
         @isFrozen = true
         # Swap the visibility of the elements.
-        @stageHolder.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-        @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
+        hideEl @stageHolder
+        showEl @cloneEl
         callback?()
     @
 
@@ -1003,8 +1003,8 @@ class OriDomi
     if @isFrozen
       @isFrozen = false
       # Swap the visibility of the elements.
-      @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-      @stageHolder.style[css.transform] = 'translateY(-100%)'
+      hideEl @cloneEl
+      showEl @stageHolder
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
       @lastOp.angle = 0
     @
