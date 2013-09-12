@@ -829,14 +829,14 @@ class OriDomi
 
   # Converts a shorthand anchor name to a full one.
   _getLonghandAnchor: (shorthand) ->
-    switch shorthand
-      when 'left', 'l', '4', 4
+    switch shorthand.toString()
+      when 'left',   'l', '4'
         'left'
-      when 'right', 'r', '2', 2
+      when 'right',  'r', '2'
         'right'
-      when 'top', 't', '1', 1
+      when 'top',    't', '1'
         'top'
-      when 'bottom', 'b', '3', 3
+      when 'bottom', 'b', '3'
         'bottom'
       else
         # Left is always default.
