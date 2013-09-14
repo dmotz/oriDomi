@@ -374,261 +374,138 @@ defaults =
   touchEndCallback: noOp
 
 
-# oriDomi Class
-# =============
+# oriDomi Prototype
+# =================
 
 class OriDomi
-  # The constructor takes two arguments: a target element and an options object literal.
-  constructor: (@el, options) ->
-    # If the browser doesn't support oriDomi, immediately return.
+
+  constructor: (@el, options = {}) ->
     return unless isSupported
-    # If the constructor wasn't called with the `new` keyword, invoke it again.
-    return new OriDomi @el, options unless @ instanceof OriDomi
-    # Find an element if the first argument is a selector.
+    return new OriDomi arguments... unless @ instanceof OriDomi
     @el = document.querySelector @el if typeof @el is 'string'
-    # Return if the element doesn't exist.
     unless @el and @el.nodeType is 1
       console.warn 'oriDomi: First argument must be a DOM element' if devMode
       return
 
-    # Extend any passed options with the defaults map.
-    @settings = extendObj options, defaults
-    # Create an array to act as an animation queue.
+    @settings = new ->
+      for k, v of defaults
+        if options[k]?
+          @[k] = options[k]
+        else
+          @[k] = v
+      @
+
     @_queue = []
-
-    # Clone the target element and save a copy of it.
-    hideEl @cloneEl = @el.cloneNode true
-
-    # Destructure some instance variables from the settings object.
-    {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
-
-    # Set an array of anchor names.
-    # oriDomi starts oriented with the left anchor.
-    @lastOp = anchor: anchorList[0]
-    # Create object literals to store panels and stages.
     @panels = {}
     @stages = {}
-    # Create a stage div to serve as a prototype.
-    stage = document.createElement 'div'
-    # The stage should occupy the full width and height of the target element.
-    stage.style.width = stage.style.height = '100%'
-    # By default, each stage is hidden and absolutely positioned so they stack
-    # on top of each other.
-    stage.style.position = 'absolute'
-    stage.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-    # Eliminate padding and margins since the stage is already the full width and height.
-    stage.style.margin = stage.style.padding = '0'
-    # Apply 3D perspective and preserve any parent perspective.
-    stage.style[css.perspective] = @settings.perspective + 'px'
-    stage.style[css.transformStyle] = 'preserve-3d'
+    @lastOp = anchor: anchorList[0]
+    @_xLast = @_yLast = 0
+    {@shading, @vPanels, @hPanels} = @settings
 
-    # Each stage needs its own perspective origin so 90 degree folds hide the element.
-    perspectiveOrigins = ['0% 50%', '100% 50%', '50% 0%', '50% 100%']
-    # Loop through the anchors list and create a stage and empty panel set for each.
-    for anchor, i in @_anchors
+    if @shading
+      @_shaders    = {}
+      shaderProtos = {}
+      shaderProto  = createEl 'shader'
+      shaderProto.style[css.transitionDuration]       = @settings.speed + 'ms'
+      shaderProto.style[css.transitionTimingFunction] = @settings.easingMethod
+
+    stageProto = createEl 'stage'
+    stageProto.style[css.perspective] = @settings.perspective + 'px'
+
+    for anchor in anchorList
       @panels[anchor] = []
-      stage = @stages[anchor] = stage.cloneNode false
-      stage.className = 'oridomi-stage-' + anchor
-      stage.style[css.perspectiveOrigin] = perspectiveOrigins[i]
-
-    @stages.left.style[css.transform]   = 'translate3d(0, 0, 0)'
-    # If shading is enabled, create an object literal to hold shaders.
-    if @shading
-      @_shaders = {}
-      # Loop through each anchor and create a nested object literal.
-      # For the left and right anchors, create arrays to hold the left and right
-      # shader for each panel. Do the same for top and bottom.
-      for anchor in @_anchors
+      @stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
+      if @shading
         @_shaders[anchor] = {}
-        if anchor is 'left' or anchor is 'right'
-          @_shaders[anchor].left = []
-          @_shaders[anchor].right = []
+        if anchor in anchorListV
+          @_shaders[anchor][side] = [] for side in anchorListV
         else
-          @_shaders[anchor].top = []
-          @_shaders[anchor].bottom = []
+          @_shaders[anchor][side] = [] for side in anchorListH
 
-      # Create a shader div prototype to clone.
-      shader = document.createElement 'div'
-      shader.style[css.transitionProp] = 'opacity'
-      shader.style[css.transitionDuration] = @settings.speed + 'ms'
-      shader.style[css.transitionEasing] = @settings.easingMethod
-      shader.style.position = 'absolute'
-      shader.style.width = shader.style.height = '100%'
-      shader.style.opacity = shader.style.top = shader.style.left = '0'
-      shader.style.pointerEvents = 'none'
+        shaderProtos[anchor] = cloneEl shaderProto, false, 'shader' + capitalize anchor
 
-    # The content holder is a clone of the target element.
-    # Every panel will contain one.
-    contentHolder = @el.cloneNode true
-    contentHolder.classList.add 'oridomi-content'
-    contentHolder.style.width = contentHolder.style.height = '100%'
-    contentHolder.style.margin = '0'
-    contentHolder.style.position = 'relative'
-    contentHolder.style.float = 'none'
-    contentHolder.style[css.boxSizing] = 'border-box'
+    contentHolder = cloneEl @el, true, 'content'
 
-    # Create a prototype mask div to clone.
-    # Masks serve to display only a small offset portion of the content they hold.
-    hMask = document.createElement 'div'
-    hMask.className = 'oridomi-mask-h'
-    hMask.style.position = 'absolute'
-    hMask.style.overflow = 'hidden'
-    hMask.style.width = hMask.style.height = '100%'
-    # Adding `translate3d(0, 0, 0)` prevents flickering during transforms.
-    hMask.style[css.transform] = 'translate3d(0, 0, 0)'
-    # Add the `contentHolder` div to the mask prototype.
-    hMask.appendChild contentHolder
+    maskProto = createEl 'mask'
+    maskProto.appendChild contentHolder
 
-    # If shading is enabled, create top and bottom shaders for the horizontal
-    # mask prototype.
-    if @shading
-      topShader = shader.cloneNode false
-      topShader.className = 'oridomi-shader-top'
-      topShader.style.background = @_getShaderGradient 'top'
-      bottomShader = shader.cloneNode false
-      bottomShader.className = 'oridomi-shader-bottom'
-      bottomShader.style.background = @_getShaderGradient 'bottom'
-      hMask.appendChild topShader
-      hMask.appendChild bottomShader
+    panelProto = createEl 'panel'
+    panelProto.style[css.transitionDuration]       = @settings.speed + 'ms'
+    panelProto.style[css.transitionTimingFunction] = @settings.easingMethod
 
-    # The panel element holds both its respective mask and all subsequent sibling panels.
-    hPanel = document.createElement 'div'
-    hPanel.className = 'oridomi-panel-h'
-    hPanel.style.width = hPanel.style.height = '100%'
-    hPanel.style.padding = '0'
-    hPanel.style.position = 'relative'
-    # The panel element is the target of the transforms.
-    hPanel.style[css.transitionProp] = css.transformProp
-    hPanel.style[css.transitionDuration] = @settings.speed + 'ms'
-    hPanel.style[css.transitionEasing] = @settings.easingMethod
-    hPanel.style[css.origin] = 'top'
-    hPanel.style[css.transformStyle] = 'preserve-3d'
-    hPanel.style[css.backface] = 'hidden'
+    for axis in ['x', 'y']
+      if axis is 'x'
+        anchorSet   = anchorListV
+        count       = @vPanels
+        metric      = 'width'
+        classSuffix = 'V'
+      else
+        anchorSet   = anchorListH
+        count       = @hPanels
+        metric      = 'height'
+        classSuffix = 'H'
 
-    # Apply a transparent border to force edge smoothing on Firefox.
-    # (This setting hurts performance significantly.)
-    hPanel.style.outline = '1px solid transparent' if @settings.forceAntialiasing
+      percent = 100 / count
 
-    # Add the horizontal mask prototype to the horizontal panel prototype.
-    hPanel.appendChild hMask
+      mask = cloneEl maskProto, true, 'mask' + classSuffix
+      mask.children[0].style[metric] = count * 100 + '%'
+      mask.appendChild shaderProtos[anchor] for anchor in anchorSet
 
-    @_createPanels 'y', hPanel
+      proto = cloneEl panelProto, false, 'panel' + classSuffix
+      proto.appendChild mask
 
-    # Now that the horizontal panels are done, we can clone the `hMask` for the vertical mask prototype.
-    vMask = hMask.cloneNode true
-    vMask.className = 'oridomi-mask-v'
+      for anchor, n in anchorSet
+        for panelN in [0...count]
+          panel = proto.cloneNode true
+          panel.style[metric] = percent + '%' if panelN is 0
+          content = panel.children[0].children[0]
 
-    # Create left and right shaders if applicable.
-    if @shading
-      leftShader = vMask.getElementsByClassName('oridomi-shader-top')[0]
-      leftShader.className = 'oridomi-shader-left'
-      leftShader.style.background = @_getShaderGradient 'left'
-      rightShader = vMask.getElementsByClassName('oridomi-shader-bottom')[0]
-      rightShader.className = 'oridomi-shader-right'
-      rightShader.style.background = @_getShaderGradient 'right'
+          if n is 0
+            content.style[anchor] = -panelN * 100 + '%'
+            if panelN is 0
+              panel.style[anchor] = '0'
+            else
+              panel.style[anchor] = '100%'
+          else
+            content.style[anchorSet[0]] = (count - panelN - 1) * -100 + '%'
+            panel.style[css.origin] = anchor
+            if panelN is 0
+              panel.style[anchorSet[0]] = 100 - percent + '%'
+            else
+              panel.style[anchorSet[0]] = '-100%'
 
-    # Clone the `hPanel` prototype and adjust its styling for vertical use.
-    vPanel = hPanel.cloneNode false
-    vPanel.className = 'oridomi-panel-v'
-    vPanel.style[css.origin] = 'left'
-    vPanel.appendChild vMask
+          if @shading
+            for a, i in anchorSet
+              @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
-    # Repeat a similar panel creation process for vertical panels.
-    @_createPanels 'x', vPanel
+          @panels[anchor][panelN] = panel
+          @panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
-    # Add a special class to the target element.
-    @el.classList.add @settings.oriDomiClass
+        @stages[anchor].appendChild @panels[anchor][0]
 
-    # Remove its padding and set a fixed width and height.
-    @el.style.padding = '0'
-    # Remove its background, border, and outline.
-    @el.style.backgroundColor = 'transparent'
-    @el.style.backgroundImage = @el.style.border = @el.style.outline = 'none'
-    @el.style.position = 'relative'
-
-    # Create an element to hold stages.
-    @stageHolder = document.createElement 'div'
-    @stageHolder.style.width = @stageHolder.style.height = '100%'
-    @stageHolder.style.position = 'absolute'
-    @stageHolder.style[css.transform] = 'translateY(-100%)'
-
-    # Enable touch events.
-    @enableTouch() if @settings.touchEnabled
-
-    # Append each stage to the target element.
+    @stageHolder = createEl 'holder'
     @stageHolder.appendChild @stages[anchor] for anchor in anchorList
 
-    # Show the target if applicable.
-    if @settings.showOnStart
-      @el.style.display = 'block'
-      @el.style.visibility = 'visible'
-
-    # Hide the original content and insert the oriDomi version.
-    @el.innerHTML = ''
+    @el.classList.add elClasses.active
+    showEl @stages.left
+    hideEl @cloneEl = @el.cloneNode true
+    @el.innerHTML   = ''
     @el.appendChild @cloneEl
     @el.appendChild @stageHolder
-
-    # These properties record starting angles for touch/drag events.
-    # Initialize both to zero.
-    @_xLast = @_yLast = 0
-
-    # Cache a jQuery object of the element if applicable.
     @$el = $ @el if $
     @accordion 0
+    @enableTouch() if @settings.touchEnabled
 
 
   # Internal Methods
   # ================
-
-
-  _createPanels: (axis, proto) ->
-    if axis is 'x'
-      anchors = anchorListV
-      count   = @vPanels
-      metric  = 'width'
-    else
-      anchors = anchorListH
-      count   = @hPanels
-      metric  = 'height'
-
-    percent = 100 / count
-
-    for anchor, n in anchors
-      for i in [0...count]
-        panel = proto.cloneNode true
-        panel.style[metric] = percent + '%' if i is 0
-        content = panel.getElementsByClassName('oridomi-content')[0]
-        content.style[metric] = count * 100 + '%'
-
-        if n is 0
-          content.style[anchor] = -i * 100 + '%'
-          if i is 0
-            panel.style[anchor] = '0'
-          else
-            panel.style[anchor] = '100%'
-        else
-          content.style[anchors[0]] = (count - i - 1) * -100 + '%'
-          panel.style[css.origin] = anchor
-          if i is 0
-            panel.style[anchors[0]] = 100 - percent + '%'
-          else
-            panel.style[anchors[0]] = '-100%'
-
-        if @shading
-          for a in anchors
-            @_shaders[anchor][a][i] = panel.getElementsByClassName("oridomi-shader-#{ a }")[0]
-
-        @panels[anchor][i] = panel
-        @panels[anchor][i - 1].appendChild panel unless i is 0
-
-      @stages[anchor].appendChild @panels[anchor][0]
-
 
   _step: =>
     return if @_inTrans or !@_queue.length
     @_inTrans = true
     [fn, angle, anchor, options] = @_queue.shift()
     @unfreeze() if @isFrozen
+
     next = =>
       @_setCallback {angle, anchor, options, fn}
       args = [angle, anchor, options]
