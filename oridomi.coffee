@@ -523,7 +523,7 @@ class OriDomi
   # wouldn't be called due to no animation taking place. This method reasons if
   # movement has taken place, preventing this pitfall of transition listeners.
   _isIdenticalOperation: (op) ->
-    return true  unless @lastOp.fn
+    return true unless @lastOp.fn
     return false if @lastOp.reset
     (return false if @lastOp[key] isnt op[key]) for key in ['angle', 'anchor', 'fn']
     (return false if v isnt @lastOp.options[k] and k isnt 'callback') for k, v of op.options
@@ -611,10 +611,10 @@ class OriDomi
 
 
   # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
-  _setShader: (i, anchor, angle) ->
+  _setShader: (n, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
-    abs = Math.abs angle
-    opacity = abs / 90 * @shadingIntensity
+    abs     = Math.abs angle
+    opacity = abs / 90 * @settings.shadingIntensity
 
     # With hard shading, opacity is reduced and `angle` is based on the global
     # `lastAngle` so all panels' shaders share the same direction. Soft shaders
@@ -637,8 +637,8 @@ class OriDomi
       else
         a = 0
         b = opacity
-      @_shaders[anchor].left[i].style.opacity  = a
-      @_shaders[anchor].right[i].style.opacity = b
+      @_shaders[anchor].left[n].style.opacity  = a
+      @_shaders[anchor].right[n].style.opacity = b
     else
       if angle < 0
         a = 0
@@ -646,8 +646,8 @@ class OriDomi
       else
         a = opacity
         b = 0
-      @_shaders[anchor].top[i].style.opacity    = a
-      @_shaders[anchor].bottom[i].style.opacity = b
+      @_shaders[anchor].top[n].style.opacity    = a
+      @_shaders[anchor].bottom[n].style.opacity = b
 
 
   # This method shows the requested stage element and sets a reference to it as
