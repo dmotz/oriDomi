@@ -112,6 +112,10 @@ prep = (fn) ->
       @
 
 
+defer = (fn) ->
+  setTimeout fn, 0
+
+
 # Empty function to be used as placeholder for callback defaults
 # (instead of creating separate empty functions).
 noOp = ->
@@ -553,11 +557,10 @@ class OriDomi
   # `_conclude` is used to handle the end process of transitions and to initialize
   # queued operations.
   _conclude: (cb) =>
-    setTimeout =>
+    defer =>
       @_inTrans = false
       @_step()
       cb?()
-    , 0
 
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
@@ -673,7 +676,7 @@ class OriDomi
     fn = (e) =>
       e.currentTarget.removeEventListener css.transitionEnd, fn, false if e
       @_showStage anchor
-      setTimeout cb, 1
+      defer cb
 
     return fn() if @lastOp.angle is 0
     @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
@@ -889,7 +892,7 @@ class OriDomi
   # Empties the queue should you want to cancel scheduled animations.
   emptyQueue: ->
     @_queue = []
-    setTimeout (=> @_inTrans = false), 1
+    defer => @_inTrans = false
     @
 
 
@@ -1037,11 +1040,10 @@ class OriDomi
       # Show the panel again.
       @panels[@lastOp.anchor][i].style.display = 'block'
       # Wait for the next event loop so the transition listener works.
-      setTimeout =>
+      defer =>
         @panels[@lastOp.anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
         @panels[@lastOp.anchor][i].style[css.transform] = @_transform angle, anchor
         @_setShader i, @lastOp.anchor, angle if @shading
-      , 0
 
     onTransitionEnd = (e) =>
       @panels[@lastOp.anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
@@ -1049,7 +1051,7 @@ class OriDomi
       if ++i is @panels[@lastOp.anchor].length
         callback?()
       else
-        setTimeout nextPanel, 0
+        defer nextPanel
 
     # Start the sequence.
     nextPanel()
