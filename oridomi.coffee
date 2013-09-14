@@ -871,14 +871,14 @@ class OriDomi
     @
 
 
-  # Removes the oriDomi element and marks its instance for garbage collection.
+  # Removes the oriDomi element and restores the original element.
   destroy: (callback) ->
     # First restore the original element.
     @freeze =>
       # Remove event listeners.
       @_setTouch false
       # Remove the data reference if using jQuery.
-      $.data @el, 'oriDomi', null if $
+      $.data @el, baseName, null if $
       # Remove the oriDomi element from the DOM.
       @el.innerHTML = @cloneEl.innerHTML
       # Reset original styles.
@@ -1150,7 +1150,7 @@ if $
       # Loop through the jQuery selection.
       for el in @
         # Warn if oriDomi hasn't been initialized on this element.
-        unless instance = $.data el, 'oriDomi'
+        unless instance = $.data el, baseName
           console.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element" if devMode
           return @
 
@@ -1165,11 +1165,11 @@ if $
       for el in @
         # If the element in the selection already has an instance of oriDomi
         # attached to it, return the instance.
-        if instance = $.data el, 'oriDomi'
+        if instance = $.data el, baseName
           return instance
         else
           # Create an instance of oriDomi and attach it to the element.
-          $.data el, 'oriDomi', new OriDomi el, options
+          $.data el, baseName, new OriDomi el, options
 
       # Return the selection.
       @
