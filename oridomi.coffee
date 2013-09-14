@@ -837,8 +837,7 @@ class OriDomi
 
 
   setSpeed: (speed) ->
-    @settings.speed = speed
-    @_setTweening true
+    @_setTweening @settings.speed = speed
 
 
   # Disables oriDomi slicing by showing the original, untouched target element.
