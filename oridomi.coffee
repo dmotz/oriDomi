@@ -71,20 +71,6 @@ showEl = (el) ->
   el.style[css.transform] = 'translate3d(0, 0, 0)'
 
 
-# This function is used to extend option object literals with a set of defaults.
-# It is simple and one dimensional.
-extendObj = (target, source) ->
-  return {} if !target and !source
-  # Check if the extension object is an object literal by casting it and comparing it.
-  return target if source isnt Object source
-  # If the target isn't an object, set it to an empty object literal.
-  target = {} if target isnt Object target
-  # Loop through the extension object and copy its values to the target if they don't exist.
-  (target[prop] = source[prop] unless target[prop]?) for prop of source
-  # Return the extended target object.
-  target
-
-
 prep = (fn) ->
   ->
     if @_touchStarted
