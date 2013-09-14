@@ -760,15 +760,15 @@ class OriDomi
     @_touchAxis = if @lastOp.anchor in anchorListV then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
     @["_#{ @_touchAxis }Last"] = @lastOp.angle
-
+    axis1 = "_#{ @_touchAxis }1"
     # Determine the starting tap's coordinate for touch and mouse events.
     if e.type is 'mousedown'
-      @["_#{ @_touchAxis }1"] = e["page#{ @_touchAxis.toUpperCase() }"]
+      @[axis1] = e["page#{ @_touchAxis.toUpperCase() }"]
     else
-      @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+      @[axis1] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Return that value to an external listener.
-    @settings.touchStartCallback @["_#{ @_touchAxis }1"]
+    @settings.touchStartCallback @[axis1]
 
 
   # Called on touch/mouse movement.
