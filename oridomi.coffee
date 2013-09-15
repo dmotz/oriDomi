@@ -105,8 +105,8 @@ prep = (fn) ->
             else if typeof a2 is 'function'
               opt.callback = a2
 
-      angle  or= @lastOp.angle or 0
-      anchor or= @lastOp.anchor
+      angle  or= @_lastOp.angle or 0
+      anchor or= @_lastOp.anchor
       @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
       @_step()
       @
@@ -399,9 +399,9 @@ class OriDomi
       @
 
     @_queue   = []
-    @panels   = {}
-    @stages   = {}
-    @lastOp   = anchor: anchorList[0]
+    @_panels  = {}
+    @_stages  = {}
+    @_lastOp  = anchor: anchorList[0]
     @_xLast   = @_yLast = 0
     @_shading = @_settings.shading
 
@@ -416,8 +416,8 @@ class OriDomi
     stageProto.style[css.perspective] = @_settings.perspective + 'px'
 
     for anchor in anchorList
-      @panels[anchor] = []
-      @stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
+      @_panels[anchor] = []
+      @_stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
       if @_shading
         @_shaders[anchor] = {}
         if anchor in anchorListV
@@ -481,20 +481,20 @@ class OriDomi
             for a, i in anchorSet
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
-          @panels[anchor][panelN] = panel
-          @panels[anchor][panelN - 1].appendChild panel unless panelN is 0
+          @_panels[anchor][panelN] = panel
+          @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
-        @stages[anchor].appendChild @panels[anchor][0]
+        @_stages[anchor].appendChild @_panels[anchor][0]
 
-    @stageHolder = createEl 'holder'
-    @stageHolder.appendChild @stages[anchor] for anchor in anchorList
+    @_stageHolder = createEl 'holder'
+    @_stageHolder.appendChild @_stages[anchor] for anchor in anchorList
 
     @el.classList.add elClasses.active
-    showEl @stages.left
+    showEl @_stages.left
     hideEl @cloneEl = @el.cloneNode true
     @el.innerHTML   = ''
     @el.appendChild @cloneEl
-    @el.appendChild @stageHolder
+    @el.appendChild @_stageHolder
     @$el = $ @el if $
     @accordion 0
     @enableTouch() if @_settings.touchEnabled
@@ -515,7 +515,7 @@ class OriDomi
       args.shift() if fn.length < 3
       fn.apply @, args
 
-    if anchor isnt @lastOp.anchor
+    if anchor isnt @_lastOp.anchor
       @_stageReset anchor, next
     else
       next()
@@ -526,10 +526,10 @@ class OriDomi
   # wouldn't be called due to no animation taking place. This method reasons if
   # movement has taken place, preventing this pitfall of transition listeners.
   _isIdenticalOperation: (op) ->
-    return true unless @lastOp.fn
-    return false if @lastOp.reset
-    (return false if @lastOp[key] isnt op[key]) for key in ['angle', 'anchor', 'fn']
-    (return false if v isnt @lastOp.options[k] and k isnt 'callback') for k, v of op.options
+    return true unless @_lastOp.fn
+    return false if @_lastOp.reset
+    (return false if @_lastOp[key] isnt op[key]) for key in ['angle', 'anchor', 'fn']
+    (return false if v isnt @_lastOp.options[k] and k isnt 'callback') for k, v of op.options
     true
 
 
@@ -540,9 +540,9 @@ class OriDomi
       @_conclude operation.options.callback
     # Otherwise, attach an event listener to be called on the transition's end.
     else
-      @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
+      @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
 
-    (@lastOp = operation).reset = false
+    (@_lastOp = operation).reset = false
 
 
   # Handler called when a CSS transition ends.
@@ -550,7 +550,7 @@ class OriDomi
     # Remove the event listener immediately to prevent bubbling.
     e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, false
     # Initialize transition teardown process.
-    @_conclude @lastOp.options.callback
+    @_conclude @_lastOp.options.callback
 
 
   # `_conclude` is used to handle the end process of transitions and to initialize
@@ -600,14 +600,14 @@ class OriDomi
   # Allows other methods to change the tween duration or disable it altogether.
   _setTweening: (speed) ->
     # To loop through the shaders, derive the correct pair from the current anchor.
-    shaderPair = if @lastOp.anchor in anchorListV then anchorListV else anchorListH
+    shaderPair = if @_lastOp.anchor in anchorListV then anchorListV else anchorListH
 
     # Loop through the panels in this anchor and set the transition duration to the new speed.
-    for panel, i in @panels[@lastOp.anchor]
+    for panel, i in @_panels[@_lastOp.anchor]
       panel.style[css.transitionDuration] = speed + 'ms'
       if @_shading
         for side in shaderPair
-          @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed + 'ms'
+          @_shaders[@_lastOp.anchor][side][i].style[css.transitionDuration] = speed + 'ms'
 
     @
 
@@ -623,7 +623,7 @@ class OriDomi
     # have alternating directions.
     if @_shading is 'hard'
       opacity *= .15
-      if @lastOp.angle < 0
+      if @_lastOp.angle < 0
         angle = abs
       else
         angle = -abs
@@ -655,11 +655,11 @@ class OriDomi
   # This method shows the requested stage element and sets a reference to it as
   # the current stage.
   _showStage: (anchor) ->
-    if anchor isnt @lastOp.anchor
-      hideEl @stages[@lastOp.anchor]
-      @lastOp.anchor = anchor
-      @lastOp.reset  = true
-      @stages[anchor].style[css.transform] = 'translate3d(' + do =>
+    if anchor isnt @_lastOp.anchor
+      hideEl @_stages[@_lastOp.anchor]
+      @_lastOp.anchor = anchor
+      @_lastOp.reset  = true
+      @_stages[anchor].style[css.transform] = 'translate3d(' + do =>
         switch anchor
           when 'left'
             '0, 0, 0)'
@@ -677,12 +677,12 @@ class OriDomi
       @_showStage anchor
       defer cb
 
-    return fn() if @lastOp.angle is 0
-    @panels[@lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
+    return fn() if @_lastOp.angle is 0
+    @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
 
-    for panel, i in @panels[@lastOp.anchor]
-      panel.style[css.transform] = @_transform 0, @lastOp.anchor
-      @_setShader i, @lastOp.anchor, 0 if @_shading
+    for panel, i in @_panels[@_lastOp.anchor]
+      panel.style[css.transform] = @_transform 0, @_lastOp.anchor
+      @_setShader i, @_lastOp.anchor, 0 if @_shading
 
     @
 
@@ -706,9 +706,9 @@ class OriDomi
   # Gives the element a resize cursor to prompt the user to drag the mouse.
   _setCursor: ->
     if @_touchEnabled
-      @stageHolder.style.cursor = css.grab
+      @_stageHolder.style.cursor = css.grab
     else
-      @stageHolder.style.cursor = 'default'
+      @_stageHolder.style.cursor = 'default'
 
 
   # Touch / Drag Event Handlers
@@ -736,7 +736,7 @@ class OriDomi
         unless eString is 'TouchLeave' and not mouseLeaveSupport
           @stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
         else
-          @stageHolder[listenFn] 'mouseout', @_onMouseOut, false
+          @_stageHolder[listenFn] 'mouseout', @_onMouseOut, false
           break
     @
 
@@ -750,13 +750,13 @@ class OriDomi
     # Set a property to track touch starts.
     @_touchStarted = true
     # Change the cursor to the active `grabbing` state.
-    @stageHolder.style.cursor = css.grabbing
+    @_stageHolder.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTweening 0
     # Derive the axis to fold on.
-    @_touchAxis = if @lastOp.anchor in anchorListV then 'x' else 'y'
+    @_touchAxis = if @_lastOp.anchor in anchorListV then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
-    @["_#{ @_touchAxis }Last"] = @lastOp.angle
+    @["_#{ @_touchAxis }Last"] = @_lastOp.angle
     axis1 = "_#{ @_touchAxis }1"
     # Determine the starting tap's coordinate for touch and mouse events.
     if e.type is 'mousedown'
@@ -783,14 +783,14 @@ class OriDomi
 
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
-    if @lastOp.angle < 0
-      if @lastOp.anchor is 'right' or @lastOp.anchor is 'bottom'
+    if @_lastOp.angle < 0
+      if @_lastOp.anchor is 'right' or @_lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] - distance
       else
         delta = @["_#{ @_touchAxis }Last"] + distance
       delta = 0 if delta > 0
     else
-      if @lastOp.anchor is 'right' or @lastOp.anchor is 'bottom'
+      if @_lastOp.anchor is 'right' or @_lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] + distance
       else
         delta = @["_#{ @_touchAxis }Last"] - distance
@@ -810,7 +810,7 @@ class OriDomi
     return unless @_touchEnabled
     # Restore the initial touch status and cursor.
     @_touchStarted = @_inTrans = false
-    @stageHolder.style.cursor = css.grab
+    @_stageHolder.style.cursor = css.grab
     # Enable tweening again.
     @_setTweening @settings.speed
     # Pass callback final value.
@@ -845,10 +845,10 @@ class OriDomi
       callback?()
     else
       # Make sure to reset folding first.
-      @_stageReset @lastOp.anchor, =>
+      @_stageReset @_lastOp.anchor, =>
         @isFrozen = true
         # Swap the visibility of the elements.
-        hideEl @stageHolder
+        hideEl @_stageHolder
         showEl @cloneEl
         callback?()
     @
@@ -861,9 +861,9 @@ class OriDomi
       @isFrozen = false
       # Swap the visibility of the elements.
       hideEl @cloneEl
-      showEl @stageHolder
+      showEl @_stageHolder
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
-      @lastOp.angle = 0
+      @_lastOp.angle = 0
     @
 
 
@@ -909,7 +909,7 @@ class OriDomi
   wait: (ms) ->
     fn = => setTimeout @_conclude, ms
     if @_inTrans
-      @_queue.push [fn, @lastOp.angle, @lastOp.anchor, @lastOp.options]
+      @_queue.push [fn, @_lastOp.angle, @_lastOp.anchor, @_lastOp.options]
     else
       fn()
     @
@@ -918,7 +918,7 @@ class OriDomi
   # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: prep (angle, anchor, options) ->
     # Loop through the panels in this stage.
-    for panel, i in @panels[anchor]
+    for panel, i in @_panels[anchor]
       # If it's an odd-numbered panel, reverse the angle.
       if i % 2 isnt 0 and not options.twist
         deg = -angle
@@ -953,7 +953,7 @@ class OriDomi
     # Reduce the angle based on the number of panels in this axis.
     angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
 
-    for panel, i in @panels[anchor]
+    for panel, i in @_panels[anchor]
       panel.style[css.transform] = @_transform angle, anchor
       @_setShader i, anchor, 0 if @_shading
 
@@ -963,11 +963,11 @@ class OriDomi
   # `ramp` lifts up all panels after the first one.
   ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
-    @panels[anchor][1].style[css.transform] = @_transform angle, anchor
+    @_panels[anchor][1].style[css.transform] = @_transform angle, anchor
 
     # For all but the first two panels, set the angle to 0.
-    for panel, i in @panels[anchor]
-      @panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
+    for panel, i in @_panels[anchor]
+      @_panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
       @_setShader i, anchor, 0 if @_shading
 
     @
@@ -978,9 +978,9 @@ class OriDomi
     @_stageReset anchor, =>
       return callback?() if @isFoldedUp
       @_inTrans = @isFoldedUp = true
-      len       = @panels[anchor].length
+      len       = @_panels[anchor].length
 
-      for panel, i in @panels[anchor]
+      for panel, i in @_panels[anchor]
         delay = @_settings.speed / len * (len - i - 1)
         panel.style[css.transitionDelay] = delay + 'ms'
         panel.style[css.transitionDuration] = @_settings.speed / 2 + 'ms' if i is 0
@@ -1002,21 +1002,21 @@ class OriDomi
   unfold: prep (callback) ->
     return callback?() unless @isFoldedUp
     @_inTrans = true
-    len       = @panels[anchor].length
+    len       = @_panels[anchor].length
 
-    for panel, i in @panels[anchor]
+    for panel, i in @_panels[anchor]
       delay = @_settings.speed / len * i
       panel.style[css.transitionDelay] = delay + 'ms'
 
       do (panel, i, delay) =>
         defer =>
-          panel.style[css.transform] = @_transform 0, @lastOp.anchor
+          panel.style[css.transform] = @_transform 0, @_lastOp.anchor
           setTimeout =>
             showEl panel.children[0]
             if i is len - 1
               @_inTrans = @isFoldedUp = false
               callback?()
-              @lastOp.fn = @accordion
+              @_lastOp.fn = @accordion
             defer => panel.style[css.transitionDuration] = @_settings.speed
           , delay + @_settings.speed * .25
 
