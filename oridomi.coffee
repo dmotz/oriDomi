@@ -706,8 +706,8 @@ class OriDomi
 
 
   # Gives the element a resize cursor to prompt the user to drag the mouse.
-  _setCursor: ->
-    if @_touchEnabled
+  _setCursor: (bool = @_touchEnabled) ->
+    if bool
       @_stageHolder.style.cursor = css.grab
     else
       @_stageHolder.style.cursor = 'default'
@@ -874,6 +874,7 @@ class OriDomi
         # Swap the visibility of the elements.
         hideEl @_stageHolder
         showEl @cloneEl
+        @_setCursor false
         callback?()
     @
 
@@ -886,6 +887,7 @@ class OriDomi
       # Swap the visibility of the elements.
       hideEl @cloneEl
       showEl @_stageHolder
+      @_setCursor()
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
       @_lastOp.angle = 0
     @
