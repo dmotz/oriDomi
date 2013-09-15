@@ -390,7 +390,7 @@ class OriDomi
       console.warn 'oriDomi: First argument must be a DOM element' if devMode
       return
 
-    @settings = new ->
+    @_settings = new ->
       for k, v of defaults
         if options[k]?
           @[k] = options[k]
@@ -403,17 +403,17 @@ class OriDomi
     @stages = {}
     @lastOp = anchor: anchorList[0]
     @_xLast = @_yLast = 0
-    {@shading, @vPanels, @hPanels} = @settings
+    {@shading, @vPanels, @hPanels} = @_settings
 
     if @shading
       @_shaders    = {}
       shaderProtos = {}
       shaderProto  = createEl 'shader'
-      shaderProto.style[css.transitionDuration]       = @settings.speed + 'ms'
-      shaderProto.style[css.transitionTimingFunction] = @settings.easingMethod
+      shaderProto.style[css.transitionDuration]       = @_settings.speed + 'ms'
+      shaderProto.style[css.transitionTimingFunction] = @_settings.easingMethod
 
     stageProto = createEl 'stage'
-    stageProto.style[css.perspective] = @settings.perspective + 'px'
+    stageProto.style[css.perspective] = @_settings.perspective + 'px'
 
     for anchor in anchorList
       @panels[anchor] = []
@@ -433,8 +433,8 @@ class OriDomi
     maskProto.appendChild contentHolder
 
     panelProto = createEl 'panel'
-    panelProto.style[css.transitionDuration]       = @settings.speed + 'ms'
-    panelProto.style[css.transitionTimingFunction] = @settings.easingMethod
+    panelProto.style[css.transitionDuration]       = @_settings.speed + 'ms'
+    panelProto.style[css.transitionTimingFunction] = @_settings.easingMethod
 
     for axis in ['x', 'y']
       if axis is 'x'
@@ -497,7 +497,7 @@ class OriDomi
     @el.appendChild @stageHolder
     @$el = $ @el if $
     @accordion 0
-    @enableTouch() if @settings.touchEnabled
+    @enableTouch() if @_settings.touchEnabled
 
 
   # Internal Methods
@@ -586,7 +586,7 @@ class OriDomi
   # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
-    max   = @settings.maxAngle
+    max   = @_settings.maxAngle
     if isNaN angle
       0
     else if angle > max
@@ -616,7 +616,7 @@ class OriDomi
   _setShader: (n, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
     abs     = Math.abs angle
-    opacity = abs / 90 * @settings.shadingIntensity
+    opacity = abs / 90 * @_settings.shadingIntensity
 
     # With hard shading, opacity is reduced and `angle` is based on the global
     # `lastAngle` so all panels' shaders share the same direction. Soft shaders
@@ -770,7 +770,7 @@ class OriDomi
       @[axis1] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Return that value to an external listener.
-    @settings.touchStartCallback @[axis1]
+    @_settings.touchStartCallback @[axis1]
 
 
   # Called on touch/mouse movement.
@@ -784,7 +784,7 @@ class OriDomi
       current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Calculate distance and multiply by `touchSensitivity`.
-    distance = (current - @["_#{ @_touchAxis }1"]) * @settings.touchSensitivity
+    distance = (current - @["_#{ @_touchAxis }1"]) * @_settings.touchSensitivity
 
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
@@ -819,7 +819,7 @@ class OriDomi
     # Enable tweening again.
     @_setTweening @settings.speed
     # Pass callback final value.
-    @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+    @_settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
 
   # End folding when the mouse or finger leaves the composition.
@@ -907,7 +907,7 @@ class OriDomi
 
   # Setter method for `maxAngle`.
   constrainAngle: (angle) ->
-    @settings.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
+    @_settings.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
     @
 
 
@@ -986,9 +986,9 @@ class OriDomi
       len       = @panels[anchor].length
 
       for panel, i in @panels[anchor]
-        delay = @settings.speed / len * (len - i - 1)
+        delay = @_settings.speed / len * (len - i - 1)
         panel.style[css.transitionDelay] = delay + 'ms'
-        panel.style[css.transitionDuration] = @settings.speed / 2 + 'ms' if i is 0
+        panel.style[css.transitionDuration] = @_settings.speed / 2 + 'ms' if i is 0
 
         do (panel, i, delay) =>
           defer =>
@@ -1000,7 +1000,7 @@ class OriDomi
               else
                 hideEl panel.children[0]
 
-            , delay + @settings.speed * .25
+            , delay + @_settings.speed * .25
 
 
   # The inverse of `foldUp`.
@@ -1010,7 +1010,7 @@ class OriDomi
     len       = @panels[anchor].length
 
     for panel, i in @panels[anchor]
-      delay = @settings.speed / len * i
+      delay = @_settings.speed / len * i
       panel.style[css.transitionDelay] = delay + 'ms'
 
       do (panel, i, delay) =>
@@ -1022,8 +1022,8 @@ class OriDomi
               @_inTrans = @isFoldedUp = false
               callback?()
               @lastOp.fn = @accordion
-            defer => panel.style[css.transitionDuration] = @settings.speed
-          , delay + @settings.speed * .25
+            defer => panel.style[css.transitionDuration] = @_settings.speed
+          , delay + @_settings.speed * .25
 
 
   # Convenience Methods
