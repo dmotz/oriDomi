@@ -682,7 +682,7 @@ class OriDomi
     return fn() if @_lastOp.angle is 0
     @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
 
-    for panel, i in @_panels[@_lastOp.anchor]
+    @_iterate @_lastOp.anchor, (panel, i) =>
       panel.style[css.transform] = @_transform 0, @_lastOp.anchor
       @_setShader i, @_lastOp.anchor, 0 if @_shading
 
@@ -736,7 +736,7 @@ class OriDomi
     for eventPair in eventPairs
       for eString in eventPair
         unless eString is 'TouchLeave' and not mouseLeaveSupport
-          @stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
+          @_stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
         else
           @_stageHolder[listenFn] 'mouseout', @_onMouseOut, false
           break
@@ -834,11 +834,9 @@ class OriDomi
   _unfold: (callback) ->
     return callback?() unless @isFoldedUp
     @_inTrans = true
-    len       = @_panels[anchor].length
 
-    for panel, i in @_panels[anchor]
-      delay = @_settings.speed / len * i
-      panel.style[css.transitionDelay] = delay + 'ms'
+    @_iterate @_lastOp.anchor, (panel, i, len) =>
+      delay = @_setPanelTrans arguments..., @_settings.speed, 2
 
       do (panel, i, delay) =>
         defer =>
@@ -851,6 +849,10 @@ class OriDomi
               @_lastOp.fn = @accordion
             defer => panel.style[css.transitionDuration] = @_settings.speed
           , delay + @_settings.speed * .25
+
+
+  _iterate: (anchor, fn) ->
+    fn.call @, panel, i, panels.length for panel, i in panels = @_panels[anchor]
 
 
   # Public Methods
@@ -944,7 +946,7 @@ class OriDomi
   # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: prep (angle, anchor, options) ->
     # Loop through the panels in this stage.
-    for panel, i in @_panels[anchor]
+    @_iterate anchor, (panel, i) =>
       # If it's an odd-numbered panel, reverse the angle.
       if i % 2 isnt 0 and not options.twist
         deg = -angle
@@ -970,8 +972,6 @@ class OriDomi
       if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
-    @
-
 
   # `curl` appears to bend rather than fold the paper. Its curves can appear smoother
   # with higher panel counts.
@@ -979,11 +979,9 @@ class OriDomi
     # Reduce the angle based on the number of panels in this axis.
     angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
 
-    for panel, i in @_panels[anchor]
+    @_iterate anchor, (panel, i) =>
       panel.style[css.transform] = @_transform angle, anchor
       @_setShader i, anchor, 0 if @_shading
-
-    @
 
 
   # `ramp` lifts up all panels after the first one.
@@ -992,11 +990,9 @@ class OriDomi
     @_panels[anchor][1].style[css.transform] = @_transform angle, anchor
 
     # For all but the first two panels, set the angle to 0.
-    for panel, i in @_panels[anchor]
+    @_iterate anchor, (panel, i) =>
       @_panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
       @_setShader i, anchor, 0 if @_shading
-
-    @
 
 
   # Hides the element by folding each panel in a cascade of animations.
@@ -1004,10 +1000,7 @@ class OriDomi
     @_stageReset anchor, =>
       return callback?() if @isFoldedUp
       @_inTrans = @isFoldedUp = true
-      len       = @_panels[anchor].length
 
-      for panel, i in @_panels[anchor]
-        delay = @_settings.speed / len * (len - i - 1)
         panel.style[css.transitionDelay] = delay + 'ms'
         panel.style[css.transitionDuration] = @_settings.speed / 2 + 'ms' if i is 0
 
