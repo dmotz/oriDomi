@@ -14,9 +14,8 @@
 
 # Function used to warn the developer that the browser does not support oriDomi.
 supportWarning = (prop) ->
-  if devMode
-    console.warn "oriDomi: Browser does not support oriDomi. Missing support for `#{ prop }`."
-    isSupported = false
+  console?.warn "oriDomi: Missing support for `#{ prop }`."
+  isSupported = false
 
 
 # This function checks for the presence of CSS properties on the test div.
@@ -128,10 +127,6 @@ noOp = ->
 # If it doesn't exist, set to null so oriDomi knows we are working without jQuery.
 # oriDomi doesn't require it to work, but offers a useful plugin bridge.
 $ = if window.$?.data then window.$ else null
-
-# `devMode` determines whether oriDomi is vocal in the console with warnings and benchmarks.
-# Turn it on externally by calling `OriDomi.devMode()`.
-devMode = false
 
 # This variable is set to true and negated later if the browser does
 # not support oriDomi.
@@ -396,7 +391,7 @@ class OriDomi
     return new OriDomi arguments... unless @ instanceof OriDomi
     @el = document.querySelector @el if typeof @el is 'string'
     unless @el and @el.nodeType is 1
-      console.warn 'oriDomi: First argument must be a DOM element' if devMode
+      console?.warn 'oriDomi: First argument must be a DOM element'
       return
 
     @_settings = new ->
@@ -1102,10 +1097,6 @@ class OriDomi
   @isSupported = isSupported
 
 
-  # External function to enable `devMode`.
-  @devMode = -> devMode = true
-
-
 # Export constructor on `window` and `module.exports` (if applicable).
 window.OriDomi = OriDomi
 module.exports = OriDomi if module?.exports
@@ -1128,7 +1119,7 @@ if $
       methodName = options
       # Check if method exists and warn if it doesn't.
       unless typeof OriDomi::[methodName] is 'function'
-        console.warn "oriDomi: No such method '#{ methodName }'" if devMode
+        console?.warn "oriDomi: No such method '#{ methodName }'"
         return @
 
       # Convert arguments to a proper array and remove the first element.
@@ -1138,7 +1129,7 @@ if $
       for el in @
         # Warn if oriDomi hasn't been initialized on this element.
         unless instance = $.data el, baseName
-          console.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element" if devMode
+          console?.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element"
           return @
 
         # Call the requested method with arguments.
