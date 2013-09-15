@@ -958,6 +958,10 @@ class OriDomi
     @
 
 
+  # Effect Methods
+  # ==============
+
+
   # oriDomi's most basic effect. Transforms the target like its namesake.
   accordion: prep (angle, anchor, options) ->
     # Loop through the panels in this stage.
