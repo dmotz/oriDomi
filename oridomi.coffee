@@ -357,9 +357,6 @@ defaults =
   # This option allows you to supply the name of a custom easing method defined in one
   # of your stylesheets. It defaults to a blank string which is interpreted as `ease`.
   easingMethod: ''
-  # To prevent a possible "flash of unstyled content" you can hide your target elements
-  # and pass this setting as `true` to show them immediately after initializing them with oriDomi.
-  showOnStart: false
   # Currently, Firefox doesn't handle edge anti-aliasing well and oriDomi edges look jagged.
   # This setting forces Firefox to smooth edges, but usually results in poor performance,
   # so it's not recommended for animation-heavy use of oriDomi until Firefox's transform performance improves.
