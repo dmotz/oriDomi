@@ -612,7 +612,8 @@ class OriDomi
 
 
   _setPanelTrans: (panel, i, len, duration, delay) ->
-    delayMs = do =>
+    {anchor} = @_lastOp
+    delayMs  = do =>
       switch delay
         when 0 then 0
         when 1 then @_settings.speed / len * (len - i - 1)
