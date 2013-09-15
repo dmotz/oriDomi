@@ -145,87 +145,10 @@ anchorListH = anchorList[2..]
 testEl = document.createElement 'div'
 
 # Set a list of browser prefixes for testing CSS3 properties.
-prefixList = ['Webkit', 'Moz', 'ms']
-
-# A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-css = new ->
-  @[key] = key for key in [
-    'transform'
-    'transformOrigin'
-    'transformStyle'
-    'transitionProperty'
-    'transitionDuration'
-    'transitionDelay'
-    'transitionTimingFunction'
-    'perspective'
-    'perspectiveOrigin'
-    'backfaceVisibility'
-    'boxSizing'
-  ]
-  @
-
-# Loop through the CSS hash and replace each value with the result of `testProp()`.
-for key, value of css
-  css[key] = testProp value
-  # If the returned value is false, warn the user that the browser doesn't support
-  # oriDomi, set `isSupported` to false and break out of the loop.
-  unless css[key]
-    supportWarning value
-    break
-
-p3d = 'preserve-3d'
-if isSupported and css.transformStyle
-  testEl.style[css.transformStyle] = p3d
-  unless testEl.style[css.transformStyle] is p3d
-    isSupported = false
-    supportWarning p3d
-
-# CSS3 gradients are used for shading.
-# Testing for them is different because they are prefixed values, not properties.
-# This invokes an anonymous function to loop through vendor-prefixed linear-gradients.
-css.gradientProp = do ->
-  for prefix in prefixList
-    hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
-    testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
-    # After setting a gradient background on the test div, attempt to retrieve it.
-    return hyphenated unless testEl.style.backgroundImage.indexOf('gradient') is -1
-  # If none of the hyphenated values worked, return the un-prefixed version.
-  'linear-gradient'
-
-# The default cursor style is set to `grab` to prompt the user to interact with the element.
-[css.grab, css.grabbing] = do ->
-  for prefix in prefixList
-    plainGrab = 'grab'
-    testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
-    # If the cursor was set correctly, return the prefixed pair.
-    return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
-  # Otherwise try the unprefixed version.
-  testEl.style.cursor = plainGrab
-  if testEl.style.cursor is plainGrab
-    [plainGrab, 'grabbing']
-  else
-    # Fallback to `move`.
-    ['move', 'move']
-
-# Invoke a functional scope to set a hyphenated version of the transform property.
-css.transformProp = do ->
-  # Use a regex to pluck the prefix `testProp` found.
-  if prefix = css.transform.match /(\w+)Transform/i
-    "-#{ prefix[1].toLowerCase() }-transform"
-  else
-    'transform'
-
-# Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
-css.transitionEnd = do ->
-  switch css.transitionProperty.toLowerCase()
-    when 'transitionproperty'       then 'transitionEnd'
-    when 'webkittransitionproperty' then 'webkitTransitionEnd'
-    when 'moztransitionproperty'    then 'transitionend'
-    when 'mstransitionproperty'     then 'msTransitionEnd'
-
-
-baseName  = 'oridomi'
-elClasses =
+prefixList  = ['Webkit', 'Moz', 'ms']
+styleBuffer = ''
+baseName    = 'oridomi'
+elClasses   =
   active:       'active'
   clone:        'clone'
   holder:       'holder'
@@ -247,91 +170,169 @@ elClasses =
   shaderTop:    'shader-top'
   shaderBottom: 'shader-bottom'
 
-
 elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
-styleBuffer  = ''
 
-addStyle elClasses.active,
-  backgroundColor: 'transparent'
-  backgroundImage: 'none'
-  padding:         '0'
-  boxSizing:       'border-box'
-  border:          'none'
-  outline:         'none'
-  position:        'relative'
+# A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
+css = new ->
+  @[key] = key for key in [
+    'transform'
+    'transformOrigin'
+    'transformStyle'
+    'transitionProperty'
+    'transitionDuration'
+    'transitionDelay'
+    'transitionTimingFunction'
+    'perspective'
+    'perspectiveOrigin'
+    'backfaceVisibility'
+    'boxSizing'
+  ]
+  @
 
-addStyle elClasses.clone, margin: '0'
 
-addStyle elClasses.holder,
-  width:     '100%'
-  height:    '100%'
-  position:  'absolute'
-  transform: 'translateY(-100%)'
+do ->
+  # Loop through the CSS hash and replace each value with the result of `testProp()`.
+  for key, value of css
+    css[key] = testProp value
+    # If the returned value is false, warn the user that the browser doesn't support
+    # oriDomi, set `isSupported` to false and break out of the loop.
+    unless css[key]
+      supportWarning value
+      return
 
-addStyle elClasses.stage,
-  width:          '100%'
-  height:         '100%'
-  position:       'absolute'
-  transform:      'translate3d(-9999px, 0, 0)'
-  margin:         '0'
-  padding:        '0'
-  transformStyle: p3d
+  p3d = 'preserve-3d'
+  if isSupported and css.transformStyle
+    testEl.style[css.transformStyle] = p3d
+    unless testEl.style[css.transformStyle] is p3d
+      isSupported = false
+      supportWarning p3d
+      return
 
-for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
-  addStyle elClasses['stage' + k], perspectiveOrigin: v
+  # CSS3 gradients are used for shading.
+  # Testing for them is different because they are prefixed values, not properties.
+  # This invokes an anonymous function to loop through vendor-prefixed linear-gradients.
+  css.gradientProp = do ->
+    for prefix in prefixList
+      hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
+      testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
+      # After setting a gradient background on the test div, attempt to retrieve it.
+      return hyphenated unless testEl.style.backgroundImage.indexOf('gradient') is -1
+    # If none of the hyphenated values worked, return the un-prefixed version.
+    'linear-gradient'
 
-addStyle elClasses.shader,
-  width:              '100%'
-  height:             '100%'
-  position:           'absolute'
-  opacity:            '0'
-  top:                '0'
-  left:               '0'
-  pointerEvents:      'none'
-  transitionProperty: 'opacity'
+  # The default cursor style is set to `grab` to prompt the user to interact with the element.
+  [css.grab, css.grabbing] = do ->
+    for prefix in prefixList
+      plainGrab = 'grab'
+      testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
+      # If the cursor was set correctly, return the prefixed pair.
+      return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
+    # Otherwise try the unprefixed version.
+    testEl.style.cursor = plainGrab
+    if testEl.style.cursor is plainGrab
+      [plainGrab, 'grabbing']
+    else
+      # Fallback to `move`.
+      ['move', 'move']
 
-for anchor in anchorList
-  addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
+  # Invoke a functional scope to set a hyphenated version of the transform property.
+  css.transformProp = do ->
+    # Use a regular expression to pluck the prefix `testProp` found.
+    if prefix = css.transform.match /(\w+)Transform/i
+      "-#{ prefix[1].toLowerCase() }-transform"
+    else
+      'transform'
 
-addStyle elClasses.content,
-  width:     '100%'
-  height:    '100%'
-  margin:    '0'
-  position:  'relative'
-  float:     'none'
-  boxSizing: 'border-box'
+  # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
+  css.transitionEnd = do ->
+    switch css.transitionProperty.toLowerCase()
+      when 'transitionproperty'       then 'transitionEnd'
+      when 'webkittransitionproperty' then 'webkitTransitionEnd'
+      when 'moztransitionproperty'    then 'transitionend'
+      when 'mstransitionproperty'     then 'msTransitionEnd'
 
-addStyle elClasses.mask,
-  width:     '100%'
-  height:    '100%'
-  position:  'absolute'
-  overflow:  'hidden'
-  transform: 'translate3d(0, 0, 0)'
-  backfaceVisibility: 'hidden'
 
-addStyle elClasses.panel,
-  width:              '100%'
-  height:             '100%'
-  padding:            '0'
-  position:           'relative'
-  transitionProperty: css.transformProp
-  transformOrigin:    'left'
-  transformStyle:     p3d
-  backfaceVisibility: 'hidden'
+  addStyle elClasses.active,
+    backgroundColor: 'transparent'
+    backgroundImage: 'none'
+    padding:         '0'
+    boxSizing:       'border-box'
+    border:          'none'
+    outline:         'none'
+    position:        'relative'
 
-addStyle elClasses.panelH, transformOrigin: 'top'
-addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
-addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
+  addStyle elClasses.clone, margin: '0'
 
-styleEl      = document.createElement 'style'
-styleEl.type = 'text/css'
+  addStyle elClasses.holder,
+    width:     '100%'
+    height:    '100%'
+    position:  'absolute'
+    transform: 'translateY(-100%)'
 
-if styleEl.styleSheet
-  styleEl.styleSheet.cssText = styleBuffer
-else
-  styleEl.appendChild document.createTextNode styleBuffer
+  addStyle elClasses.stage,
+    width:          '100%'
+    height:         '100%'
+    position:       'absolute'
+    transform:      'translate3d(-9999px, 0, 0)'
+    margin:         '0'
+    padding:        '0'
+    transformStyle: p3d
 
-document.head.appendChild styleEl
+  for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
+    addStyle elClasses['stage' + k], perspectiveOrigin: v
+
+  addStyle elClasses.shader,
+    width:              '100%'
+    height:             '100%'
+    position:           'absolute'
+    opacity:            '0'
+    top:                '0'
+    left:               '0'
+    pointerEvents:      'none'
+    transitionProperty: 'opacity'
+
+  for anchor in anchorList
+    addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
+
+  addStyle elClasses.content,
+    width:     '100%'
+    height:    '100%'
+    margin:    '0'
+    position:  'relative'
+    float:     'none'
+    boxSizing: 'border-box'
+
+  addStyle elClasses.mask,
+    width:     '100%'
+    height:    '100%'
+    position:  'absolute'
+    overflow:  'hidden'
+    transform: 'translate3d(0, 0, 0)'
+    backfaceVisibility: 'hidden'
+
+  addStyle elClasses.panel,
+    width:              '100%'
+    height:             '100%'
+    padding:            '0'
+    position:           'relative'
+    transitionProperty: css.transformProp
+    transformOrigin:    'left'
+    transformStyle:     p3d
+    backfaceVisibility: 'hidden'
+
+  addStyle elClasses.panelH, transformOrigin: 'top'
+  addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
+  addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
+
+  styleEl      = document.createElement 'style'
+  styleEl.type = 'text/css'
+
+  if styleEl.styleSheet
+    styleEl.styleSheet.cssText = styleBuffer
+  else
+    styleEl.appendChild document.createTextNode styleBuffer
+
+  document.head.appendChild styleEl
 
 
 # Defaults
