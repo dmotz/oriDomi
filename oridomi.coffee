@@ -1054,13 +1054,13 @@ class OriDomi
   # Convenience proxy to accordion-fold instance to maximum angle.
   collapse: (anchor, options = {}) ->
     options.sticky = false
-    @accordion -90, anchor, options
+    @accordion -@_settings.maxAngle, anchor, options
 
 
   # Same as `collapse`, but uses positive angle for slightly different effect.
   collapseAlt: (anchor, options = {}) ->
     options.sticky = false
-    @accordion 90, anchor, options
+    @accordion @_settings.maxAngle, anchor, options
 
 
   # Simply proxy for calling `accordion` with `sticky` enabled.
