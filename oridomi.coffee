@@ -515,7 +515,9 @@ class OriDomi
       args.shift() if fn.length < 3
       fn.apply @, args
 
-    if anchor isnt @_lastOp.anchor
+    if @isFoldedUp
+      @_unfold next
+    else if anchor isnt @_lastOp.anchor
       @_stageReset anchor, next
     else
       next()
@@ -829,6 +831,28 @@ class OriDomi
     @_onTouchEnd() if e.toElement and not @el.contains e.toElement
 
 
+  _unfold: (callback) ->
+    return callback?() unless @isFoldedUp
+    @_inTrans = true
+    len       = @_panels[anchor].length
+
+    for panel, i in @_panels[anchor]
+      delay = @_settings.speed / len * i
+      panel.style[css.transitionDelay] = delay + 'ms'
+
+      do (panel, i, delay) =>
+        defer =>
+          panel.style[css.transform] = @_transform 0, @_lastOp.anchor
+          setTimeout =>
+            showEl panel.children[0]
+            if i is len - 1
+              @_inTrans = @isFoldedUp = false
+              callback?()
+              @_lastOp.fn = @accordion
+            defer => panel.style[css.transitionDuration] = @_settings.speed
+          , delay + @_settings.speed * .25
+
+
   # Public Methods
   # ==============
 
@@ -999,26 +1023,7 @@ class OriDomi
 
 
   # The inverse of `foldUp`.
-  unfold: prep (callback) ->
-    return callback?() unless @isFoldedUp
-    @_inTrans = true
-    len       = @_panels[anchor].length
-
-    for panel, i in @_panels[anchor]
-      delay = @_settings.speed / len * i
-      panel.style[css.transitionDelay] = delay + 'ms'
-
-      do (panel, i, delay) =>
-        defer =>
-          panel.style[css.transform] = @_transform 0, @_lastOp.anchor
-          setTimeout =>
-            showEl panel.children[0]
-            if i is len - 1
-              @_inTrans = @isFoldedUp = false
-              callback?()
-              @_lastOp.fn = @accordion
-            defer => panel.style[css.transitionDuration] = @_settings.speed
-          , delay + @_settings.speed * .25
+  unfold: prep (callback) -> @_unfold arguments...
 
 
   # Convenience Methods
