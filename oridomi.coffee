@@ -173,6 +173,13 @@ for key, value of css
     supportWarning value
     break
 
+p3d = 'preserve-3d'
+if isSupported and css.transformStyle
+  testEl.style[css.transformStyle] = p3d
+  unless testEl.style[css.transformStyle] is p3d
+    isSupported = false
+    supportWarning p3d
+
 # CSS3 gradients are used for shading.
 # Testing for them is different because they are prefixed values, not properties.
 # This invokes an anonymous function to loop through vendor-prefixed linear-gradients.
@@ -268,7 +275,7 @@ addStyle elClasses.stage,
   transform:      'translate3d(-9999px, 0, 0)'
   margin:         '0'
   padding:        '0'
-  transformStyle: 'preserve-3d'
+  transformStyle: p3d
 
 for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
   addStyle elClasses['stage' + k], perspectiveOrigin: v
@@ -309,7 +316,7 @@ addStyle elClasses.panel,
   position:           'relative'
   transitionProperty: css.transformProp
   transformOrigin:    'left'
-  transformStyle:     'preserve-3d'
+  transformStyle:     p3d
   backfaceVisibility: 'hidden'
 
 addStyle elClasses.panelH, transformOrigin: 'top'
