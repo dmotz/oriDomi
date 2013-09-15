@@ -979,83 +979,52 @@ class OriDomi
     @
 
 
-  # `foldUp` folds up all panels in separate synchronous animations.
-  foldUp: (anchor, callback) ->
-    # Default to left anchor.
-    unless anchor
-      anchor = 'left'
-    # Check if callback is the first argument.
-    else if typeof anchor is 'function'
-      callback = anchor
+  # Hides the element by folding each panel in a cascade of animations.
+  foldUp: prep (anchor, callback) ->
+    @_stageReset anchor, =>
+      return callback?() if @isFoldedUp
+      @_inTrans = @isFoldedUp = true
+      len       = @panels[anchor].length
 
-    # `foldUp` uses irregular arguments, so we manually construct the arguments array.
-    normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
-    return unless normalized
-    anchor = normalized[1]
-    # Set `isFoldedUp` to `true` so we are forced to unfold before calling other methods.
-    @isFoldedUp = true
-    # Start an iterator at the last panel in this anchor.
-    i = @panels[anchor].length - 1
-    # Rotate 100 degrees.
-    angle = 100
+      for panel, i in @panels[anchor]
+        delay = @settings.speed / len * (len - i - 1)
+        panel.style[css.transitionDelay] = delay + 'ms'
+        panel.style[css.transitionDuration] = @settings.speed / 2 + 'ms' if i is 0
 
-    # Local function that sets an event listener on the current panel and transforms it.
-    nextPanel = =>
-      @panels[anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
-      @panels[anchor][i].style[css.transform] = @_transform angle
-      @_setShader i, anchor, angle if @shading
+        do (panel, i, delay) =>
+          defer =>
+            panel.style[css.transform] = @_transform (if i is 0 then 90 else 170), anchor
+            setTimeout =>
+              if i is 0
+                @_inTrans = false
+                callback?()
+              else
+                hideEl panel.children[0]
 
-    # Called when each panel finishes folding in.
-    onTransitionEnd = (e) =>
-      # Remove the listener.
-      @panels[anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
-      # Hide the panel so it doesn't collide when bending around.
-      @panels[anchor][i].style.display = 'none'
-      # Decrement the iterator and check if we're on the first panel.
-      if --i is 0
-        # If so, invoke the callback directly if applicable.
-        callback?()
-      else
-        # Otherwise, defer until the next event loop and fold back the next panel.
-        setTimeout nextPanel, 0
-
-    # Start the chain of folds.
-    nextPanel()
+            , delay + @settings.speed * .25
 
 
   # The inverse of `foldUp`.
-  unfold: (callback) ->
-    # If the target isn't folded up, there's no reason to call this method and
-    # the callback is immediately invoked.
-    callback?() unless @isFoldedUp
+  unfold: prep (callback) ->
+    return callback?() unless @isFoldedUp
+    @_inTrans = true
+    len       = @panels[anchor].length
 
-    # Reset `isFoldedUp`.
-    @isFoldedUp = false
-    # Start the iterator on the second panel.
-    i = 1
-    # Rotate back to 0.
-    angle = 0
+    for panel, i in @panels[anchor]
+      delay = @settings.speed / len * i
+      panel.style[css.transitionDelay] = delay + 'ms'
 
-    nextPanel = =>
-      # Show the panel again.
-      @panels[@lastOp.anchor][i].style.display = 'block'
-      # Wait for the next event loop so the transition listener works.
-      defer =>
-        @panels[@lastOp.anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
-        @panels[@lastOp.anchor][i].style[css.transform] = @_transform angle, anchor
-        @_setShader i, @lastOp.anchor, angle if @shading
-
-    onTransitionEnd = (e) =>
-      @panels[@lastOp.anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
-      # Increment the iterator and check if we're past the last panel.
-      if ++i is @panels[@lastOp.anchor].length
-        callback?()
-      else
-        defer nextPanel
-
-    # Start the sequence.
-    nextPanel()
-    @
+      do (panel, i, delay) =>
+        defer =>
+          panel.style[css.transform] = @_transform 0, @lastOp.anchor
+          setTimeout =>
+            showEl panel.children[0]
+            if i is len - 1
+              @_inTrans = @isFoldedUp = false
+              callback?()
+              @lastOp.fn = @accordion
+            defer => panel.style[css.transitionDuration] = @settings.speed
+          , delay + @settings.speed * .25
 
 
   # Convenience Methods
