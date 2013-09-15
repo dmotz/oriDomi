@@ -255,7 +255,6 @@ do ->
   addStyle elClasses.active,
     backgroundColor: 'transparent'
     backgroundImage: 'none'
-    padding:         '0'
     boxSizing:       'border-box'
     border:          'none'
     outline:         'none'
