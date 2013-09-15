@@ -41,12 +41,12 @@ watch = ->
   coffee.stderr.pipe process.stderr
 
 
-size = ->
+stats = ->
   tgthr
     coffee: (cb) -> fs.stat 'oridomi.coffee', cb
     js:     (cb) -> fs.stat 'oridomi.js',     cb
     mini:   (cb) -> fs.stat 'oridomi.min.js', cb
-  , (stats) ->      console.log key + ':\t' + stat[1].size for key, stat of stats
+  , (stats) ->      console.log "#{ key }:\t#{ stat[1].size } B" for key, stat of stats
 
 
 compile = announce 'compile', (args, cb) ->
@@ -67,6 +67,6 @@ task 'watch',   'compile continuously',                           watch
 task 'compile', 'compile .coffee to .js',                         compile
 task 'minify',  'compress .js for production',                    minify
 task 'docs',    'generate annotated source page in ./docs',       docs
-task 'size',    'output filesize stats',                          size
+task 'stats',   'output filesize stats',                          stats
 task 'demo',    'compile demo site stylesheet',                   demo
 
