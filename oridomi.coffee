@@ -599,19 +599,26 @@ class OriDomi
       angle
 
 
-  # Allows other methods to change the tween duration or disable it altogether.
-  _setTweening: (speed) ->
-    # To loop through the shaders, derive the correct pair from the current anchor.
-    shaderPair = if @_lastOp.anchor in anchorListV then anchorListV else anchorListH
+  # Allows other methods to change the transiton duration/delay or disable it altogether.
+  _setTrans: (duration, delay) ->
+    @_iterate @_lastOp.anchor, (panel, i, len) => @_setPanelTrans arguments..., duration, delay
 
-    # Loop through the panels in this anchor and set the transition duration to the new speed.
-    for panel, i in @_panels[@_lastOp.anchor]
-      panel.style[css.transitionDuration] = speed + 'ms'
-      if @_shading
-        for side in shaderPair
-          @_shaders[@_lastOp.anchor][side][i].style[css.transitionDuration] = speed + 'ms'
 
-    @
+  _setPanelTrans: (panel, i, len, duration, delay) ->
+    delayMs = do =>
+      switch delay
+        when 0 then 0
+        when 1 then @_settings.speed / len * (len - i - 1)
+        when 2 then @_settings.speed / len * i
+
+    panel.style[css.transitionDuration] = duration + 'ms'
+    panel.style[css.transitionDelay]    = delayMs  + 'ms'
+    if @_shading
+      for side in (if anchor in anchorListV then anchorListV else anchorListH)
+        @_shaders[anchor][side][i].style[css.transitionDuration] = duration + 'ms'
+        @_shaders[anchor][side][i].style[css.transitionDelay]    = delayMs  + 'ms'
+
+    delayMs
 
 
   # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
@@ -754,7 +761,7 @@ class OriDomi
     # Change the cursor to the active `grabbing` state.
     @_stageHolder.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
-    @_setTweening 0
+    @_setTrans 0, 0
     # Derive the axis to fold on.
     @_touchAxis = if @_lastOp.anchor in anchorListV then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
@@ -800,11 +807,10 @@ class OriDomi
 
 
     delta = @_normalizeAngle delta
-    @lastOp.angle = delta
-    # Invoke the effect method with the delta as an angle argument.
-    @lastOp.fn.call @, delta, @lastOp.anchor, @lastOp.options
-    # Pass the delta to the movement callback.
-    @settings.touchMoveCallback delta
+    @_lastOp.angle = delta
+    @_lastOp.fn.call @, delta, @_lastOp.anchor, @_lastOp.options
+    @_settings.touchMoveCallback delta
+
 
 
   # Teardown process when touch/drag event ends.
@@ -814,7 +820,7 @@ class OriDomi
     @_touchStarted = @_inTrans = false
     @_stageHolder.style.cursor = css.grab
     # Enable tweening again.
-    @_setTweening @settings.speed
+    @_setTrans @_settings.speed, 0
     # Pass callback final value.
     @_settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
@@ -1001,8 +1007,10 @@ class OriDomi
       return callback?() if @isFoldedUp
       @_inTrans = @isFoldedUp = true
 
-        panel.style[css.transitionDelay] = delay + 'ms'
-        panel.style[css.transitionDuration] = @_settings.speed / 2 + 'ms' if i is 0
+      @_iterate anchor, (panel, i, len) =>
+        duration  = @_settings.speed
+        duration /= 2 if i is 0
+        delay     = @_setPanelTrans arguments..., duration, 1
 
         do (panel, i, delay) =>
           defer =>
