@@ -398,13 +398,14 @@ class OriDomi
           @[k] = v
       @
 
-    @_queue = []
-    @panels = {}
-    @stages = {}
-    @lastOp = anchor: anchorList[0]
-    @_xLast = @_yLast = 0
-    {@shading} = @_settings
-    if @shading
+    @_queue   = []
+    @panels   = {}
+    @stages   = {}
+    @lastOp   = anchor: anchorList[0]
+    @_xLast   = @_yLast = 0
+    @_shading = @_settings.shading
+
+    if @_shading
       @_shaders    = {}
       shaderProtos = {}
       shaderProto  = createEl 'shader'
@@ -417,7 +418,7 @@ class OriDomi
     for anchor in anchorList
       @panels[anchor] = []
       @stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
-      if @shading
+      if @_shading
         @_shaders[anchor] = {}
         if anchor in anchorListV
           @_shaders[anchor][side] = [] for side in anchorListV
@@ -476,7 +477,7 @@ class OriDomi
             else
               panel.style[anchorSet[0]] = '-100%'
 
-          if @shading
+          if @_shading
             for a, i in anchorSet
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
@@ -604,7 +605,7 @@ class OriDomi
     # Loop through the panels in this anchor and set the transition duration to the new speed.
     for panel, i in @panels[@lastOp.anchor]
       panel.style[css.transitionDuration] = speed + 'ms'
-      if @shading
+      if @_shading
         for side in shaderPair
           @_shaders[@lastOp.anchor][side][i].style[css.transitionDuration] = speed + 'ms'
 
@@ -620,7 +621,7 @@ class OriDomi
     # With hard shading, opacity is reduced and `angle` is based on the global
     # `lastAngle` so all panels' shaders share the same direction. Soft shaders
     # have alternating directions.
-    if @shading is 'hard'
+    if @_shading is 'hard'
       opacity *= .15
       if @lastOp.angle < 0
         angle = abs
@@ -681,7 +682,7 @@ class OriDomi
 
     for panel, i in @panels[@lastOp.anchor]
       panel.style[css.transform] = @_transform 0, @lastOp.anchor
-      @_setShader i, @lastOp.anchor, 0 if @shading
+      @_setShader i, @lastOp.anchor, 0 if @_shading
 
     @
 
@@ -940,7 +941,7 @@ class OriDomi
       # Set the CSS transformation.
       panel.style[css.transform] = @_transform deg, anchor, options.fracture
       # Apply shaders.
-      if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
+      if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
     @
@@ -954,7 +955,7 @@ class OriDomi
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle, anchor
-      @_setShader i, anchor, 0 if @shading
+      @_setShader i, anchor, 0 if @_shading
 
     @
 
@@ -967,7 +968,7 @@ class OriDomi
     # For all but the first two panels, set the angle to 0.
     for panel, i in @panels[anchor]
       @panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
-      @_setShader i, anchor, 0 if @shading
+      @_setShader i, anchor, 0 if @_shading
 
     @
 
