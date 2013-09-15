@@ -264,10 +264,12 @@ do ->
   addStyle elClasses.clone, margin: '0'
 
   addStyle elClasses.holder,
-    width:     '100%'
-    height:    '100%'
-    position:  'absolute'
-    transform: 'translateY(-100%)'
+    width:          '100%'
+    height:         '100%'
+    position:       'absolute'
+    transform:      'translateY(-100%)'
+    transformStyle: p3d
+
 
   addStyle elClasses.stage,
     width:          '100%'
