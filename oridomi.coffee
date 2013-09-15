@@ -300,6 +300,7 @@ addStyle elClasses.mask,
   position:  'absolute'
   overflow:  'hidden'
   transform: 'translate3d(0, 0, 0)'
+  backfaceVisibility: 'hidden'
 
 addStyle elClasses.panel,
   width:              '100%'
