@@ -155,6 +155,7 @@ css = new ->
     'transformStyle'
     'transitionProperty'
     'transitionDuration'
+    'transitionDelay'
     'transitionTimingFunction'
     'perspective'
     'perspectiveOrigin'
