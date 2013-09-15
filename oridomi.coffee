@@ -403,8 +403,7 @@ class OriDomi
     @stages = {}
     @lastOp = anchor: anchorList[0]
     @_xLast = @_yLast = 0
-    {@shading, @vPanels, @hPanels} = @_settings
-
+    {@shading} = @_settings
     if @shading
       @_shaders    = {}
       shaderProtos = {}
@@ -439,12 +438,12 @@ class OriDomi
     for axis in ['x', 'y']
       if axis is 'x'
         anchorSet   = anchorListV
-        count       = @vPanels
+        count       = @_settings.vPanels
         metric      = 'width'
         classSuffix = 'V'
       else
         anchorSet   = anchorListH
-        count       = @hPanels
+        count       = @_settings.hPanels
         metric      = 'height'
         classSuffix = 'H'
 
@@ -951,7 +950,7 @@ class OriDomi
   # with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /= if anchor in anchorListV then @vPanels else @hPanels
+    angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle, anchor
