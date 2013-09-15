@@ -32,6 +32,7 @@ build = (cb) ->
     demo:    (cb) -> demo    null, cb
   , ->
     console.log 'Build succeeded.'
+    stats()
     cb?()
 
 
