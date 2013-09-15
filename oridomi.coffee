@@ -687,11 +687,6 @@ class OriDomi
     @
 
 
-  # Simple method that returns the correct panel set based on an anchor.
-  _getPanelType: (anchor) ->
-    if anchor in anchorListV then @vPanels else @hPanels
-
-
   # Converts a shorthand anchor name to a full one.
   _getLonghandAnchor: (shorthand) ->
     switch shorthand.toString()
@@ -956,7 +951,7 @@ class OriDomi
   # with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /=  @_getPanelType anchor
+    angle /= if anchor in anchorListV then @vPanels else @hPanels
 
     for panel, i in @panels[anchor]
       panel.style[css.transform] = @_transform angle, anchor
