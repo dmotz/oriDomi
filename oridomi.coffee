@@ -255,7 +255,9 @@ do ->
     outline:         'none'
     position:        'relative'
 
-  addStyle elClasses.clone, margin: '0'
+  addStyle elClasses.clone,
+    margin:    '0'
+    boxSizing: 'border-box'
 
   addStyle elClasses.holder,
     width:          '100%'
@@ -495,7 +497,9 @@ class OriDomi
 
     @el.classList.add elClasses.active
     showEl @_stages.left
-    hideEl @cloneEl = @el.cloneNode true
+    @cloneEl = cloneEl @el, true, 'clone'
+    @cloneEl.classList.remove elClasses.active
+    hideEl @cloneEl
     @el.innerHTML   = ''
     @el.appendChild @cloneEl
     @el.appendChild @_stageHolder
