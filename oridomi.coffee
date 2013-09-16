@@ -682,11 +682,11 @@ class OriDomi
           when 'left'
             '0, 0, 0)'
           when 'right'
-            "-#{ @vPanels * .5 }px, 0, 0)"
+            "-#{ @_settings.vPanels * 1 }px, 0, 0)"
           when 'top'
             '0, 0, 0)'
           when 'bottom'
-            "0, #{ @hPanels * .5 }px, 0)"
+            "0, -#{ (@_settings.hPanels + 2) * 1 }px, 0)"
 
 
   _stageReset: (anchor, cb) =>
