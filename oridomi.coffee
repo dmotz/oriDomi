@@ -620,8 +620,8 @@ class OriDomi
     delayMs  = do =>
       switch delay
         when 0 then 0
-        when 1 then @_settings.speed / len * (len - i - 1)
-        when 2 then @_settings.speed / len * i
+        when 1 then @_settings.speed / len * i
+        when 2 then @_settings.speed / len * (len - i - 1)
 
     panel.style[css.transitionDuration] = duration + 'ms'
     panel.style[css.transitionDelay]    = delayMs  + 'ms'
@@ -854,7 +854,7 @@ class OriDomi
     @_inTrans = true
 
     @_iterate @_lastOp.anchor, (panel, i, len) =>
-      delay = @_setPanelTrans arguments..., @_settings.speed, 2
+      delay = @_setPanelTrans arguments..., @_settings.speed, 1
 
       do (panel, i, delay) =>
         defer =>
@@ -1033,7 +1033,7 @@ class OriDomi
       @_iterate anchor, (panel, i, len) =>
         duration  = @_settings.speed
         duration /= 2 if i is 0
-        delay     = @_setPanelTrans arguments..., duration, 1
+        delay     = @_setPanelTrans arguments..., duration, 2
 
         do (panel, i, delay) =>
           defer =>
