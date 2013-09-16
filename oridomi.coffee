@@ -354,6 +354,7 @@ defaults =
   # Configurable maximum angle for effects. With most effects, exceeding 90/-90 usually
   # makes the element wrap around and pass through itself leading to some glitchy visuals.
   maxAngle: 90
+  ripple: 0
   # This CSS class is applied to elements that oriDomi has been invoked so they can be
   # easily targeted later if needed.
   oriDomiClass: 'oridomi'
@@ -505,6 +506,8 @@ class OriDomi
     @el.appendChild @_stageHolder
     @$el = $ @el if $
     @accordion 0
+    @_settings.ripple = Number @_settings.ripple
+    @_setTrans @_settings.speed, @_settings.ripple if @_settings.ripple
     @enableTouch() if @_settings.touchEnabled
 
 
@@ -829,7 +832,7 @@ class OriDomi
     @_touchStarted = @_inTrans = false
     @_stageHolder.style.cursor = css.grab
     # Enable tweening again.
-    @_setTrans @_settings.speed, 0
+    @_setTrans @_settings.speed, @_settings.ripple
     # Pass callback final value.
     @_settings.touchEndCallback @["_#{ @_touchAxis }Last"]
 
@@ -875,7 +878,7 @@ class OriDomi
 
 
   setSpeed: (speed) ->
-    @_setTrans (@_settings.speed = speed), 0
+    @_setTrans (@_settings.speed = speed), @_settings.ripple
     @
 
 
@@ -942,6 +945,12 @@ class OriDomi
   # Disables touch events.
   disableTouch: ->
     @_setTouch false
+
+
+  setRipple: (dir = 1) ->
+    @_settings.ripple = Number dir
+    @_setTrans @_settings.speed, dir
+    @
 
 
   # Setter method for `maxAngle`.
