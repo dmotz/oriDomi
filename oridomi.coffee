@@ -126,7 +126,7 @@ noOp = ->
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to null so oriDomi knows we are working without jQuery.
 # oriDomi doesn't require it to work, but offers a useful plugin bridge.
-$ = if window.$?.data then window.$ else null
+$ = if (window.jQuery or window.$)?.data then window.$ else null
 
 # This variable is set to true and negated later if the browser does
 # not support oriDomi.
