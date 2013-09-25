@@ -13,6 +13,12 @@ tgthr = (fns, cb) ->
   v out k for k, v of fns
 
 
+startWatcher = (bin, args) ->
+  watcher = spawn bin, args?.split ' '
+  watcher.stdout.pipe process.stdout
+  watcher.stderr.pipe process.stderr
+
+
 announce = (name, fn) -> ->
   console.log "Running #{ name }..."
   fn.apply @, arguments
