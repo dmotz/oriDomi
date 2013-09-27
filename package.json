@@ -15,7 +15,7 @@
     "frontend",
     "jquery"
   ],
-  "dependencies": {
       "coffee-script" : "1.6.x"
+  "devDependencies": {
   }
 }
