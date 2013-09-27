@@ -15,7 +15,11 @@
     "frontend",
     "jquery"
   ],
-      "coffee-script" : "1.6.x"
   "devDependencies": {
+    "coffee-script": "1.6.x",
+    "uglify-js": "2.4.x",
+    "stylus": "0.38.x",
+    "nib": "1.0.x",
+    "docco": "0.6.x"
   }
 }
