@@ -459,7 +459,8 @@ class OriDomi
 
       mask = cloneEl maskProto, true, 'mask' + classSuffix
       mask.children[0].style[metric] = count * 100 + '%'
-      mask.appendChild shaderProtos[anchor] for anchor in anchorSet
+      if @_shading
+        mask.appendChild shaderProtos[anchor] for anchor in anchorSet
 
       proto = cloneEl panelProto, false, 'panel' + classSuffix
       proto.appendChild mask
