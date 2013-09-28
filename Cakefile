@@ -43,9 +43,10 @@ build = (cb) ->
 
 
 watch = ->
-  coffee = spawn 'coffee', '-mwc oridomi.coffee'.split ' '
-  coffee.stdout.pipe process.stdout
-  coffee.stderr.pipe process.stderr
+  startWatcher.apply @, pair for pair in [
+    ['coffee', '-mwc oridomi.coffee']
+    ['stylus', '-u nib -w demo/demo.styl']
+  ]
 
 
 stats = ->
