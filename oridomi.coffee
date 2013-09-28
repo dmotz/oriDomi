@@ -866,7 +866,8 @@ class OriDomi
             if i is len - 1
               @_inTrans = @isFoldedUp = false
               callback?()
-              @_lastOp.fn = @accordion
+              @_lastOp.fn    = @accordion
+              @_lastOp.angle = 0
             defer => panel.style[css.transitionDuration] = @_settings.speed
           , delay + @_settings.speed * .25
 
