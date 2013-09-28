@@ -1133,22 +1133,18 @@ $::oriDomi = (options) ->
   if typeof options is 'string'
     methodName = options
     # Check if method exists and warn if it doesn't.
-    unless typeof OriDomi::[methodName] is 'function'
-      console?.warn "oriDomi: No such method '#{ methodName }'"
+    unless typeof method = OriDomi::[methodName] is 'function'
+      console?.warn "oriDomi: No such method `#{ methodName }`"
       return @
 
-    # Convert arguments to a proper array and remove the first element.
-    args = Array::slice.call arguments
-    args.shift()
-    # Loop through the jQuery selection.
-    for el in @
-      # Warn if oriDomi hasn't been initialized on this element.
-      unless instance = $.data el, baseName
-        console?.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element"
-        return @
+
+    # Warn if oriDomi hasn't been initialized on this element.
+    unless instance = $.data @[0], baseName
+      console?.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element"
+      return @
 
       # Call the requested method with arguments.
-      instance[methodName] args
+      method.apply instance, [].slice.call(arguments)[1...]
 
     # Return selection.
     @
