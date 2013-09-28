@@ -2,7 +2,7 @@
 # ### Fold up the DOM like paper.
 # 0.3.0
 
-# [http://oridomi.com](http://oridomi.com)
+# [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
 
 # Copyright 2013, MIT License
@@ -1134,7 +1134,7 @@ $::oriDomi = (options) ->
   if typeof options is 'string'
     methodName = options
     # Check if method exists and warn if it doesn't.
-    unless typeof method = OriDomi::[methodName] is 'function'
+    unless typeof (method = OriDomi::[methodName]) is 'function'
       console?.warn "oriDomi: No such method `#{ methodName }`"
       return @
 
@@ -1144,8 +1144,8 @@ $::oriDomi = (options) ->
       console?.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element"
       return @
 
-      # Call the requested method with arguments.
-      method.apply instance, [].slice.call(arguments)[1...]
+    # Call the requested method with arguments.
+    method.apply instance, [].slice.call(arguments)[1...]
 
     # Return selection.
     @
