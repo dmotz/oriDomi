@@ -500,11 +500,11 @@ class OriDomi
 
     @el.classList.add elClasses.active
     showEl @_stages.left
-    @cloneEl = cloneEl @el, true, 'clone'
-    @cloneEl.classList.remove elClasses.active
-    hideEl @cloneEl
+    @_cloneEl = cloneEl @el, true, 'clone'
+    @_cloneEl.classList.remove elClasses.active
+    hideEl @_cloneEl
     @el.innerHTML   = ''
-    @el.appendChild @cloneEl
+    @el.appendChild @_cloneEl
     @el.appendChild @_stageHolder
     @$el = $ @el if $
     @accordion 0
@@ -897,7 +897,7 @@ class OriDomi
         @isFrozen = true
         # Swap the visibility of the elements.
         hideEl @_stageHolder
-        showEl @cloneEl
+        showEl @_cloneEl
         @_setCursor false
         callback?()
     @
@@ -909,7 +909,7 @@ class OriDomi
     if @isFrozen
       @isFrozen = false
       # Swap the visibility of the elements.
-      hideEl @cloneEl
+      hideEl @_cloneEl
       showEl @_stageHolder
       @_setCursor()
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
@@ -926,7 +926,7 @@ class OriDomi
       # Remove the data reference if using jQuery.
       $.data @el, baseName, null if $
       # Remove the oriDomi element from the DOM.
-      @el.innerHTML = @cloneEl.innerHTML
+      @el.innerHTML = @_cloneEl.innerHTML
       # Reset original styles.
       @el.classList.remove elClasses.active
       callback?()
