@@ -254,6 +254,7 @@ do ->
     border:          'none'
     outline:         'none'
     position:        'relative'
+    transformStyle:  p3d
 
   addStyle elClasses.clone,
     margin:    '0'
@@ -265,7 +266,6 @@ do ->
     position:       'absolute'
     transform:      'translateY(-100%)'
     transformStyle: p3d
-
 
   addStyle elClasses.stage,
     width:          '100%'
