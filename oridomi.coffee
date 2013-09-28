@@ -411,6 +411,7 @@ class OriDomi
     @_lastOp  = anchor: anchorList[0]
     @_xLast   = @_yLast = 0
     @_shading = @_settings.shading
+    @_shading = 'hard' if @_shading is true
 
     if @_shading
       @_shaders    = {}
