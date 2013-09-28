@@ -1,8 +1,17 @@
 # oriDomi Cakefile
 # Dan Motzenbecker
 
-fs            = require 'fs'
-{exec, spawn} = require 'child_process'
+fs      = require 'fs'
+cp      = require 'child_process'
+binPath = './node_modules/.bin/'
+
+exec = (cmd, cb) ->
+  cp.exec binPath + cmd, cb
+
+
+spawn = (cmd, args) ->
+  cp.spawn binPath + cmd, args
+
 
 tgthr = (fns, cb) ->
   res = {}
@@ -67,7 +76,7 @@ docs    = announce 'docs',    (args, cb) ->
   exec 'docco oridomi.coffee', print cb
 
 demo    = announce 'demo',    (args, cb) ->
-  exec 'stylus -u nib ./demo/demo.styl', print cb
+  exec 'stylus -u nib demo/demo.styl', print cb
 
 
 task 'build',   'compile, minify, and generate annotated source', build
