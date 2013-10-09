@@ -1,6 +1,6 @@
 {
   "name": "oridomi",
-  "description": "Fold up the DOM like paper.",
+  "description": "Origami for the web. Fold up the DOM like paper.",
   "author": {
     "name": "Dan Motzenbecker",
     "email": "dan@oxism.com",
@@ -15,6 +15,7 @@
   },
   "main": "./oridomi",
   "keywords": [
+    "origami",
     "DOM",
     "paper",
     "folding",
