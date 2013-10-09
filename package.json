@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git://github.com/dmotz/oriDomi.git"
   },
+  "main": "./oridomi",
   "keywords": [
     "DOM",
     "paper",
