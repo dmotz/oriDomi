@@ -752,8 +752,8 @@ class OriDomi
     # Attach touch/drag event listeners in related pairs.
     for eventPair in eventPairs
       for eString in eventPair
-        unless eString is 'TouchLeave' and not mouseLeaveSupport
           @_stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
+        unless eString is 'TouchLeave' and !mouseLeaveSupport
         else
           @_stageHolder[listenFn] 'mouseout', @_onMouseOut, false
           break
@@ -844,7 +844,7 @@ class OriDomi
   # A fallback for browsers that don't support `mouseleave`.
   _onMouseOut: (e) =>
     return unless @_touchEnabled and @_touchStarted
-    @_onTouchEnd() if e.toElement and not @el.contains e.toElement
+    @_onTouchEnd() if e.toElement and !@el.contains e.toElement
 
 
   _unfold: (callback) ->
@@ -976,7 +976,7 @@ class OriDomi
     # Loop through the panels in this stage.
     @_iterate anchor, (panel, i) =>
       # If it's an odd-numbered panel, reverse the angle.
-      if i % 2 isnt 0 and not options.twist
+      if i % 2 isnt 0 and !options.twist
         deg = -angle
       else
         deg = angle
