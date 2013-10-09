@@ -1109,9 +1109,13 @@ class OriDomi
   @isSupported = isSupported
 
 
-# Export constructor on `window` and `module.exports` (if applicable).
-window.OriDomi = OriDomi
-module.exports = OriDomi if module?.exports
+# Expose the OriDomi constructor via CommonJS, AMD, or the window object.
+if module?.exports
+  module.exports = OriDomi
+else if define?.amd
+  define -> OriDomi
+else
+  window.OriDomi = OriDomi
 
 
 
