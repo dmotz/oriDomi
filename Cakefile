@@ -54,6 +54,7 @@ build = (cb) ->
 watch = ->
   startWatcher.apply @, pair for pair in [
     ['coffee', '-mwc oridomi.coffee']
+    ['coffee', '-mwc demo/demo.coffee']
     ['stylus', '-u nib -w demo/demo.styl']
   ]
 
