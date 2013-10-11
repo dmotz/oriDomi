@@ -248,17 +248,18 @@ do ->
 
 
   addStyle elClasses.active,
-    backgroundColor: 'transparent'
-    backgroundImage: 'none'
-    boxSizing:       'border-box'
-    border:          'none'
-    outline:         'none'
+    backgroundColor: 'transparent !important'
+    backgroundImage: 'none !important'
+    boxSizing:       'border-box !important'
+    border:          'none !important'
+    outline:         'none !important'
+    padding:         '0 !important'
     position:        'relative'
-    transformStyle:  p3d
+    transformStyle:  p3d + ' !important'
 
   addStyle elClasses.clone,
-    margin:    '0'
-    boxSizing: 'border-box'
+    margin:    '0 !important'
+    boxSizing: 'border-box !important'
 
   addStyle elClasses.holder,
     width:          '100%'
@@ -293,12 +294,10 @@ do ->
     addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
 
   addStyle elClasses.content,
-    width:     '100%'
-    height:    '100%'
-    margin:    '0'
-    position:  'relative'
-    float:     'none'
-    boxSizing: 'border-box'
+    margin:    '0 !important'
+    position:  'relative !important'
+    float:     'none !important'
+    boxSizing: 'border-box !important'
 
   addStyle elClasses.mask,
     width:     '100%'
