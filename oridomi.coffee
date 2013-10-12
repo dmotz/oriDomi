@@ -966,6 +966,38 @@ class OriDomi
     @
 
 
+  modifyContent: (fn) ->
+    if typeof fn isnt 'function'
+      selectors = fn
+
+      set = (el, content, style) ->
+        el.innerHTML = content if content
+        if style
+          el.style[key] = value for key, value of style
+          null
+
+      fn = (el) ->
+        for selector, value of selectors
+          content = style = null
+          if typeof value is 'string'
+            content = value
+          else
+            {content, style} = value
+
+          if selector is ''
+            set el, content, style
+            continue
+
+          set match, content, style for match in el.querySelectorAll selector
+
+        null
+
+    for anchor in anchorList
+      for panel, i in @_panels[anchor]
+        fn panel.children[0].children[0], i, anchor
+    @
+
+
   # Effect Methods
   # ==============
 
