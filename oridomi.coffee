@@ -1,4 +1,4 @@
-# # oriDomi
+# # OriDomi
 # ### Fold up the DOM like paper.
 # 0.3.0
 
@@ -12,9 +12,9 @@
 # Helper Functions
 # ================
 
-# Function used to warn the developer that the browser does not support oriDomi.
+# Function used to warn the developer that the browser does not support OriDomi.
 supportWarning = (prop) ->
-  console?.warn "oriDomi: Missing support for `#{ prop }`."
+  console?.warn "OriDomi: Missing support for `#{ prop }`."
   isSupported = false
 
 
@@ -124,12 +124,12 @@ noOp = ->
 # =====
 
 # Set a reference to jQuery (or another `$`-aliased DOM library).
-# If it doesn't exist, set to null so oriDomi knows we are working without jQuery.
-# oriDomi doesn't require it to work, but offers a useful plugin bridge.
+# If it doesn't exist, set to null so OriDomi knows we are working without jQuery.
+# OriDomi doesn't require it to work, but offers a useful plugin bridge.
 $ = if (window.jQuery or window.$)?.data then window.$ else null
 
 # This variable is set to true and negated later if the browser does
-# not support oriDomi.
+# not support OriDomi.
 isSupported = true
 
 anchorList  = ['left', 'right', 'top', 'bottom']
@@ -167,7 +167,7 @@ elClasses   =
 
 elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
 
-# A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
+# A map of the CSS3 properties needed to support OriDomi, with shorthand names as keys.
 css = new ->
   @[key] = key for key in [
     'transform'
@@ -190,7 +190,7 @@ do ->
   for key, value of css
     css[key] = testProp value
     # If the returned value is false, warn the user that the browser doesn't support
-    # oriDomi, set `isSupported` to false and break out of the loop.
+    # OriDomi, set `isSupported` to false and break out of the loop.
     unless css[key]
       supportWarning value
       return
@@ -335,7 +335,7 @@ do ->
 # Defaults
 # ========
 
-# Object literal of oriDomi instance defaults.
+# Object literal of OriDomi instance defaults.
 defaults =
   # The number of vertical panels (for folding left or right).
   vPanels: 3
@@ -354,7 +354,7 @@ defaults =
   # makes the element wrap around and pass through itself leading to some glitchy visuals.
   maxAngle: 90
   ripple: 0
-  # This CSS class is applied to elements that oriDomi has been invoked so they can be
+  # This CSS class is applied to elements that OriDomi has been invoked so they can be
   # easily targeted later if needed.
   oriDomiClass: 'oridomi'
   # This is a multiplier that determines the darkness of shading.
@@ -368,7 +368,7 @@ defaults =
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
   touchSensitivity: .25
   # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
-  # be used to manipulate objects outside of the oriDomi instance (e.g. sliding panels).
+  # be used to manipulate objects outside of the OriDomi instance (e.g. sliding panels).
   # x values are returned when folding left and right, y values for top and bottom.
   # These are empty functions by default.
   # Invoked with starting coordinate as first argument.
@@ -379,7 +379,7 @@ defaults =
   touchEndCallback: noOp
 
 
-# oriDomi Prototype
+# OriDomi Prototype
 # =================
 
 class OriDomi
@@ -389,7 +389,7 @@ class OriDomi
     return new OriDomi arguments... unless @ instanceof OriDomi
     @el = document.querySelector @el if typeof @el is 'string'
     unless @el and @el.nodeType is 1
-      console?.warn 'oriDomi: First argument must be a DOM element'
+      console?.warn 'OriDomi: First argument must be a DOM element'
       return
 
     @_settings = new ->
@@ -882,7 +882,7 @@ class OriDomi
     @
 
 
-  # Disables oriDomi slicing by showing the original, untouched target element.
+  # Disables OriDomi slicing by showing the original, untouched target element.
   # This is useful for certain user interactions on the inner content.
   freeze: (callback) ->
     # Return if already frozen.
@@ -900,7 +900,7 @@ class OriDomi
     @
 
 
-  # Restores the oriDomi version of the element for folding purposes.
+  # Restores the OriDomi version of the element for folding purposes.
   unfreeze: ->
     # Only unfreeze if already frozen.
     if @isFrozen
@@ -914,7 +914,7 @@ class OriDomi
     @
 
 
-  # Removes the oriDomi element and restores the original element.
+  # Removes the OriDomi element and restores the original element.
   destroy: (callback) ->
     # First restore the original element.
     @freeze =>
@@ -922,7 +922,7 @@ class OriDomi
       @_setTouch false
       # Remove the data reference if using jQuery.
       $.data @el, baseName, null if $
-      # Remove the oriDomi element from the DOM.
+      # Remove the OriDomi element from the DOM.
       @el.innerHTML = @_cloneEl.innerHTML
       # Reset original styles.
       @el.classList.remove elClasses.active
@@ -1004,7 +1004,7 @@ class OriDomi
   # ==============
 
 
-  # oriDomi's most basic effect. Transforms the target like its namesake.
+  # OriDomi's most basic effect. Transforms the target like its namesake.
   accordion: prep (angle, anchor, options) ->
     # Loop through the panels in this stage.
     @_iterate anchor, (panel, i) =>
@@ -1138,7 +1138,7 @@ class OriDomi
   @VERSION = '0.3.0'
 
 
-  # Externally check if oriDomi is supported by the browser.
+  # Externally check if OriDomi is supported by the browser.
   @isSupported = isSupported
 
 
@@ -1158,9 +1158,9 @@ else
 
 # Only create bridge if jQuery (or an imitation supporting `data()`) exists.
 return unless $
-# Attach an `oriDomi` method to `$`'s prototype.
+# Attach an `OriDomi` method to `$`'s prototype.
 $::oriDomi = (options) ->
-  # Return selection if oriDomi is unsupported by the browser.
+  # Return selection if OriDomi is unsupported by the browser.
   return @ unless isSupported
 
   # If `options` is a string, assume it's a method call.
@@ -1168,13 +1168,13 @@ $::oriDomi = (options) ->
     methodName = options
     # Check if method exists and warn if it doesn't.
     unless typeof (method = OriDomi::[methodName]) is 'function'
-      console?.warn "oriDomi: No such method `#{ methodName }`"
+      console?.warn "OriDomi: No such method `#{ methodName }`"
       return @
 
 
-    # Warn if oriDomi hasn't been initialized on this element.
+    # Warn if OriDomi hasn't been initialized on this element.
     unless instance = $.data @[0], baseName
-      console?.warn "oriDomi: Can't call #{ methodName }, oriDomi hasn't been initialized on this element"
+      console?.warn "OriDomi: Can't call #{ methodName }, OriDomi hasn't been initialized on this element"
       return @
 
     # Call the requested method with arguments.
@@ -1183,15 +1183,15 @@ $::oriDomi = (options) ->
     # Return selection.
     @
 
-  # If not calling a method, initialize oriDomi on the selection.
+  # If not calling a method, initialize OriDomi on the selection.
   else
     for el in @
-      # If the element in the selection already has an instance of oriDomi
+      # If the element in the selection already has an instance of OriDomi
       # attached to it, return the instance.
       if instance = $.data el, baseName
         return instance
       else
-        # Create an instance of oriDomi and attach it to the element.
+        # Create an instance of OriDomi and attach it to the element.
         $.data el, baseName, new OriDomi el, options
 
     # Return the selection.
