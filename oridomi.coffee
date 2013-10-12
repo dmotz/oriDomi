@@ -727,9 +727,9 @@ class OriDomi
   # Gives the element a resize cursor to prompt the user to drag the mouse.
   _setCursor: (bool = @_touchEnabled) ->
     if bool
-      @_stageHolder.style.cursor = css.grab
+      @el.style.cursor = css.grab
     else
-      @_stageHolder.style.cursor = 'default'
+      @el.style.cursor = 'default'
 
 
   # Touch / Drag Event Handlers
@@ -754,10 +754,10 @@ class OriDomi
     # Attach touch/drag event listeners in related pairs.
     for eventPair in eventPairs
       for eString in eventPair
-          @_stageHolder[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
         unless eString is 'TouchLeave' and !mouseLeaveSupport
+          @el[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
         else
-          @_stageHolder[listenFn] 'mouseout', @_onMouseOut, false
+          @el[listenFn] 'mouseout', @_onMouseOut, false
           break
     @
 
@@ -771,7 +771,7 @@ class OriDomi
     # Set a property to track touch starts.
     @_touchStarted = true
     # Change the cursor to the active `grabbing` state.
-    @_stageHolder.style.cursor = css.grabbing
+    @el.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
     @_setTrans 0, 0
     # Derive the axis to fold on.
@@ -830,7 +830,7 @@ class OriDomi
     return unless @_touchEnabled
     # Restore the initial touch status and cursor.
     @_touchStarted = @_inTrans = false
-    @_stageHolder.style.cursor = css.grab
+    @el.style.cursor = css.grab
     # Enable tweening again.
     @_setTrans @_settings.speed, @_settings.ripple
     # Pass callback final value.
