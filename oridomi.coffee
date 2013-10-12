@@ -624,8 +624,9 @@ class OriDomi
     panel.style[css.transitionDelay]    = delayMs  + 'ms'
     if @_shading
       for side in (if anchor in anchorListV then anchorListV else anchorListH)
-        @_shaders[anchor][side][i].style[css.transitionDuration] = duration + 'ms'
-        @_shaders[anchor][side][i].style[css.transitionDelay]    = delayMs  + 'ms'
+        shader = @_shaders[anchor][side][i]
+        shader.style[css.transitionDuration] = duration + 'ms'
+        shader.style[css.transitionDelay]    = delayMs  + 'ms'
 
     delayMs
 
