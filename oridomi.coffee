@@ -560,16 +560,16 @@ class OriDomi
     # Remove the event listener immediately to prevent bubbling.
     e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, false
     # Initialize transition teardown process.
-    @_conclude @_lastOp.options.callback
+    @_conclude @_lastOp.options.callback, e
 
 
   # `_conclude` is used to handle the end process of transitions and to initialize
   # queued operations.
-  _conclude: (cb) =>
+  _conclude: (cb, event) =>
     defer =>
       @_inTrans = false
       @_step()
-      cb?()
+      cb? event, @
 
 
   # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
