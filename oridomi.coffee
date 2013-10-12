@@ -9,59 +9,68 @@
 
 'use strict'
 
-# Helper Functions
+# Utility Functions
 # ================
 
-# Function used to warn the developer that the browser does not support OriDomi.
+# Used for informing the developer which required feature the browser lacks.
 supportWarning = (prop) ->
   console?.warn "OriDomi: Missing support for `#{ prop }`."
   isSupported = false
 
 
-# This function checks for the presence of CSS properties on the test div.
+# Checks for the presence of CSS properties on a test element.
 testProp = (prop) ->
-  # Loop through the vendor prefix list and return when we find a match.
+  # Loop through the vendor prefix list and return a match is found.
   for prefix in prefixList
     return full if testEl.style[(full = prefix + capitalize prop)]?
 
-  # If the un-prefixed property is present, return it.
+  # If the unprefixed property is present, return it.
   return prop if testEl.style[prop]?
-  # If no matches are found, return false to denote that the browser is missing this property.
+  # If no matches are found, return false to denote that the browser is
+  # missing this property.
   false
 
 
+# Generates CSS text based on a selector string and a map of styling rules.
 addStyle = (selector, rules) ->
   style = ".#{ selector }{"
   for prop, val of rules
+    # If the CSS property is among special properties defined later, prefix it.
     if prop of css
       prop = css[prop]
       prop = '-' + prop if prop.match /^(webkit|moz|ms)/i
 
+    # Convert camelcase to hypenated.
     style += "#{ prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() }:#{ val };"
 
   styleBuffer += style + '}'
 
 
+# Defines gradient directions based on a given anchor.
 getGradient = (anchor) ->
   "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
+# Used mainly when creating camelcased strings.
 capitalize = (s) ->
   s[0].toUpperCase() + s[1...]
 
 
+# Create an element and look up the canonical class name.
 createEl = (className) ->
   el = document.createElement 'div'
   el.className = elClasses[className]
   el
 
 
+# Clone an element, add an additional class, and return it.
 cloneEl = (parent, deep, className) ->
   el = parent.cloneNode deep
   el.classList.add elClasses[className]
   el
 
 
+# GPU efficient ways of hiding and showing elements:
 hideEl = (el) ->
   el.style[css.transform] = 'translate3d(-9999px, 0, 0)'
 
@@ -70,8 +79,11 @@ showEl = (el) ->
   el.style[css.transform] = 'translate3d(0, 0, 0)'
 
 
+# This decorator is used on public effect methods to invoke preliminary tasks
+# before the effect is applied.
 prep = (fn) ->
   ->
+    # If the method has been initiated by a touch handler, skip this process.
     if @_touchStarted
       fn.apply @, arguments
     else
@@ -79,6 +91,10 @@ prep = (fn) ->
       opt          = {}
       angle        = anchor = null
 
+      # This switch is used to derive the intended order of arguments.
+      # This keeps argument requirements flexible, allowing most to be left out.
+      # By putting this logic in a decorator, it doesn't have to exist in any
+      # of the individual methods.
       switch fn.length
         when 1
           opt.callback = a0
@@ -106,11 +122,17 @@ prep = (fn) ->
 
       angle   ?= @_lastOp.angle or 0
       anchor or= @_lastOp.anchor
+      # Here we add the called function and its normalized arguments to the
+      # instance's queue.
       @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
+      # `_step()` manages the queue and decides whether the action will occur now
+      # or be deferred.
       @_step()
+      # This decorator also returns the instance so effect methods are chainable.
       @
 
 
+# It's necessary to defer many DOM manipulations to a subsequent event loop tick.
 defer = (fn) ->
   setTimeout fn, 0
 
@@ -125,13 +147,14 @@ noOp = ->
 
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to null so OriDomi knows we are working without jQuery.
-# OriDomi doesn't require it to work, but offers a useful plugin bridge.
+# OriDomi doesn't require it to work, but offers a useful plugin bridge if present.
 $ = if (window.jQuery or window.$)?.data then window.$ else null
 
 # This variable is set to true and negated later if the browser does
 # not support OriDomi.
 isSupported = true
 
+# List of anchors and their corresponding axis pairs.
 anchorList  = ['left', 'right', 'top', 'bottom']
 anchorListV = anchorList[..1]
 anchorListH = anchorList[2..]
@@ -139,11 +162,14 @@ anchorListH = anchorList[2..]
 # Create a div for testing CSS3 properties.
 testEl = document.createElement 'div'
 
-# Set a list of browser prefixes for testing CSS3 properties.
-prefixList  = ['Webkit', 'Moz', 'ms']
+# The style buffer is later populated with CSS rules and appended to the document.
 styleBuffer = ''
-baseName    = 'oridomi'
-elClasses   =
+
+# List of browser prefixes for testing CSS3 properties.
+prefixList = ['Webkit', 'Moz', 'ms']
+baseName   = 'oridomi'
+# CSS classes used by style rules.
+elClasses  =
   active:       'active'
   clone:        'clone'
   holder:       'holder'
@@ -165,9 +191,12 @@ elClasses   =
   shaderTop:    'shader-top'
   shaderBottom: 'shader-bottom'
 
+# Each class is namespaced to prevent styling collisions.
 elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
 
-# A map of the CSS3 properties needed to support OriDomi, with shorthand names as keys.
+# Map of the CSS3 properties needed to support OriDomi, with shorthand names as keys.
+# The keys and values are initialized as identical pairs to start with and prefixed
+# subsequently when necessary.
 css = new ->
   @[key] = key for key in [
     'transform'
@@ -184,28 +213,28 @@ css = new ->
   ]
   @
 
-
+# This section is wrapped in an immediately invoked function so that it can exit
+# early when discovering a lack of browser support to prevent unnecessary work.
 do ->
-  # Loop through the CSS hash and replace each value with the result of `testProp()`.
+  # Loop through the CSS map and replace each value with the result of `testProp()`.
   for key, value of css
     css[key] = testProp value
     # If the returned value is false, warn the user that the browser doesn't support
-    # OriDomi, set `isSupported` to false and break out of the loop.
-    unless css[key]
-      supportWarning value
-      return
+    # OriDomi, set `isSupported` to false, and break out of the loop.
+    return supportWarning value unless css[key]
 
+  # Test for `preserve-3d` as a transform style. This is particularly important
+  # since it's necessary for nested 3D transforms and recent versions of IE that
+  # support 3D transforms lack it.
   p3d = 'preserve-3d'
-  if isSupported and css.transformStyle
-    testEl.style[css.transformStyle] = p3d
-    unless testEl.style[css.transformStyle] is p3d
-      isSupported = false
-      supportWarning p3d
-      return
+  testEl.style[css.transformStyle] = p3d
+  # Failure is indicated when querying the style lacks the correct string.
+  unless testEl.style[css.transformStyle] is p3d
+    return supportWarning p3d
 
-  # CSS3 gradients are used for shading.
+  # CSS3 linear gradients are used for shading.
   # Testing for them is different because they are prefixed values, not properties.
-  # This invokes an anonymous function to loop through vendor-prefixed linear-gradients.
+  # This invokes an anonymous function to loop through vendor-prefixed linear gradients.
   css.gradientProp = do ->
     for prefix in prefixList
       hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
@@ -216,6 +245,7 @@ do ->
     'linear-gradient'
 
   # The default cursor style is set to `grab` to prompt the user to interact with the element.
+  # `grab` as a value isn't supported in all browsers so it has to be detected.
   [css.grab, css.grabbing] = do ->
     for prefix in prefixList
       plainGrab = 'grab'
@@ -230,7 +260,7 @@ do ->
       # Fallback to `move`.
       ['move', 'move']
 
-  # Invoke a functional scope to set a hyphenated version of the transform property.
+  # Like gradients, transform (as a transition value) needs to be detected and prefixed.
   css.transformProp = do ->
     # Use a regular expression to pluck the prefix `testProp` found.
     if prefix = css.transform.match /(\w+)Transform/i
@@ -247,6 +277,7 @@ do ->
       when 'mstransitionproperty'     then 'msTransitionEnd'
 
 
+  # These calls generate OriDomi's stylesheet.
   addStyle elClasses.active,
     backgroundColor: 'transparent !important'
     backgroundImage: 'none !important'
@@ -277,6 +308,7 @@ do ->
     padding:        '0'
     transformStyle: p3d
 
+  # Each anchor needs a particular perspective origin.
   for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
     addStyle elClasses['stage' + k], perspectiveOrigin: v
 
@@ -290,6 +322,7 @@ do ->
     pointerEvents:      'none'
     transitionProperty: 'opacity'
 
+  # Linear gradient directions depend on their anchor.
   for anchor in anchorList
     addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
 
@@ -324,6 +357,7 @@ do ->
   styleEl      = document.createElement 'style'
   styleEl.type = 'text/css'
 
+  # Once the style buffer is ready, it's appended to the document as a stylesheet.
   if styleEl.styleSheet
     styleEl.styleSheet.cssText = styleBuffer
   else
