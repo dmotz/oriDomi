@@ -454,7 +454,9 @@ class OriDomi
       percent = 100 / count
 
       mask = cloneEl maskProto, true, 'mask' + classSuffix
-      mask.children[0].style[metric] = count * 100 + '%'
+      content = mask.children[0]
+      content.style.width   = content.style.height = '100%'
+      content.style[metric] = content.style['max' + capitalize metric] = count * 100 + '%'
       if @_shading
         mask.appendChild shaderProtos[anchor] for anchor in anchorSet
 
