@@ -738,8 +738,6 @@ class OriDomi
       panel.style[css.transform] = @_transform 0, @_lastOp.anchor
       @_setShader i, @_lastOp.anchor, 0 if @_shading
 
-    @
-
 
   # Converts a shorthand anchor name to a full one.
   _getLonghandAnchor: (shorthand) ->
