@@ -786,7 +786,7 @@ class OriDomi
       @[axis1] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Return that value to an external listener.
-    @_settings.touchStartCallback @[axis1]
+    @_settings.touchStartCallback @[axis1], e
 
 
   # Called on touch/mouse movement.
@@ -818,15 +818,14 @@ class OriDomi
       delta = 0 if delta < 0
 
 
-    delta = @_normalizeAngle delta
-    @_lastOp.angle = delta
+    @_lastOp.angle = delta = @_normalizeAngle delta
     @_lastOp.fn.call @, delta, @_lastOp.anchor, @_lastOp.options
-    @_settings.touchMoveCallback delta
+    @_settings.touchMoveCallback delta, e
 
 
 
   # Teardown process when touch/drag event ends.
-  _onTouchEnd: =>
+  _onTouchEnd: (e) =>
     return unless @_touchEnabled
     # Restore the initial touch status and cursor.
     @_touchStarted = @_inTrans = false
@@ -834,19 +833,19 @@ class OriDomi
     # Enable tweening again.
     @_setTrans @_settings.speed, @_settings.ripple
     # Pass callback final value.
-    @_settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+    @_settings.touchEndCallback @["_#{ @_touchAxis }Last"], e
 
 
   # End folding when the mouse or finger leaves the composition.
-  _onTouchLeave: =>
+  _onTouchLeave: (e) =>
     return unless @_touchEnabled and @_touchStarted
-    @_onTouchEnd()
+    @_onTouchEnd e
 
 
   # A fallback for browsers that don't support `mouseleave`.
   _onMouseOut: (e) =>
     return unless @_touchEnabled and @_touchStarted
-    @_onTouchEnd() if e.toElement and !@el.contains e.toElement
+    @_onTouchEnd e if e.toElement and !@el.contains e.toElement
 
 
   _unfold: (callback) ->
