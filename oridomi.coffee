@@ -607,25 +607,34 @@ class OriDomi
       cb? event, @
 
 
-  # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
-  _transform: (angle, anchor, fracture) ->
+  # Transforms a given element based on angle, anchor, and fracture boolean.
+  _transformPanel: (el, angle, anchor, fracture) ->
+    # The values of 1 and -1 are used to try to prevent small gaps from
+    # appearing between panels during transforms.
+    x = y = z = 0
     switch anchor
       when 'left'
-        axes = [0, angle, 0]
+        y = angle
         translate = 'X(-1'
       when 'right'
-        axes = [0, -angle, 0]
+        y = -angle
         translate = 'X(1'
       when 'top'
-        axes = [-angle, 0, 0]
+        x = -angle
         translate = 'Y(-1'
       when 'bottom'
-        axes = [angle, 0, 0]
+        x = angle
         translate = 'Y(1'
 
-    axes = [angle, angle, angle] if fracture
-    "rotateX(#{ axes[0] }deg) rotateY(#{ axes[1] }deg) rotateZ(#{ axes[2] }deg) translate#{ translate }px)"
+    # Rotate on every axis in fracture mode.
+    x = y = z = angle if fracture
 
+    el.style[css.transform] = """
+                              rotateX(#{ x }deg)
+                              rotateY(#{ y }deg)
+                              rotateZ(#{ z }deg)
+                              translate#{ translate }px)
+                              """
 
   # `_normalizeAngle` validates a given angle by making sure it's a float and by
   # keeping it within the maximum range specified in the instance settings.
@@ -735,7 +744,7 @@ class OriDomi
     @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
 
     @_iterate @_lastOp.anchor, (panel, i) =>
-      panel.style[css.transform] = @_transform 0, @_lastOp.anchor
+      @_transformPanel panel, 0, @_lastOp.anchor
       @_setShader i, @_lastOp.anchor, 0 if @_shading
 
 
@@ -888,7 +897,7 @@ class OriDomi
 
       do (panel, i, delay) =>
         defer =>
-          panel.style[css.transform] = @_transform 0, @_lastOp.anchor
+          @_transformPanel panel, 0, @_lastOp.anchor
           setTimeout =>
             showEl panel.children[0]
             if i is len - 1
@@ -1059,7 +1068,7 @@ class OriDomi
       deg *= -1 if options.stairs
 
       # Set the CSS transformation.
-      panel.style[css.transform] = @_transform deg, anchor, options.fracture
+      @_transformPanel panel, deg, anchor, options.fracture
       # Apply shaders.
       if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
@@ -1072,18 +1081,18 @@ class OriDomi
     angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
 
     @_iterate anchor, (panel, i) =>
-      panel.style[css.transform] = @_transform angle, anchor
+      @_transformPanel panel, angle, anchor
       @_setShader i, anchor, 0 if @_shading
 
 
   # `ramp` lifts up all panels after the first one.
   ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
-    @_panels[anchor][1].style[css.transform] = @_transform angle, anchor
+    @_transformPanel @_panels[anchor][1], angle, anchor
 
     # For all but the first two panels, set the angle to 0.
     @_iterate anchor, (panel, i) =>
-      @_panels[anchor][i].style[css.transform] = @_transform 0, anchor if i > 1
+      @_transformPanel panel, 0, anchor if i > 1
       @_setShader i, anchor, 0 if @_shading
 
 
@@ -1100,7 +1109,7 @@ class OriDomi
 
         do (panel, i, delay) =>
           defer =>
-            panel.style[css.transform] = @_transform (if i is 0 then 90 else 170), anchor
+            @_transformPanel panel, (if i is 0 then 90 else 170), anchor
             setTimeout =>
               if i is 0
                 @_inTrans = false
