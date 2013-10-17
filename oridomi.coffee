@@ -95,6 +95,8 @@ prep = (fn) ->
       # This keeps argument requirements flexible, allowing most to be left out.
       # By putting this logic in a decorator, it doesn't have to exist in any
       # of the individual methods.
+
+      # Methods are inferred by their arity.
       switch fn.length
         when 1
           opt.callback = a0
@@ -333,11 +335,11 @@ do ->
     boxSizing: 'border-box !important'
 
   addStyle elClasses.mask,
-    width:     '100%'
-    height:    '100%'
-    position:  'absolute'
-    overflow:  'hidden'
-    transform: 'translate3d(0, 0, 0)'
+    width:              '100%'
+    height:             '100%'
+    position:           'absolute'
+    overflow:           'hidden'
+    transform:          'translate3d(0, 0, 0)'
     backfaceVisibility: 'hidden'
 
   addStyle elClasses.panel,
@@ -369,7 +371,7 @@ do ->
 # Defaults
 # ========
 
-# Object literal of OriDomi instance defaults.
+# These defaults are used by all OriDomi instances unless overridden.
 defaults =
   # The number of vertical panels (for folding left or right).
   vPanels: 3
@@ -387,45 +389,51 @@ defaults =
   # Configurable maximum angle for effects. With most effects, exceeding 90/-90 usually
   # makes the element wrap around and pass through itself leading to some glitchy visuals.
   maxAngle: 90
+  # Ripple mode causes effects to fold in a staggered, cascading manner.
+  # `1` indicates a forward cascade, `2` is backwards. It is disabled by default.
   ripple: 0
-  # This CSS class is applied to elements that OriDomi has been invoked so they can be
-  # easily targeted later if needed.
+  # This CSS class is applied to OriDomi elements so they can be easily targeted later.
   oriDomiClass: 'oridomi'
   # This is a multiplier that determines the darkness of shading.
   # If you need subtler shading, set this to a value below 1.
   shadingIntensity: 1
-  # This option allows you to supply the name of a custom easing method defined in one
-  # of your stylesheets. It defaults to a blank string which is interpreted as `ease`.
+  # This option allows you to supply the name of an easing method or a
+  # cubic bezier formula for customized animation easing.
   easingMethod: ''
-  # Allow the user to fold the target by dragging a finger or the mouse.
+  # Allows the user to fold the element via touch or mouse.
   touchEnabled: true
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
   touchSensitivity: .25
-  # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
-  # be used to manipulate objects outside of the OriDomi instance (e.g. sliding panels).
-  # x values are returned when folding left and right, y values for top and bottom.
-  # These are empty functions by default.
-  # Invoked with starting coordinate as first argument.
+  # Custom callbacks for touch/drag events. Each one is invoked with a relevant
+  # value so they can be used to manipulate objects outside of the OriDomi
+  # instance (e.g. sliding panels). x values are returned when folding left and
+  # right, y values for top and bottom. The second argument passed is the original
+  # touch or mouse event. These are empty functions by default. Invoked with
+  # starting coordinate as first argument.
   touchStartCallback: noOp
-  # Invoked with current movement distance.
+  # Invoked with the folded angle.
   touchMoveCallback: noOp
   # Inkoked with ending point.
   touchEndCallback: noOp
 
 
-# OriDomi Prototype
-# =================
+# Constructor
+# ===========
 
 class OriDomi
 
   constructor: (@el, options = {}) ->
     return unless isSupported
+    # Prevent constructor calls made without `new`.
     return new OriDomi arguments... unless @ instanceof OriDomi
+    # Support selector strings as well as elements.
     @el = document.querySelector @el if typeof @el is 'string'
+    # Make sure element is valid.
     unless @el and @el.nodeType is 1
       console?.warn 'OriDomi: First argument must be a DOM element'
       return
 
+    # Fill in passed options with defaults.
     @_settings = new ->
       for k, v of defaults
         if options[k]?
@@ -434,13 +442,18 @@ class OriDomi
           @[k] = v
       @
 
+    # The queue holds animation sequences.
     @_queue   = []
     @_panels  = {}
     @_stages  = {}
+    # Set the starting anchor to left.
     @_lastOp  = anchor: anchorList[0]
     @_shading = @_settings.shading
+    # Alias `shading: true` as hard shading.
     @_shading = 'hard' if @_shading is true
 
+    # The shader elements are constructed in a conditional so the process can be
+    # skipped if shading is disabled.
     if @_shading
       @_shaders    = {}
       shaderProtos = {}
@@ -452,6 +465,7 @@ class OriDomi
     stageProto.style[css.perspective] = @_settings.perspective + 'px'
 
     for anchor in anchorList
+      # Each anchor has a unique set of panels.
       @_panels[anchor] = []
       @_stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
       if @_shading
@@ -472,6 +486,7 @@ class OriDomi
     panelProto.style[css.transitionDuration]       = @_settings.speed + 'ms'
     panelProto.style[css.transitionTimingFunction] = @_settings.easingMethod
 
+    # This loop builds all of the panels.
     for axis in ['x', 'y']
       if axis is 'x'
         anchorSet   = anchorListV
@@ -484,10 +499,15 @@ class OriDomi
         metric      = 'height'
         classSuffix = 'H'
 
+      # Set the panel dimension to a percentage of the container.
       percent = 100 / count
 
-      mask = cloneEl maskProto, true, 'mask' + classSuffix
+      mask    = cloneEl maskProto, true, 'mask' + classSuffix
       content = mask.children[0]
+      # The inner content retains the original dimensions of the element
+      # while being inside a small slice. By multiplying 100% by the number of
+      # panels on this axis, the size reduction of the parent in undone and
+      # sizing flexibility is achieved.
       content.style.width   = content.style.height = '100%'
       content.style[metric] = content.style['max' + capitalize metric] = count * 100 + '%'
       if @_shading
@@ -499,9 +519,13 @@ class OriDomi
       for anchor, n in anchorSet
         for panelN in [0...count]
           panel = proto.cloneNode true
+          # Only the first panel has its size set to a percentage since subsequent
+          # panels are nested children and will match its size.
           panel.style[metric] = percent + '%' if panelN is 0
           content = panel.children[0].children[0]
 
+          # The inner content of each panel is offset relative to the panel
+          # index to display a contiguous composition.
           if n is 0
             content.style[anchor] = -panelN * 100 + '%'
             if panelN is 0
@@ -521,8 +545,10 @@ class OriDomi
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
           @_panels[anchor][panelN] = panel
+          # Panels are nested inside each other.
           @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
+        # Append the first panel to each stage.
         @_stages[anchor].appendChild @_panels[anchor][0]
 
     @_stageHolder = createEl 'holder'
@@ -530,14 +556,21 @@ class OriDomi
 
     @el.classList.add elClasses.active
     showEl @_stages.left
+    # The original element is cloned and hidden via transforms so the dimensions
+    # of the OriDomi content are maintained by it.
     @_cloneEl = cloneEl @el, true, 'clone'
     @_cloneEl.classList.remove elClasses.active
     hideEl @_cloneEl
+    # Once the clone is stored the original element is emptied and appened with
+    # the clone and the OriDomi content.
     @el.innerHTML   = ''
     @el.appendChild @_cloneEl
     @el.appendChild @_stageHolder
     @$el = $ @el if $
+    # An effect method is called since touch events rely on using the last
+    # method called.
     @accordion 0
+    # The ripple setting is converted to a number to allow boolean settings.
     @_settings.ripple = Number @_settings.ripple
     @_setTrans @_settings.speed, @_settings.ripple if @_settings.ripple
     @enableTouch() if @_settings.touchEnabled
@@ -546,12 +579,17 @@ class OriDomi
   # Internal Methods
   # ================
 
+  # This method is called for the action shifted off the queue.
   _step: =>
+    # Return if the composition is currently in transition or the queue is empty.
     return if @_inTrans or !@_queue.length
     @_inTrans = true
+    # Destructure action arguments from the front of the queue.
     [fn, angle, anchor, options] = @_queue.shift()
     @unfreeze() if @isFrozen
 
+    # A local function for the next action is created should the call need to be
+    # deferred (if the stage is folded up or on the wrong anchor).
     next = =>
       @_setCallback {angle, anchor, options, fn}
       args = [angle, anchor, options]
@@ -569,7 +607,7 @@ class OriDomi
   # This method tests if the called action is identical to the previous one.
   # If two identical operations were called in a row, the transition callback
   # wouldn't be called due to no animation taking place. This method reasons if
-  # movement has taken place, preventing this pitfall of transition listeners.
+  # movement has taken place, avoiding this pitfall of transition listeners.
   _isIdenticalOperation: (op) ->
     return true unless @_lastOp.fn
     return false if @_lastOp.reset
@@ -578,7 +616,7 @@ class OriDomi
     true
 
 
-  # `_callback` normalizes callback handling for all public methods.
+  # This method normalizes callback handling for all public methods.
   _setCallback: (operation) ->
     # If there was no transformation, invoke the callback immediately.
     if @_isIdenticalOperation operation
@@ -594,12 +632,11 @@ class OriDomi
   _onTransitionEnd: (e) =>
     # Remove the event listener immediately to prevent bubbling.
     e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, false
-    # Initialize transition teardown process.
+    # Initialize the transition teardown process.
     @_conclude @_lastOp.options.callback, e
 
 
-  # `_conclude` is used to handle the end process of transitions and to initialize
-  # queued operations.
+  # Used to handle the end process of transitions and to initialize queued operations.
   _conclude: (cb, event) =>
     defer =>
       @_inTrans = false
@@ -636,7 +673,8 @@ class OriDomi
                               translate#{ translate }px)
                               """
 
-  # `_normalizeAngle` validates a given angle by making sure it's a float and by
+
+  # This validates a given angle by making sure it's a float and by
   # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
@@ -656,9 +694,12 @@ class OriDomi
     @_iterate @_lastOp.anchor, (panel, i, len) => @_setPanelTrans arguments..., duration, delay
 
 
+  # This method changes the transition duration and delay of panels and shaders.
   _setPanelTrans: (panel, i, len, duration, delay) ->
     {anchor} = @_lastOp
     delayMs  = do =>
+      # Delay is a `ripple` value. The milliseconds are derived based on the
+      # speed setting and the number of panels.
       switch delay
         when 0 then 0
         when 1 then @_settings.speed / len * i
@@ -675,7 +716,7 @@ class OriDomi
     delayMs
 
 
-  # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
+  # Determines a shader's opacity based upon panel position, anchor, and angle.
   _setShader: (n, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
     abs     = Math.abs angle
@@ -734,12 +775,15 @@ class OriDomi
             "0, -#{ (@_settings.hPanels + 2) * 1 }px, 0)"
 
 
+  # If the composition needs to switch stages or fold up, it must first unfold
+  # all panels to 0 degrees.
   _stageReset: (anchor, cb) =>
     fn = (e) =>
       e.currentTarget.removeEventListener css.transitionEnd, fn, false if e
       @_showStage anchor
       defer cb
 
+    # If already unfolded to 0, immediately invoke the change function.
     return fn() if @_lastOp.angle is 0
     @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
 
@@ -872,7 +916,7 @@ class OriDomi
     @el.style.cursor = css.grab
     # Enable tweening again.
     @_setTrans @_settings.speed, @_settings.ripple
-    # Pass callback final value.
+    # Pass callback final coordinate.
     @_settings.touchEndCallback @["_#{ @_touchAxis }Last"], e
 
 
@@ -888,7 +932,11 @@ class OriDomi
     @_onTouchEnd e if e.toElement and !@el.contains e.toElement
 
 
+  # This method unfolds the composition after it's been folded up. It's private
+  # and doesn't use the decorator because it's used internally by other methods
+  # and skips the queue. Its public counterpart is a queued alias.
   _unfold: (callback) ->
+    # Return immediately unless the composition is actually folded up.
     return callback?() unless @isFoldedUp
     @_inTrans = true
 
@@ -909,6 +957,7 @@ class OriDomi
           , delay + @_settings.speed * .25
 
 
+  # This method is used by many others to iterate among panels within a given anchor.
   _iterate: (anchor, fn) ->
     fn.call @, panel, i, panels.length for panel, i in panels = @_panels[anchor]
 
@@ -917,6 +966,7 @@ class OriDomi
   # ==============
 
 
+  # Public setter for transition durations.
   setSpeed: (speed) ->
     @_setTrans (@_settings.speed = speed), @_settings.ripple
     @
@@ -964,7 +1014,7 @@ class OriDomi
       $.data @el, baseName, null if $
       # Remove the OriDomi element from the DOM.
       @el.innerHTML = @_cloneEl.innerHTML
-      # Reset original styles.
+      # Reset original styling.
       @el.classList.remove elClasses.active
       callback?()
     null
@@ -987,6 +1037,7 @@ class OriDomi
     @_setTouch false
 
 
+  # Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.
   setRipple: (dir = 1) ->
     @_settings.ripple = Number dir
     @_setTrans @_settings.speed, dir
@@ -999,6 +1050,8 @@ class OriDomi
     @
 
 
+  # Pause in the midst of an animation sequence, in milliseconds.
+  # E.g.: el.reveal(20).wait()
   wait: (ms) ->
     fn = => setTimeout @_conclude, ms
     if @_inTrans
