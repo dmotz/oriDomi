@@ -569,7 +569,7 @@ class OriDomi
     @$el = $ @el if $
     # An effect method is called since touch events rely on using the last
     # method called.
-    @accordion 0
+    @reset 0
     # The ripple setting is converted to a number to allow boolean settings.
     @_settings.ripple = Number @_settings.ripple
     @_setTrans @_settings.speed, @_settings.ripple if @_settings.ripple
