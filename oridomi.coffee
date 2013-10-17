@@ -966,6 +966,16 @@ class OriDomi
   # ==============
 
 
+  # Enables touch events.
+  enableTouch: ->
+    @_setTouch true
+
+
+  # Disables touch events.
+  disableTouch: ->
+    @_setTouch false
+
+
   # Public setter for transition durations.
   setSpeed: (speed) ->
     @_setTrans (@_settings.speed = speed), @_settings.ripple
@@ -1025,16 +1035,6 @@ class OriDomi
     @_queue = []
     defer => @_inTrans = false
     @
-
-
-  # Enables touch events.
-  enableTouch: ->
-    @_setTouch true
-
-
-  # Disables touch events.
-  disableTouch: ->
-    @_setTouch false
 
 
   # Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.
