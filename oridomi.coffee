@@ -1124,6 +1124,19 @@ class OriDomi
   unfold: prep (callback) -> @_unfold arguments...
 
 
+  # For custom folding behavior, you can pass a function to map that will
+  # determine the folding angle applied to each panel. The passed function
+  # is supplied with the input angle, the panel index, and the number of
+  # panels in the active anchor. Calling map returns a new function bound to
+  # the instance and the lambda, e.g. `oridomi.map(randomFn)(30).reveal(20)`.
+  map: (fn) ->
+    prep((angle, anchor, options) =>
+      @_iterate anchor, (panel, i, len) =>
+        deg = fn angle, i, len
+        @_transformPanel panel, deg, anchor, options.fracture
+    ).bind @
+
+
   # Convenience Methods
   # ===================
 
