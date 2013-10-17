@@ -9,7 +9,7 @@
   supportWarning = function(prop) {
     var isSupported;
     if (typeof console !== "undefined" && console !== null) {
-      console.warn("oriDomi: Missing support for `" + prop + "`.");
+      console.warn("OriDomi: Missing support for `" + prop + "`.");
     }
     return isSupported = false;
   };
@@ -131,7 +131,7 @@
 
   noOp = function() {};
 
-  $ = ((_ref = window.$) != null ? _ref.data : void 0) ? window.$ : null;
+  $ = ((_ref = window.jQuery || window.$) != null ? _ref.data : void 0) ? window.$ : null;
 
   isSupported = true;
 
@@ -143,9 +143,9 @@
 
   testEl = document.createElement('div');
 
-  prefixList = ['Webkit', 'Moz', 'ms'];
-
   styleBuffer = '';
+
+  prefixList = ['Webkit', 'Moz', 'ms'];
 
   baseName = 'oridomi';
 
@@ -193,18 +193,13 @@
       value = css[key];
       css[key] = testProp(value);
       if (!css[key]) {
-        supportWarning(value);
-        return;
+        return supportWarning(value);
       }
     }
     p3d = 'preserve-3d';
-    if (isSupported && css.transformStyle) {
-      testEl.style[css.transformStyle] = p3d;
-      if (testEl.style[css.transformStyle] !== p3d) {
-        isSupported = false;
-        supportWarning(p3d);
-        return;
-      }
+    testEl.style[css.transformStyle] = p3d;
+    if (testEl.style[css.transformStyle] !== p3d) {
+      return supportWarning(p3d);
     }
     css.gradientProp = (function() {
       var hyphenated, prefix, _i, _len;
@@ -256,16 +251,18 @@
       }
     })();
     addStyle(elClasses.active, {
-      backgroundColor: 'transparent',
-      backgroundImage: 'none',
-      boxSizing: 'border-box',
-      border: 'none',
-      outline: 'none',
-      position: 'relative'
+      backgroundColor: 'transparent !important',
+      backgroundImage: 'none !important',
+      boxSizing: 'border-box !important',
+      border: 'none !important',
+      outline: 'none !important',
+      padding: '0 !important',
+      position: 'relative',
+      transformStyle: p3d + ' !important'
     });
     addStyle(elClasses.clone, {
-      margin: '0',
-      boxSizing: 'border-box'
+      margin: '0 !important',
+      boxSizing: 'border-box !important'
     });
     addStyle(elClasses.holder, {
       width: '100%',
@@ -312,12 +309,10 @@
       });
     }
     addStyle(elClasses.content, {
-      width: '100%',
-      height: '100%',
-      margin: '0',
-      position: 'relative',
-      float: 'none',
-      boxSizing: 'border-box'
+      margin: '0 !important',
+      position: 'relative !important',
+      float: 'none !important',
+      boxSizing: 'border-box !important'
     });
     addStyle(elClasses.mask, {
       width: '100%',
@@ -367,7 +362,6 @@
     oriDomiClass: 'oridomi',
     shadingIntensity: 1,
     easingMethod: '',
-    forceAntialiasing: false,
     touchEnabled: true,
     touchSensitivity: .25,
     touchStartCallback: noOp,
@@ -406,7 +400,7 @@
       }
       if (!(this.el && this.el.nodeType === 1)) {
         if (typeof console !== "undefined" && console !== null) {
-          console.warn('oriDomi: First argument must be a DOM element');
+          console.warn('OriDomi: First argument must be a DOM element');
         }
         return;
       }
@@ -427,8 +421,10 @@
       this._lastOp = {
         anchor: anchorList[0]
       };
-      this._xLast = this._yLast = 0;
       this._shading = this._settings.shading;
+      if (this._shading === true) {
+        this._shading = 'hard';
+      }
       if (this._shading) {
         this._shaders = {};
         shaderProtos = {};
@@ -480,10 +476,14 @@
         }
         percent = 100 / count;
         mask = cloneEl(maskProto, true, 'mask' + classSuffix);
-        mask.children[0].style[metric] = count * 100 + '%';
-        for (_m = 0, _len4 = anchorSet.length; _m < _len4; _m++) {
-          anchor = anchorSet[_m];
-          mask.appendChild(shaderProtos[anchor]);
+        content = mask.children[0];
+        content.style.width = content.style.height = '100%';
+        content.style[metric] = content.style['max' + capitalize(metric)] = count * 100 + '%';
+        if (this._shading) {
+          for (_m = 0, _len4 = anchorSet.length; _m < _len4; _m++) {
+            anchor = anchorSet[_m];
+            mask.appendChild(shaderProtos[anchor]);
+          }
         }
         proto = cloneEl(panelProto, false, 'panel' + classSuffix);
         proto.appendChild(mask);
@@ -532,11 +532,11 @@
       }
       this.el.classList.add(elClasses.active);
       showEl(this._stages.left);
-      this.cloneEl = cloneEl(this.el, true, 'clone');
-      this.cloneEl.classList.remove(elClasses.active);
-      hideEl(this.cloneEl);
+      this._cloneEl = cloneEl(this.el, true, 'clone');
+      this._cloneEl.classList.remove(elClasses.active);
+      hideEl(this._cloneEl);
       this.el.innerHTML = '';
-      this.el.appendChild(this.cloneEl);
+      this.el.appendChild(this._cloneEl);
       this.el.appendChild(this._stageHolder);
       if ($) {
         this.$el = $(this.el);
@@ -621,41 +621,42 @@
 
     OriDomi.prototype._onTransitionEnd = function(e) {
       e.currentTarget.removeEventListener(css.transitionEnd, this._onTransitionEnd, false);
-      return this._conclude(this._lastOp.options.callback);
+      return this._conclude(this._lastOp.options.callback, e);
     };
 
-    OriDomi.prototype._conclude = function(cb) {
+    OriDomi.prototype._conclude = function(cb, event) {
       var _this = this;
       return defer(function() {
         _this._inTrans = false;
         _this._step();
-        return typeof cb === "function" ? cb() : void 0;
+        return typeof cb === "function" ? cb(event, _this) : void 0;
       });
     };
 
-    OriDomi.prototype._transform = function(angle, anchor, fracture) {
-      var axes, translate;
+    OriDomi.prototype._transformPanel = function(el, angle, anchor, fracture) {
+      var translate, x, y, z;
+      x = y = z = 0;
       switch (anchor) {
         case 'left':
-          axes = [0, angle, 0];
+          y = angle;
           translate = 'X(-1';
           break;
         case 'right':
-          axes = [0, -angle, 0];
+          y = -angle;
           translate = 'X(1';
           break;
         case 'top':
-          axes = [-angle, 0, 0];
+          x = -angle;
           translate = 'Y(-1';
           break;
         case 'bottom':
-          axes = [angle, 0, 0];
+          x = angle;
           translate = 'Y(1';
       }
       if (fracture) {
-        axes = [angle, angle, angle];
+        x = y = z = angle;
       }
-      return "rotateX(" + axes[0] + "deg) rotateY(" + axes[1] + "deg) rotateZ(" + axes[2] + "deg) translate" + translate + "px)";
+      return el.style[css.transform] = "rotateX(" + x + "deg)\nrotateY(" + y + "deg)\nrotateZ(" + z + "deg)\ntranslate" + translate + "px)";
     };
 
     OriDomi.prototype._normalizeAngle = function(angle) {
@@ -681,7 +682,7 @@
     };
 
     OriDomi.prototype._setPanelTrans = function(panel, i, len, duration, delay) {
-      var anchor, delayMs, side, _i, _len, _ref1,
+      var anchor, delayMs, shader, side, _i, _len, _ref1,
         _this = this;
       anchor = this._lastOp.anchor;
       delayMs = (function() {
@@ -700,8 +701,9 @@
         _ref1 = (__indexOf.call(anchorListV, anchor) >= 0 ? anchorListV : anchorListH);
         for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
           side = _ref1[_i];
-          this._shaders[anchor][side][i].style[css.transitionDuration] = duration + 'ms';
-          this._shaders[anchor][side][i].style[css.transitionDelay] = delayMs + 'ms';
+          shader = this._shaders[anchor][side][i];
+          shader.style[css.transitionDuration] = duration + 'ms';
+          shader.style[css.transitionDelay] = delayMs + 'ms';
         }
       }
       return delayMs;
@@ -779,13 +781,12 @@
         return fn();
       }
       this._panels[this._lastOp.anchor][0].addEventListener(css.transitionEnd, fn, false);
-      this._iterate(this._lastOp.anchor, function(panel, i) {
-        panel.style[css.transform] = _this._transform(0, _this._lastOp.anchor);
+      return this._iterate(this._lastOp.anchor, function(panel, i) {
+        _this._transformPanel(panel, 0, _this._lastOp.anchor);
         if (_this._shading) {
           return _this._setShader(i, _this._lastOp.anchor, 0);
         }
       });
-      return this;
     };
 
     OriDomi.prototype._getLonghandAnchor = function(shorthand) {
@@ -816,9 +817,9 @@
         bool = this._touchEnabled;
       }
       if (bool) {
-        return this._stageHolder.style.cursor = css.grab;
+        return this.el.style.cursor = css.grab;
       } else {
-        return this._stageHolder.style.cursor = 'default';
+        return this.el.style.cursor = 'default';
       }
     };
 
@@ -844,9 +845,9 @@
         for (_j = 0, _len1 = eventPair.length; _j < _len1; _j++) {
           eString = eventPair[_j];
           if (!(eString === 'TouchLeave' && !mouseLeaveSupport)) {
-            this._stageHolder[listenFn](eString.toLowerCase(), this['_on' + eventPair[0]], false);
+            this.el[listenFn](eString.toLowerCase(), this['_on' + eventPair[0]], false);
           } else {
-            this._stageHolder[listenFn]('mouseout', this._onMouseOut, false);
+            this.el[listenFn]('mouseout', this._onMouseOut, false);
             break;
           }
         }
@@ -862,7 +863,7 @@
       e.preventDefault();
       this.emptyQueue();
       this._touchStarted = true;
-      this._stageHolder.style.cursor = css.grabbing;
+      this.el.style.cursor = css.grabbing;
       this._setTrans(0, 0);
       this._touchAxis = (_ref1 = this._lastOp.anchor, __indexOf.call(anchorListV, _ref1) >= 0) ? 'x' : 'y';
       this["_" + this._touchAxis + "Last"] = this._lastOp.angle;
@@ -872,7 +873,7 @@
       } else {
         this[axis1] = e.targetTouches[0]["page" + (this._touchAxis.toUpperCase())];
       }
-      return this._settings.touchStartCallback(this[axis1]);
+      return this._settings.touchStartCallback(this[axis1], e);
     };
 
     OriDomi.prototype._onTouchMove = function(e) {
@@ -906,27 +907,26 @@
           delta = 0;
         }
       }
-      delta = this._normalizeAngle(delta);
-      this._lastOp.angle = delta;
+      this._lastOp.angle = delta = this._normalizeAngle(delta);
       this._lastOp.fn.call(this, delta, this._lastOp.anchor, this._lastOp.options);
-      return this._settings.touchMoveCallback(delta);
+      return this._settings.touchMoveCallback(delta, e);
     };
 
-    OriDomi.prototype._onTouchEnd = function() {
+    OriDomi.prototype._onTouchEnd = function(e) {
       if (!this._touchEnabled) {
         return;
       }
       this._touchStarted = this._inTrans = false;
-      this._stageHolder.style.cursor = css.grab;
+      this.el.style.cursor = css.grab;
       this._setTrans(this._settings.speed, this._settings.ripple);
-      return this._settings.touchEndCallback(this["_" + this._touchAxis + "Last"]);
+      return this._settings.touchEndCallback(this["_" + this._touchAxis + "Last"], e);
     };
 
-    OriDomi.prototype._onTouchLeave = function() {
+    OriDomi.prototype._onTouchLeave = function(e) {
       if (!(this._touchEnabled && this._touchStarted)) {
         return;
       }
-      return this._onTouchEnd();
+      return this._onTouchEnd(e);
     };
 
     OriDomi.prototype._onMouseOut = function(e) {
@@ -934,7 +934,7 @@
         return;
       }
       if (e.toElement && !this.el.contains(e.toElement)) {
-        return this._onTouchEnd();
+        return this._onTouchEnd(e);
       }
     };
 
@@ -949,7 +949,7 @@
         delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([_this._settings.speed], [1]));
         return (function(panel, i, delay) {
           return defer(function() {
-            panel.style[css.transform] = _this._transform(0, _this._lastOp.anchor);
+            _this._transformPanel(panel, 0, _this._lastOp.anchor);
             return setTimeout(function() {
               showEl(panel.children[0]);
               if (i === len - 1) {
@@ -958,6 +958,7 @@
                   callback();
                 }
                 _this._lastOp.fn = _this.accordion;
+                _this._lastOp.angle = 0;
               }
               return defer(function() {
                 return panel.style[css.transitionDuration] = _this._settings.speed;
@@ -979,6 +980,14 @@
       return _results;
     };
 
+    OriDomi.prototype.enableTouch = function() {
+      return this._setTouch(true);
+    };
+
+    OriDomi.prototype.disableTouch = function() {
+      return this._setTouch(false);
+    };
+
     OriDomi.prototype.setSpeed = function(speed) {
       this._setTrans((this._settings.speed = speed), this._settings.ripple);
       return this;
@@ -994,7 +1003,7 @@
         this._stageReset(this._lastOp.anchor, function() {
           _this.isFrozen = true;
           hideEl(_this._stageHolder);
-          showEl(_this.cloneEl);
+          showEl(_this._cloneEl);
           _this._setCursor(false);
           return typeof callback === "function" ? callback() : void 0;
         });
@@ -1005,7 +1014,7 @@
     OriDomi.prototype.unfreeze = function() {
       if (this.isFrozen) {
         this.isFrozen = false;
-        hideEl(this.cloneEl);
+        hideEl(this._cloneEl);
         showEl(this._stageHolder);
         this._setCursor();
         this._lastOp.angle = 0;
@@ -1020,7 +1029,7 @@
         if ($) {
           $.data(_this.el, baseName, null);
         }
-        _this.el.innerHTML = _this.cloneEl.innerHTML;
+        _this.el.innerHTML = _this._cloneEl.innerHTML;
         _this.el.classList.remove(elClasses.active);
         return typeof callback === "function" ? callback() : void 0;
       });
@@ -1034,14 +1043,6 @@
         return _this._inTrans = false;
       });
       return this;
-    };
-
-    OriDomi.prototype.enableTouch = function() {
-      return this._setTouch(true);
-    };
-
-    OriDomi.prototype.disableTouch = function() {
-      return this._setTouch(false);
     };
 
     OriDomi.prototype.setRipple = function(dir) {
@@ -1072,6 +1073,57 @@
       return this;
     };
 
+    OriDomi.prototype.modifyContent = function(fn) {
+      var anchor, i, panel, selectors, set, _i, _j, _len, _len1, _ref1;
+      if (typeof fn !== 'function') {
+        selectors = fn;
+        set = function(el, content, style) {
+          var key, value;
+          if (content) {
+            el.innerHTML = content;
+          }
+          if (style) {
+            for (key in style) {
+              value = style[key];
+              el.style[key] = value;
+            }
+            return null;
+          }
+        };
+        fn = function(el) {
+          var content, match, selector, style, value, _i, _len, _ref1;
+          for (selector in selectors) {
+            value = selectors[selector];
+            content = style = null;
+            if (typeof value === 'string') {
+              content = value;
+            } else {
+              content = value.content, style = value.style;
+            }
+            if (selector === '') {
+              set(el, content, style);
+              continue;
+            }
+            _ref1 = el.querySelectorAll(selector);
+            for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+              match = _ref1[_i];
+              set(match, content, style);
+            }
+          }
+          return null;
+        };
+      }
+      for (_i = 0, _len = anchorList.length; _i < _len; _i++) {
+        anchor = anchorList[_i];
+        _ref1 = this._panels[anchor];
+        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+          panel = _ref1[i];
+          fn(panel.children[0].children[0], i, anchor);
+        }
+      }
+      return this;
+    };
+
     OriDomi.prototype.accordion = prep(function(angle, anchor, options) {
       var _this = this;
       return this._iterate(anchor, function(panel, i) {
@@ -1095,7 +1147,7 @@
         if (options.stairs) {
           deg *= -1;
         }
-        panel.style[css.transform] = _this._transform(deg, anchor, options.fracture);
+        _this._transformPanel(panel, deg, anchor, options.fracture);
         if (_this._shading && !(i === 0 && options.sticky) && Math.abs(deg) !== 180) {
           return _this._setShader(i, anchor, deg);
         }
@@ -1106,7 +1158,7 @@
       var _this = this;
       angle /= __indexOf.call(anchorListV, anchor) >= 0 ? this._settings.vPanels : this._settings.hPanels;
       return this._iterate(anchor, function(panel, i) {
-        panel.style[css.transform] = _this._transform(angle, anchor);
+        _this._transformPanel(panel, angle, anchor);
         if (_this._shading) {
           return _this._setShader(i, anchor, 0);
         }
@@ -1115,10 +1167,10 @@
 
     OriDomi.prototype.ramp = prep(function(angle, anchor, options) {
       var _this = this;
-      this._panels[anchor][1].style[css.transform] = this._transform(angle, anchor);
+      this._transformPanel(this._panels[anchor][1], angle, anchor);
       return this._iterate(anchor, function(panel, i) {
-        if (i > 1) {
-          _this._panels[anchor][i].style[css.transform] = _this._transform(0, anchor);
+        if (i !== 1) {
+          _this._transformPanel(panel, 0, anchor);
         }
         if (_this._shading) {
           return _this._setShader(i, anchor, 0);
@@ -1142,7 +1194,7 @@
           delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([duration], [2]));
           return (function(panel, i, delay) {
             return defer(function() {
-              panel.style[css.transform] = _this._transform((i === 0 ? 90 : 170), anchor);
+              _this._transformPanel(panel, (i === 0 ? 90 : 170), anchor);
               return setTimeout(function() {
                 if (i === 0) {
                   _this._inTrans = false;
@@ -1161,26 +1213,21 @@
       return this._unfold.apply(this, arguments);
     });
 
+    OriDomi.prototype.map = function(fn) {
+      var _this = this;
+      return prep(function(angle, anchor, options) {
+        return _this._iterate(anchor, function(panel, i, len) {
+          var deg;
+          deg = fn(angle, i, len);
+          return _this._transformPanel(panel, deg, anchor, options.fracture);
+        });
+      }).bind(this);
+    };
+
     OriDomi.prototype.reset = function(callback) {
       return this.accordion(0, {
         callback: callback
       });
-    };
-
-    OriDomi.prototype.collapse = function(anchor, options) {
-      if (options == null) {
-        options = {};
-      }
-      options.sticky = false;
-      return this.accordion(-this._settings.maxAngle, anchor, options);
-    };
-
-    OriDomi.prototype.collapseAlt = function(anchor, options) {
-      if (options == null) {
-        options = {};
-      }
-      options.sticky = false;
-      return this.accordion(this._settings.maxAngle, anchor, options);
     };
 
     OriDomi.prototype.reveal = function(angle, anchor, options) {
@@ -1215,6 +1262,22 @@
       return this.accordion(angle / 10, anchor, options);
     };
 
+    OriDomi.prototype.collapse = function(anchor, options) {
+      if (options == null) {
+        options = {};
+      }
+      options.sticky = false;
+      return this.accordion(-this._settings.maxAngle, anchor, options);
+    };
+
+    OriDomi.prototype.collapseAlt = function(anchor, options) {
+      if (options == null) {
+        options = {};
+      }
+      options.sticky = false;
+      return this.accordion(this._settings.maxAngle, anchor, options);
+    };
+
     OriDomi.VERSION = '0.3.0';
 
     OriDomi.isSupported = isSupported;
@@ -1223,52 +1286,53 @@
 
   })();
 
-  window.OriDomi = OriDomi;
-
   if (typeof module !== "undefined" && module !== null ? module.exports : void 0) {
     module.exports = OriDomi;
+  } else if (typeof define !== "undefined" && define !== null ? define.amd : void 0) {
+    define(function() {
+      return OriDomi;
+    });
+  } else {
+    window.OriDomi = OriDomi;
   }
 
-  if ($) {
-    $.prototype.oriDomi = function(options) {
-      var args, el, instance, methodName, _i, _j, _len, _len1;
-      if (!isSupported) {
-        return this;
-      }
-      if (typeof options === 'string') {
-        methodName = options;
-        if (typeof OriDomi.prototype[methodName] !== 'function') {
-          if (typeof console !== "undefined" && console !== null) {
-            console.warn("oriDomi: No such method '" + methodName + "'");
-          }
-          return this;
-        }
-        args = Array.prototype.slice.call(arguments);
-        args.shift();
-        for (_i = 0, _len = this.length; _i < _len; _i++) {
-          el = this[_i];
-          if (!(instance = $.data(el, baseName))) {
-            if (typeof console !== "undefined" && console !== null) {
-              console.warn("oriDomi: Can't call " + methodName + ", oriDomi hasn't been initialized on this element");
-            }
-            return this;
-          }
-          instance[methodName](args);
-        }
-        return this;
-      } else {
-        for (_j = 0, _len1 = this.length; _j < _len1; _j++) {
-          el = this[_j];
-          if (instance = $.data(el, baseName)) {
-            return instance;
-          } else {
-            $.data(el, baseName, new OriDomi(el, options));
-          }
-        }
-        return this;
-      }
-    };
+  if (!$) {
+    return;
   }
+
+  $.prototype.oriDomi = function(options) {
+    var el, instance, method, methodName, _i, _len;
+    if (!isSupported) {
+      return this;
+    }
+    if (typeof options === 'string') {
+      methodName = options;
+      if (typeof (method = OriDomi.prototype[methodName]) !== 'function') {
+        if (typeof console !== "undefined" && console !== null) {
+          console.warn("OriDomi: No such method `" + methodName + "`");
+        }
+        return this;
+      }
+      if (!(instance = $.data(this[0], baseName))) {
+        if (typeof console !== "undefined" && console !== null) {
+          console.warn("OriDomi: Can't call " + methodName + ", OriDomi hasn't been initialized on this element");
+        }
+        return this;
+      }
+      method.apply(instance, [].slice.call(arguments).slice(1));
+      return this;
+    } else {
+      for (_i = 0, _len = this.length; _i < _len; _i++) {
+        el = this[_i];
+        if (instance = $.data(el, baseName)) {
+          return instance;
+        } else {
+          $.data(el, baseName, new OriDomi(el, options));
+        }
+      }
+      return this;
+    }
+  };
 
 }).call(this);
 
