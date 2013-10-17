@@ -569,7 +569,7 @@ class OriDomi
     @$el = $ @el if $
     # An effect method is called since touch events rely on using the last
     # method called.
-    @reset 0
+    @accordion 0
     # The ripple setting is converted to a number to allow boolean settings.
     @_settings.ripple = Number @_settings.ripple
     @_setTrans @_settings.speed, @_settings.ripple if @_settings.ripple
@@ -1061,6 +1061,12 @@ class OriDomi
     @
 
 
+  # This method is used to externally manipulate the styling or contents of the
+  # composition. Manipulation instructions can be supplied via a function (invoked
+  # with each panel element), or a map of selectors with instructions.
+  # Instruction values can be text to implicitly update `innerHTML` content or
+  # objects with `style` and/or `content` keys. Style keys should contain object
+  # literals with camel-cased CSS properties as keys.
   modifyContent: (fn) ->
     if typeof fn isnt 'function'
       selectors = fn
@@ -1097,11 +1103,12 @@ class OriDomi
   # ==============
 
 
-  # OriDomi's most basic effect. Transforms the target like its namesake.
+  # Base effect with alternating peaks and valleys.
+  # `reveal` relies on it by calling it with `sticky: true` to keep the first
+  # panel flat.
   accordion: prep (angle, anchor, options) ->
-    # Loop through the panels in this stage.
     @_iterate anchor, (panel, i) =>
-      # If it's an odd-numbered panel, reverse the angle.
+      # With an odd-numbered panel, reverse the angle.
       if i % 2 isnt 0 and !options.twist
         deg = -angle
       else
@@ -1122,13 +1129,13 @@ class OriDomi
 
       # Set the CSS transformation.
       @_transformPanel panel, deg, anchor, options.fracture
-      # Apply shaders.
+
       if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
 
-  # `curl` appears to bend rather than fold the paper. Its curves can appear smoother
-  # with higher panel counts.
+  # This effect appears to bend rather than fold the paper. Its curves can
+  # appear smoother with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
     angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
@@ -1138,14 +1145,14 @@ class OriDomi
       @_setShader i, anchor, 0 if @_shading
 
 
-  # `ramp` lifts up all panels after the first one.
+  # Lifts up all panels after the first one.
   ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
     @_transformPanel @_panels[anchor][1], angle, anchor
 
-    # For all but the first two panels, set the angle to 0.
+    # For all but the second panel, set the angle to 0.
     @_iterate anchor, (panel, i) =>
-      @_transformPanel panel, 0, anchor if i > 1
+      @_transformPanel panel, 0, anchor if i isnt 1
       @_setShader i, anchor, 0 if @_shading
 
 
@@ -1173,7 +1180,7 @@ class OriDomi
             , delay + @_settings.speed * .25
 
 
-  # The inverse of `foldUp`.
+  # This is the queued version of `_unfold`.
   unfold: prep (callback) -> @_unfold arguments...
 
 
@@ -1194,21 +1201,9 @@ class OriDomi
   # ===================
 
 
-  # Reset handles resetting all panels back to zero degrees.
+  # Resets all panels back to zero degrees.
   reset: (callback) ->
     @accordion 0, {callback}
-
-
-  # Convenience proxy to accordion-fold instance to maximum angle.
-  collapse: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion -@_settings.maxAngle, anchor, options
-
-
-  # Same as `collapse`, but uses positive angle for slightly different effect.
-  collapseAlt: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion @_settings.maxAngle, anchor, options
 
 
   # Simply proxy for calling `accordion` with `sticky` enabled.
@@ -1224,20 +1219,32 @@ class OriDomi
     @accordion angle, anchor, options
 
 
-  # `fracture: true` proxy.
+  # The composition is split apart by its panels rather than folded.
   fracture: (angle, anchor, options = {}) ->
     options.fracture = true
     @accordion angle, anchor, options
 
 
-  # `twist: true` proxy.
+  # Similar to `fracture`, but the panels are twisted as well.
   twist: (angle, anchor, options = {}) ->
     options.fracture = options.twist = true
     @accordion angle / 10, anchor, options
 
 
-  # Class Members
-  # =============
+  # Convenience proxy to accordion-fold instance to maximum angle.
+  collapse: (anchor, options = {}) ->
+    options.sticky = false
+    @accordion -@_settings.maxAngle, anchor, options
+
+
+  # Same as `collapse`, but uses positive angle for slightly different effect.
+  collapseAlt: (anchor, options = {}) ->
+    options.sticky = false
+    @accordion @_settings.maxAngle, anchor, options
+
+
+  # Statics
+  # =======
 
 
   # Set a version flag for easy external retrieval.
