@@ -35,6 +35,7 @@
         <li><a href="#content-manipulation">Content manipulation</a></li>
         <li><a href="#ripple">Ripple</a></li>
         <li><a href="#responsive">Responsive</a></li>
+        <li><a href="#custom">Custom behavior</a></li>
         <li><a href="#minutiae">Minuti&aelig;</a></li>
       </ul>
     </li>
@@ -461,6 +462,41 @@ folded.setRipple(2);
       <a href="http://oxism.com">personal site</a>.
     </p>
 
+
+    <h2 id="custom">Custom behavior</h2>
+
+    <p>
+      And now you&rsquo;ve decided the built-in effects just aren&rsquo;t good
+      enough for you?
+    </p>
+
+    <p>
+      Luckily, you can precisely control the folding behavior of every panel by
+      passing a custom function to the <code>map()</code> method:
+    </p>
+
+<pre>
+<code>
+folded.map(function(angle, index, length){ return angle * index * Math.random() })(20);
+</code>
+</pre>
+
+    <p>
+      In the contrived example above, an anonymous function is passed to
+      <code>map()</code> that simply multiplies the supplied angle by a given
+      panel&rsquo;s index and a random decimal. The function is called for every
+      panel in the series and may return a different value for each panel based
+      on the same input value.
+    </p>
+
+    <p>
+      Since the function you supply is called with the panel index and the set
+      length, you can create some complex behavior based on evens/odds, angle ranges,
+      or special behavior based on first/last position. For example, if you wanted
+      to create a fold-in effect that keeps the first and last panels flat against
+      the page surface, your function could return different values based on the
+      index and length arguments supplied to it.
+    </p>
 
     <h2 id="minutiae">Minuti&aelig;</h2>
 
