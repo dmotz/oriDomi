@@ -105,14 +105,6 @@
         <div class="label">stairs(18)</div>
         <div class="button" data-n="3">fold</div>
       </li>
-
-<!--       <li>
-        <div class="demo demo5">
-          <h3>Petrodollars</h3>
-        </div>
-        <div class="label">stairs(), 4 panels</div>
-      </li> -->
-
     </ul>
 
   </section>
@@ -125,11 +117,11 @@
       <li>works with media queries</li>
       <li>~20k minified</li>
       <li>animation queueing</li>
-      <li>optional jQuery plugin</li>
       <li>iOS compatible</li>
-      <li>touch / mouse handling &amp; callbacks</li>
-      <li>animation callbacks</li>
+      <li>touch / mouse handlers &amp; callbacks</li>
       <li>fluent interface</li>
+      <li>animation callbacks</li>
+      <li>optional jQuery plugin</li>
     </ul>
   </section>
 
@@ -385,7 +377,7 @@ var slider = new Oridomi('.slider', {
 <pre>
 <code>
 folded.modifyContent(function(el) {
-  el.querySelector('h1').innerHTML = 'turn and face the strange'
+  el.querySelector('h1').innerHTML = 'ch-ch-ch-ch-changes... turn and face the strange'
   el.style.backgroundColor = '#000';
 });
 </code>
@@ -394,10 +386,10 @@ folded.modifyContent(function(el) {
     <p>
       By passing a function to <code>modifyContent()</code>, you can easily apply
       your manipulations on every panel in the composition, with the first argument
-      referring an individual panel element. <code>modifyContent()</code> also
+      referring to an individual panel element. <code>modifyContent()</code> also
       passes to the supplied function the anchor (top, left, right, or bottom)
-      and the panel's index within that anchor (as the second and third arguments
-      respectively) should you want to make precise and unique manipulations.
+      and the panel&rsquo;s index within that anchor (as the second and third
+      arguments respectively) should you want to make precise and unique manipulations.
     </p>
 
     <p>
@@ -460,7 +452,7 @@ folded.setRipple(2);
       OriDomi compositions adapt to dynamic dimensions just as well as normal
       elements. This means that if your OriDomi composition's size is changed
       by percentage-based sizing, media queries, CSS transitions, scripting, et
-      cetera, the panels will resize themselves accordingly.
+      cetera, the panels will resize themselves relative to their parent container.
     </p>
 
     <p>
@@ -528,8 +520,9 @@ folded.map(function(angle, index, length){ return angle * index * Math.random() 
     <h1>Coda</h1>
 
     <p>
-      I usually tweet about updates and other projects I&rsquo;m working on, so
-      <a href="http://twitter.com/dcmotz">follow me</a> if that interests you.
+      I usually tweet about updates and other projects I&rsquo;m working on.
+      <a href="http://twitter.com/dcmotz">Follow me</a> if that sounds like it
+      might interest you.
     </p>
 
     <p>
@@ -543,7 +536,7 @@ folded.map(function(angle, index, length){ return angle * index * Math.random() 
 
 
   <footer>
-    &infin; ex libris <a href="http://oxism.com">oxism.com</a>
+    &infin; <a href="http://oxism.com">oxism.com</a>
   </footer>
 
   <script src="oridomi.js"></script>
