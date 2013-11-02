@@ -293,6 +293,7 @@ do ->
   addStyle elClasses.clone,
     margin:    '0 !important'
     boxSizing: 'border-box !important'
+    overflow:  'hidden !important'
 
   addStyle elClasses.holder,
     width:          '100%'
@@ -333,6 +334,7 @@ do ->
     position:  'relative !important'
     float:     'none !important'
     boxSizing: 'border-box !important'
+    overflow:  'hidden !important'
 
   addStyle elClasses.mask,
     width:              '100%'
