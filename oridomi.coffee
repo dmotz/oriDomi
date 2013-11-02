@@ -1192,8 +1192,7 @@ class OriDomi
   map: (fn) ->
     prep((angle, anchor, options) =>
       @_iterate anchor, (panel, i, len) =>
-        deg = fn angle, i, len
-        @_transformPanel panel, deg, anchor, options.fracture
+        @_transformPanel panel, fn(angle, i, len), anchor, options.fracture
     ).bind @
 
 
