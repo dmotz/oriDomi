@@ -9,6 +9,10 @@
 
 'use strict'
 
+# This variable is set to true and negated later if the browser does
+# not support OriDomi.
+isSupported = true
+
 # Utility Functions
 # ================
 
@@ -151,10 +155,6 @@ noOp = ->
 # If it doesn't exist, set to null so OriDomi knows we are working without jQuery.
 # OriDomi doesn't require it to work, but offers a useful plugin bridge if present.
 $ = if (window.jQuery or window.$)?.data then window.$ else null
-
-# This variable is set to true and negated later if the browser does
-# not support OriDomi.
-isSupported = true
 
 # List of anchors and their corresponding axis pairs.
 anchorList  = ['left', 'right', 'top', 'bottom']
