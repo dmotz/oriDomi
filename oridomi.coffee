@@ -104,6 +104,7 @@ prep = (fn) ->
       switch fn.length
         when 1
           opt.callback = a0
+          return opt.callback?() unless @isFoldedUp
         when 2
           if typeof a0 is 'function'
             opt.callback = a0
@@ -943,7 +944,6 @@ class OriDomi
   # and skips the queue. Its public counterpart is a queued alias.
   _unfold: (callback) ->
     # Return immediately unless the composition is actually folded up.
-    return callback?() unless @isFoldedUp
     @_inTrans = true
 
     @_iterate @_lastOp.anchor, (panel, i, len) =>
