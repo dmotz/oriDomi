@@ -77,7 +77,11 @@ docs    = announce 'docs',    (args, cb) ->
   exec 'docco oridomi.coffee', print cb
 
 demo    = announce 'demo',    (args, cb) ->
-  exec 'stylus -u nib demo/demo.styl', print cb
+  tgthr
+    coffee: (cb) -> exec 'coffee -mc demo/demo.coffee', print cb
+    styl:   (cb) -> exec 'stylus -u nib demo/demo.styl', print cb
+  , -> cb null
+
 
 
 task 'build',   'compile, minify, and generate annotated source', build
@@ -86,5 +90,5 @@ task 'compile', 'compile .coffee to .js',                         compile
 task 'minify',  'compress .js for production',                    minify
 task 'docs',    'generate annotated source page in ./docs',       docs
 task 'stats',   'output filesize stats',                          stats
-task 'demo',    'compile demo site stylesheet',                   demo
+task 'demo',    'compile doc site .coffee and .styl',             demo
 
