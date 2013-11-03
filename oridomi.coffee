@@ -600,7 +600,10 @@ class OriDomi
       fn.apply @, args
 
     if @isFoldedUp
-      @_unfold next
+      if fn.length is 2
+        next()
+      else
+        @_unfold next
     else if anchor isnt @_lastOp.anchor
       @_stageReset anchor, next
     else
@@ -1161,8 +1164,8 @@ class OriDomi
 
   # Hides the element by folding each panel in a cascade of animations.
   foldUp: prep (anchor, callback) ->
+    return callback?() if @isFoldedUp
     @_stageReset anchor, =>
-      return callback?() if @isFoldedUp
       @_inTrans = @isFoldedUp = true
 
       @_iterate anchor, (panel, i, len) =>
