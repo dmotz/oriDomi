@@ -1011,7 +1011,7 @@ class OriDomi
       @isFrozen = false
       # Swap the visibility of the elements.
       hideEl @_cloneEl
-      showEl @_stageHolder
+      @_stageHolder.style[css.transform] = 'translateY(-100%)'
       @_setCursor()
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
       @_lastOp.angle = 0
