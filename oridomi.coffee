@@ -943,9 +943,7 @@ class OriDomi
   # and doesn't use the decorator because it's used internally by other methods
   # and skips the queue. Its public counterpart is a queued alias.
   _unfold: (callback) ->
-    # Return immediately unless the composition is actually folded up.
     @_inTrans = true
-
     @_iterate @_lastOp.anchor, (panel, i, len) =>
       delay = @_setPanelTrans arguments..., @_settings.speed, 1
 
