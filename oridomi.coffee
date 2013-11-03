@@ -104,6 +104,8 @@ prep = (fn) ->
       switch fn.length
         when 1
           opt.callback = a0
+          # If the composition is already folded up, skip the queueing process
+          # and invoke the supplied callback immediately.
           return opt.callback?() unless @isFoldedUp
         when 2
           if typeof a0 is 'function'
