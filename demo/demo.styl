@@ -1,5 +1,9 @@
 @import 'nib'
 
+$helv    = 'Helvetica Neue', Helvetica, Arial, sans-serif
+$advBold = 'Adventor Bold', $helv
+$abril   = 'Abril Fatface', 'Hoefler Text', Constantia, Palatino, Georgia, serif
+
 @font-face
   font-family: 'Adventor Regular'
   src: url('./fonts/adventor-regular.eot')
@@ -55,14 +59,14 @@ body
   background-color: #fff
   color: #333
   margin: 0 auto
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+  font-family: $helv
   text-rendering: optimizeLegibility
   font-smoothing: antialiased
   text-align: center
 
 
 .logo
-  font-family: 'Adventor Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  font-family: $advBold
   display: inline-block
   font-size: 11rem
   background-color: #222
@@ -80,7 +84,7 @@ body
     font-style: normal
 
   sup
-    font-family: 'Adventor Regular', 'Helvetica Neue', Helvetica, Arial, sans-serif
+    font-family: $helv
     font-size: 6rem
     font-weight: 100
     letter-spacing: -.7rem
@@ -292,7 +296,7 @@ code
 
 
 .demo1
-  font-family: 'Adventor Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif
+  font-family: $advBold
   height: 30rem
   color: #fff
   background-image: url('./images/road.jpg')
@@ -319,7 +323,7 @@ code
 
 
 .demo2
-  font-family: "Abril Fatface", "Hoefler Text", Constantia, Palatino, Georgia, serif
+  font-family: $abril
   color: #333
   background-color: #eee
   font-size: 6rem
