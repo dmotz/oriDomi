@@ -344,7 +344,6 @@ do ->
     position:           'absolute'
     overflow:           'hidden'
     transform:          'translate3d(0, 0, 0)'
-    backfaceVisibility: 'hidden'
 
   addStyle elClasses.panel,
     width:              '100%'
@@ -354,7 +353,6 @@ do ->
     transitionProperty: css.transformProp
     transformOrigin:    'left'
     transformStyle:     p3d
-    backfaceVisibility: 'hidden'
 
   addStyle elClasses.panelH, transformOrigin: 'top'
   addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
