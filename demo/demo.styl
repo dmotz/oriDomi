@@ -245,9 +245,10 @@ code
   margin-top: 0
 
   li
-    display: inline-block
+    display: block
     user-select: none
     margin: 2rem
+    margin-bottom: 4rem
 
 
   > h2, > h3
@@ -276,10 +277,12 @@ code
 
 
 .demo
-  display: inline-block
+  display: block
+  max-width: 80rem
   width: 100%
   min-width: 320px
   position: relative
+  margin: 0 auto
   margin-bottom: 2rem
 
 
@@ -465,4 +468,8 @@ footer
   .oridomi-content
     transition: none !important
 
+@media only screen and (min-width: 970px)
+  #demos li
+    width: 35%
+    display: inline-block
 
