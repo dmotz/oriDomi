@@ -294,6 +294,7 @@ do ->
     margin:    '0 !important'
     boxSizing: 'border-box !important'
     overflow:  'hidden !important'
+    display:   'block !important'
 
   addStyle elClasses.holder,
     width:          '100%'
