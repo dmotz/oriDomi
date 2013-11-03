@@ -6,8 +6,9 @@
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __slice = [].slice;
 
+  isSupported = true;
+
   supportWarning = function(prop) {
-    var isSupported;
     if (typeof console !== "undefined" && console !== null) {
       console.warn("OriDomi: Missing support for `" + prop + "`.");
     }
@@ -67,7 +68,7 @@
   };
 
   hideEl = function(el) {
-    return el.style[css.transform] = 'translate3d(-9999px, 0, 0)';
+    return el.style[css.transform] = 'translate3d(-99999px, 0, 0)';
   };
 
   showEl = function(el) {
@@ -86,6 +87,9 @@
         switch (fn.length) {
           case 1:
             opt.callback = a0;
+            if (!this.isFoldedUp) {
+              return typeof opt.callback === "function" ? opt.callback() : void 0;
+            }
             break;
           case 2:
             if (typeof a0 === 'function') {
@@ -132,8 +136,6 @@
   noOp = function() {};
 
   $ = ((_ref = window.jQuery || window.$) != null ? _ref.data : void 0) ? window.$ : null;
-
-  isSupported = true;
 
   anchorList = ['left', 'right', 'top', 'bottom'];
 
@@ -262,7 +264,9 @@
     });
     addStyle(elClasses.clone, {
       margin: '0 !important',
-      boxSizing: 'border-box !important'
+      boxSizing: 'border-box !important',
+      overflow: 'hidden !important',
+      display: 'block !important'
     });
     addStyle(elClasses.holder, {
       width: '100%',
@@ -312,15 +316,15 @@
       margin: '0 !important',
       position: 'relative !important',
       float: 'none !important',
-      boxSizing: 'border-box !important'
+      boxSizing: 'border-box !important',
+      overflow: 'hidden !important'
     });
     addStyle(elClasses.mask, {
       width: '100%',
       height: '100%',
       position: 'absolute',
       overflow: 'hidden',
-      transform: 'translate3d(0, 0, 0)',
-      backfaceVisibility: 'hidden'
+      transform: 'translate3d(0, 0, 0)'
     });
     addStyle(elClasses.panel, {
       width: '100%',
@@ -329,8 +333,7 @@
       position: 'relative',
       transitionProperty: css.transformProp,
       transformOrigin: 'left',
-      transformStyle: p3d,
-      backfaceVisibility: 'hidden'
+      transformStyle: p3d
     });
     addStyle(elClasses.panelH, {
       transformOrigin: 'top'
@@ -404,7 +407,7 @@
         }
         return;
       }
-      this._settings = new function() {
+      this._config = new function() {
         for (k in defaults) {
           v = defaults[k];
           if (options[k] != null) {
@@ -421,7 +424,7 @@
       this._lastOp = {
         anchor: anchorList[0]
       };
-      this._shading = this._settings.shading;
+      this._shading = this._config.shading;
       if (this._shading === true) {
         this._shading = 'hard';
       }
@@ -429,11 +432,11 @@
         this._shaders = {};
         shaderProtos = {};
         shaderProto = createEl('shader');
-        shaderProto.style[css.transitionDuration] = this._settings.speed + 'ms';
-        shaderProto.style[css.transitionTimingFunction] = this._settings.easingMethod;
+        shaderProto.style[css.transitionDuration] = this._config.speed + 'ms';
+        shaderProto.style[css.transitionTimingFunction] = this._config.easingMethod;
       }
       stageProto = createEl('stage');
-      stageProto.style[css.perspective] = this._settings.perspective + 'px';
+      stageProto.style[css.perspective] = this._config.perspective + 'px';
       for (_i = 0, _len = anchorList.length; _i < _len; _i++) {
         anchor = anchorList[_i];
         this._panels[anchor] = [];
@@ -458,19 +461,19 @@
       maskProto = createEl('mask');
       maskProto.appendChild(contentHolder);
       panelProto = createEl('panel');
-      panelProto.style[css.transitionDuration] = this._settings.speed + 'ms';
-      panelProto.style[css.transitionTimingFunction] = this._settings.easingMethod;
+      panelProto.style[css.transitionDuration] = this._config.speed + 'ms';
+      panelProto.style[css.transitionTimingFunction] = this._config.easingMethod;
       _ref1 = ['x', 'y'];
       for (_l = 0, _len3 = _ref1.length; _l < _len3; _l++) {
         axis = _ref1[_l];
         if (axis === 'x') {
           anchorSet = anchorListV;
-          count = this._settings.vPanels;
+          count = this._config.vPanels;
           metric = 'width';
           classSuffix = 'V';
         } else {
           anchorSet = anchorListH;
-          count = this._settings.hPanels;
+          count = this._config.hPanels;
           metric = 'height';
           classSuffix = 'H';
         }
@@ -542,11 +545,11 @@
         this.$el = $(this.el);
       }
       this.accordion(0);
-      this._settings.ripple = Number(this._settings.ripple);
-      if (this._settings.ripple) {
-        this._setTrans(this._settings.speed, this._settings.ripple);
+      this._config.ripple = Number(this._config.ripple);
+      if (this._config.ripple) {
+        this._setTrans(this._config.speed, this._config.ripple);
       }
-      if (this._settings.touchEnabled) {
+      if (this._config.touchEnabled) {
         this.enableTouch();
       }
     }
@@ -577,7 +580,11 @@
         return fn.apply(_this, args);
       };
       if (this.isFoldedUp) {
-        return this._unfold(next);
+        if (fn.length === 2) {
+          return next();
+        } else {
+          return this._unfold(next);
+        }
       } else if (anchor !== this._lastOp.anchor) {
         return this._stageReset(anchor, next);
       } else {
@@ -662,7 +669,7 @@
     OriDomi.prototype._normalizeAngle = function(angle) {
       var max;
       angle = parseFloat(angle, 10);
-      max = this._settings.maxAngle;
+      max = this._config.maxAngle;
       if (isNaN(angle)) {
         return 0;
       } else if (angle > max) {
@@ -690,9 +697,9 @@
           case 0:
             return 0;
           case 1:
-            return _this._settings.speed / len * i;
+            return _this._config.speed / len * i;
           case 2:
-            return _this._settings.speed / len * (len - i - 1);
+            return _this._config.speed / len * (len - i - 1);
         }
       })();
       panel.style[css.transitionDuration] = duration + 'ms';
@@ -712,7 +719,7 @@
     OriDomi.prototype._setShader = function(n, anchor, angle) {
       var a, abs, b, opacity;
       abs = Math.abs(angle);
-      opacity = abs / 90 * this._settings.shadingIntensity;
+      opacity = abs / 90 * this._config.shadingIntensity;
       if (this._shading === 'hard') {
         opacity *= .15;
         if (this._lastOp.angle < 0) {
@@ -757,11 +764,11 @@
             case 'left':
               return '0, 0, 0)';
             case 'right':
-              return "-" + (_this._settings.vPanels * 1) + "px, 0, 0)";
+              return "-" + (_this._config.vPanels * 1) + "px, 0, 0)";
             case 'top':
               return '0, 0, 0)';
             case 'bottom':
-              return "0, -" + ((_this._settings.hPanels + 2) * 1) + "px, 0)";
+              return "0, -" + ((_this._config.hPanels + 2) * 1) + "px, 0)";
           }
         })();
       }
@@ -873,7 +880,7 @@
       } else {
         this[axis1] = e.targetTouches[0]["page" + (this._touchAxis.toUpperCase())];
       }
-      return this._settings.touchStartCallback(this[axis1], e);
+      return this._config.touchStartCallback(this[axis1], e);
     };
 
     OriDomi.prototype._onTouchMove = function(e) {
@@ -887,7 +894,7 @@
       } else {
         current = e.targetTouches[0]["page" + (this._touchAxis.toUpperCase())];
       }
-      distance = (current - this["_" + this._touchAxis + "1"]) * this._settings.touchSensitivity;
+      distance = (current - this["_" + this._touchAxis + "1"]) * this._config.touchSensitivity;
       if (this._lastOp.angle < 0) {
         if (this._lastOp.anchor === 'right' || this._lastOp.anchor === 'bottom') {
           delta = this["_" + this._touchAxis + "Last"] - distance;
@@ -909,7 +916,7 @@
       }
       this._lastOp.angle = delta = this._normalizeAngle(delta);
       this._lastOp.fn.call(this, delta, this._lastOp.anchor, this._lastOp.options);
-      return this._settings.touchMoveCallback(delta, e);
+      return this._config.touchMoveCallback(delta, e);
     };
 
     OriDomi.prototype._onTouchEnd = function(e) {
@@ -918,8 +925,8 @@
       }
       this._touchStarted = this._inTrans = false;
       this.el.style.cursor = css.grab;
-      this._setTrans(this._settings.speed, this._settings.ripple);
-      return this._settings.touchEndCallback(this["_" + this._touchAxis + "Last"], e);
+      this._setTrans(this._config.speed, this._config.ripple);
+      return this._config.touchEndCallback(this["_" + this._touchAxis + "Last"], e);
     };
 
     OriDomi.prototype._onTouchLeave = function(e) {
@@ -940,13 +947,10 @@
 
     OriDomi.prototype._unfold = function(callback) {
       var _this = this;
-      if (!this.isFoldedUp) {
-        return typeof callback === "function" ? callback() : void 0;
-      }
       this._inTrans = true;
       return this._iterate(this._lastOp.anchor, function(panel, i, len) {
         var delay;
-        delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([_this._settings.speed], [1]));
+        delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([_this._config.speed], [1]));
         return (function(panel, i, delay) {
           return defer(function() {
             _this._transformPanel(panel, 0, _this._lastOp.anchor);
@@ -961,9 +965,9 @@
                 _this._lastOp.angle = 0;
               }
               return defer(function() {
-                return panel.style[css.transitionDuration] = _this._settings.speed;
+                return panel.style[css.transitionDuration] = _this._config.speed;
               });
-            }, delay + _this._settings.speed * .25);
+            }, delay + _this._config.speed * .25);
           });
         })(panel, i, delay);
       });
@@ -989,7 +993,7 @@
     };
 
     OriDomi.prototype.setSpeed = function(speed) {
-      this._setTrans((this._settings.speed = speed), this._settings.ripple);
+      this._setTrans((this._config.speed = speed), this._config.ripple);
       return this;
     };
 
@@ -1015,7 +1019,7 @@
       if (this.isFrozen) {
         this.isFrozen = false;
         hideEl(this._cloneEl);
-        showEl(this._stageHolder);
+        this._stageHolder.style[css.transform] = 'translateY(-100%)';
         this._setCursor();
         this._lastOp.angle = 0;
       }
@@ -1049,13 +1053,13 @@
       if (dir == null) {
         dir = 1;
       }
-      this._settings.ripple = Number(dir);
-      this._setTrans(this._settings.speed, dir);
+      this._config.ripple = Number(dir);
+      this._setTrans(this._config.speed, dir);
       return this;
     };
 
     OriDomi.prototype.constrainAngle = function(angle) {
-      this._settings.maxAngle = parseFloat(angle, 10) || defaults.maxAngle;
+      this._config.maxAngle = parseFloat(angle, 10) || defaults.maxAngle;
       return this;
     };
 
@@ -1156,7 +1160,7 @@
 
     OriDomi.prototype.curl = prep(function(angle, anchor, options) {
       var _this = this;
-      angle /= __indexOf.call(anchorListV, anchor) >= 0 ? this._settings.vPanels : this._settings.hPanels;
+      angle /= __indexOf.call(anchorListV, anchor) >= 0 ? this._config.vPanels : this._config.hPanels;
       return this._iterate(anchor, function(panel, i) {
         _this._transformPanel(panel, angle, anchor);
         if (_this._shading) {
@@ -1180,14 +1184,14 @@
 
     OriDomi.prototype.foldUp = prep(function(anchor, callback) {
       var _this = this;
+      if (this.isFoldedUp) {
+        return typeof callback === "function" ? callback() : void 0;
+      }
       return this._stageReset(anchor, function() {
-        if (_this.isFoldedUp) {
-          return typeof callback === "function" ? callback() : void 0;
-        }
         _this._inTrans = _this.isFoldedUp = true;
         return _this._iterate(anchor, function(panel, i, len) {
           var delay, duration;
-          duration = _this._settings.speed;
+          duration = _this._config.speed;
           if (i === 0) {
             duration /= 2;
           }
@@ -1202,7 +1206,7 @@
                 } else {
                   return hideEl(panel.children[0]);
                 }
-              }, delay + _this._settings.speed * .25);
+              }, delay + _this._config.speed * .25);
             });
           })(panel, i, delay);
         });
@@ -1217,9 +1221,7 @@
       var _this = this;
       return prep(function(angle, anchor, options) {
         return _this._iterate(anchor, function(panel, i, len) {
-          var deg;
-          deg = fn(angle, i, len);
-          return _this._transformPanel(panel, deg, anchor, options.fracture);
+          return _this._transformPanel(panel, fn(angle, i, len), anchor, options.fracture);
         });
       }).bind(this);
     };
@@ -1267,7 +1269,7 @@
         options = {};
       }
       options.sticky = false;
-      return this.accordion(-this._settings.maxAngle, anchor, options);
+      return this.accordion(-this._config.maxAngle, anchor, options);
     };
 
     OriDomi.prototype.collapseAlt = function(anchor, options) {
@@ -1275,10 +1277,10 @@
         options = {};
       }
       options.sticky = false;
-      return this.accordion(this._settings.maxAngle, anchor, options);
+      return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '0.3.0';
+    OriDomi.VERSION = '1.0.0';
 
     OriDomi.isSupported = isSupported;
 
