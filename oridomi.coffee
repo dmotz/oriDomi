@@ -76,7 +76,7 @@ cloneEl = (parent, deep, className) ->
 
 # GPU efficient ways of hiding and showing elements:
 hideEl = (el) ->
-  el.style[css.transform] = 'translate3d(-9999px, 0, 0)'
+  el.style[css.transform] = 'translate3d(-99999px, 0, 0)'
 
 
 showEl = (el) ->
