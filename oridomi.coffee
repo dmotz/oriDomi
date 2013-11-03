@@ -1194,10 +1194,10 @@ class OriDomi
   # panels in the active anchor. Calling map returns a new function bound to
   # the instance and the lambda, e.g. `oridomi.map(randomFn)(30).reveal(20)`.
   map: (fn) ->
-    prep((angle, anchor, options) =>
+    prep (angle, anchor, options) =>
       @_iterate anchor, (panel, i, len) =>
         @_transformPanel panel, fn(angle, i, len), anchor, options.fracture
-    ).bind @
+    .bind @
 
 
   # Convenience Methods
