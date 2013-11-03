@@ -438,7 +438,7 @@ class OriDomi
       return
 
     # Fill in passed options with defaults.
-    @_settings = new ->
+    @_config = new ->
       for k, v of defaults
         if options[k]?
           @[k] = options[k]
@@ -452,7 +452,7 @@ class OriDomi
     @_stages  = {}
     # Set the starting anchor to left.
     @_lastOp  = anchor: anchorList[0]
-    @_shading = @_settings.shading
+    @_shading = @_config.shading
     # Alias `shading: true` as hard shading.
     @_shading = 'hard' if @_shading is true
 
@@ -462,11 +462,11 @@ class OriDomi
       @_shaders    = {}
       shaderProtos = {}
       shaderProto  = createEl 'shader'
-      shaderProto.style[css.transitionDuration]       = @_settings.speed + 'ms'
-      shaderProto.style[css.transitionTimingFunction] = @_settings.easingMethod
+      shaderProto.style[css.transitionDuration]       = @_config.speed + 'ms'
+      shaderProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
     stageProto = createEl 'stage'
-    stageProto.style[css.perspective] = @_settings.perspective + 'px'
+    stageProto.style[css.perspective] = @_config.perspective + 'px'
 
     for anchor in anchorList
       # Each anchor has a unique set of panels.
@@ -487,19 +487,19 @@ class OriDomi
     maskProto.appendChild contentHolder
 
     panelProto = createEl 'panel'
-    panelProto.style[css.transitionDuration]       = @_settings.speed + 'ms'
-    panelProto.style[css.transitionTimingFunction] = @_settings.easingMethod
+    panelProto.style[css.transitionDuration]       = @_config.speed + 'ms'
+    panelProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
     # This loop builds all of the panels.
     for axis in ['x', 'y']
       if axis is 'x'
         anchorSet   = anchorListV
-        count       = @_settings.vPanels
+        count       = @_config.vPanels
         metric      = 'width'
         classSuffix = 'V'
       else
         anchorSet   = anchorListH
-        count       = @_settings.hPanels
+        count       = @_config.hPanels
         metric      = 'height'
         classSuffix = 'H'
 
@@ -575,9 +575,9 @@ class OriDomi
     # method called.
     @accordion 0
     # The ripple setting is converted to a number to allow boolean settings.
-    @_settings.ripple = Number @_settings.ripple
-    @_setTrans @_settings.speed, @_settings.ripple if @_settings.ripple
-    @enableTouch() if @_settings.touchEnabled
+    @_config.ripple = Number @_config.ripple
+    @_setTrans @_config.speed, @_config.ripple if @_config.ripple
+    @enableTouch() if @_config.touchEnabled
 
 
   # Internal Methods
@@ -685,7 +685,7 @@ class OriDomi
   # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
-    max   = @_settings.maxAngle
+    max   = @_config.maxAngle
     if isNaN angle
       0
     else if angle > max
@@ -709,8 +709,8 @@ class OriDomi
       # speed setting and the number of panels.
       switch delay
         when 0 then 0
-        when 1 then @_settings.speed / len * i
-        when 2 then @_settings.speed / len * (len - i - 1)
+        when 1 then @_config.speed / len * i
+        when 2 then @_config.speed / len * (len - i - 1)
 
     panel.style[css.transitionDuration] = duration + 'ms'
     panel.style[css.transitionDelay]    = delayMs  + 'ms'
@@ -727,7 +727,7 @@ class OriDomi
   _setShader: (n, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
     abs     = Math.abs angle
-    opacity = abs / 90 * @_settings.shadingIntensity
+    opacity = abs / 90 * @_config.shadingIntensity
 
     # With hard shading, opacity is reduced and `angle` is based on the global
     # `lastAngle` so all panels' shaders share the same direction. Soft shaders
@@ -775,11 +775,11 @@ class OriDomi
           when 'left'
             '0, 0, 0)'
           when 'right'
-            "-#{ @_settings.vPanels * 1 }px, 0, 0)"
+            "-#{ @_config.vPanels * 1 }px, 0, 0)"
           when 'top'
             '0, 0, 0)'
           when 'bottom'
-            "0, -#{ (@_settings.hPanels + 2) * 1 }px, 0)"
+            "0, -#{ (@_config.hPanels + 2) * 1 }px, 0)"
 
 
   # If the composition needs to switch stages or fold up, it must first unfold
@@ -877,7 +877,7 @@ class OriDomi
       @[axis1] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Return that value to an external listener.
-    @_settings.touchStartCallback @[axis1], e
+    @_config.touchStartCallback @[axis1], e
 
 
   # Called on touch/mouse movement.
@@ -891,7 +891,7 @@ class OriDomi
       current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Calculate distance and multiply by `touchSensitivity`.
-    distance = (current - @["_#{ @_touchAxis }1"]) * @_settings.touchSensitivity
+    distance = (current - @["_#{ @_touchAxis }1"]) * @_config.touchSensitivity
 
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
@@ -911,7 +911,7 @@ class OriDomi
 
     @_lastOp.angle = delta = @_normalizeAngle delta
     @_lastOp.fn.call @, delta, @_lastOp.anchor, @_lastOp.options
-    @_settings.touchMoveCallback delta, e
+    @_config.touchMoveCallback delta, e
 
 
 
@@ -922,9 +922,9 @@ class OriDomi
     @_touchStarted = @_inTrans = false
     @el.style.cursor = css.grab
     # Enable tweening again.
-    @_setTrans @_settings.speed, @_settings.ripple
+    @_setTrans @_config.speed, @_config.ripple
     # Pass callback final coordinate.
-    @_settings.touchEndCallback @["_#{ @_touchAxis }Last"], e
+    @_config.touchEndCallback @["_#{ @_touchAxis }Last"], e
 
 
   # End folding when the mouse or finger leaves the composition.
@@ -945,7 +945,7 @@ class OriDomi
   _unfold: (callback) ->
     @_inTrans = true
     @_iterate @_lastOp.anchor, (panel, i, len) =>
-      delay = @_setPanelTrans arguments..., @_settings.speed, 1
+      delay = @_setPanelTrans arguments..., @_config.speed, 1
 
       do (panel, i, delay) =>
         defer =>
@@ -957,8 +957,8 @@ class OriDomi
               callback?()
               @_lastOp.fn    = @accordion
               @_lastOp.angle = 0
-            defer => panel.style[css.transitionDuration] = @_settings.speed
-          , delay + @_settings.speed * .25
+            defer => panel.style[css.transitionDuration] = @_config.speed
+          , delay + @_config.speed * .25
 
 
   # This method is used by many others to iterate among panels within a given anchor.
@@ -982,7 +982,7 @@ class OriDomi
 
   # Public setter for transition durations.
   setSpeed: (speed) ->
-    @_setTrans (@_settings.speed = speed), @_settings.ripple
+    @_setTrans (@_config.speed = speed), @_config.ripple
     @
 
 
@@ -1043,14 +1043,14 @@ class OriDomi
 
   # Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.
   setRipple: (dir = 1) ->
-    @_settings.ripple = Number dir
-    @_setTrans @_settings.speed, dir
+    @_config.ripple = Number dir
+    @_setTrans @_config.speed, dir
     @
 
 
   # Setter method for `maxAngle`.
   constrainAngle: (angle) ->
-    @_settings.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
+    @_config.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
     @
 
 
@@ -1142,7 +1142,7 @@ class OriDomi
   # appear smoother with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /= if anchor in anchorListV then @_settings.vPanels else @_settings.hPanels
+    angle /= if anchor in anchorListV then @_config.vPanels else @_config.hPanels
 
     @_iterate anchor, (panel, i) =>
       @_transformPanel panel, angle, anchor
@@ -1167,7 +1167,7 @@ class OriDomi
       @_inTrans = @isFoldedUp = true
 
       @_iterate anchor, (panel, i, len) =>
-        duration  = @_settings.speed
+        duration  = @_config.speed
         duration /= 2 if i is 0
         delay     = @_setPanelTrans arguments..., duration, 2
 
@@ -1181,7 +1181,7 @@ class OriDomi
               else
                 hideEl panel.children[0]
 
-            , delay + @_settings.speed * .25
+            , delay + @_config.speed * .25
 
 
   # This is the queued version of `_unfold`.
@@ -1237,13 +1237,13 @@ class OriDomi
   # Convenience proxy to accordion-fold instance to maximum angle.
   collapse: (anchor, options = {}) ->
     options.sticky = false
-    @accordion -@_settings.maxAngle, anchor, options
+    @accordion -@_config.maxAngle, anchor, options
 
 
   # Same as `collapse`, but uses positive angle for slightly different effect.
   collapseAlt: (anchor, options = {}) ->
     options.sticky = false
-    @accordion @_settings.maxAngle, anchor, options
+    @accordion @_config.maxAngle, anchor, options
 
 
   # Statics
