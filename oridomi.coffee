@@ -446,6 +446,8 @@ class OriDomi
           @[k] = v
       @
 
+    # The ripple setting is converted to a number to allow boolean settings.
+    @_config.ripple = Number @_config.ripple
     # The queue holds animation sequences.
     @_queue   = []
     @_panels  = {}
@@ -574,9 +576,7 @@ class OriDomi
     # An effect method is called since touch events rely on using the last
     # method called.
     @accordion 0
-    # The ripple setting is converted to a number to allow boolean settings.
-    @_config.ripple = Number @_config.ripple
-    @_setTrans @_config.speed, @_config.ripple if @_config.ripple
+    @setRipple @_config.ripple if @_config.ripple
     @enableTouch() if @_config.touchEnabled
 
 
@@ -697,13 +697,12 @@ class OriDomi
 
 
   # Allows other methods to change the transiton duration/delay or disable it altogether.
-  _setTrans: (duration, delay) ->
-    @_iterate @_lastOp.anchor, (panel, i, len) => @_setPanelTrans arguments..., duration, delay
+  _setTrans: (duration, delay, anchor = @_lastOp.anchor) ->
+    @_iterate anchor, (panel, i, len) => @_setPanelTrans anchor, arguments..., duration, delay
 
 
   # This method changes the transition duration and delay of panels and shaders.
-  _setPanelTrans: (panel, i, len, duration, delay) ->
-    {anchor} = @_lastOp
+  _setPanelTrans: (anchor, panel, i, len, duration, delay) ->
     delayMs  = do =>
       # Delay is a `ripple` value. The milliseconds are derived based on the
       # speed setting and the number of panels.
@@ -944,8 +943,9 @@ class OriDomi
   # and skips the queue. Its public counterpart is a queued alias.
   _unfold: (callback) ->
     @_inTrans = true
-    @_iterate @_lastOp.anchor, (panel, i, len) =>
-      delay = @_setPanelTrans arguments..., @_config.speed, 1
+    {anchor}  = @_lastOp
+    @_iterate anchor, (panel, i, len) =>
+      delay = @_setPanelTrans anchor, arguments..., @_config.speed, 1
 
       do (panel, i, delay) =>
         defer =>
@@ -982,7 +982,8 @@ class OriDomi
 
   # Public setter for transition durations.
   setSpeed: (speed) ->
-    @_setTrans (@_config.speed = speed), @_config.ripple
+    for anchor in anchorList
+      @_setTrans (@_config.speed = speed), @_config.ripple, anchor
     @
 
 
@@ -1044,7 +1045,7 @@ class OriDomi
   # Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.
   setRipple: (dir = 1) ->
     @_config.ripple = Number dir
-    @_setTrans @_config.speed, dir
+    @setSpeed @_config.speed
     @
 
 
@@ -1169,7 +1170,7 @@ class OriDomi
       @_iterate anchor, (panel, i, len) =>
         duration  = @_config.speed
         duration /= 2 if i is 0
-        delay     = @_setPanelTrans arguments..., duration, 2
+        delay     = @_setPanelTrans anchor, arguments..., duration, 2
 
         do (panel, i, delay) =>
           defer =>
