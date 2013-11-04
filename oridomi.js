@@ -1311,9 +1311,12 @@
   }
 
   $.prototype.oriDomi = function(options) {
-    var el, instance, method, methodName, _i, _len;
+    var el, instance, method, methodName, _i, _j, _len, _len1;
     if (!isSupported) {
       return this;
+    }
+    if (options === true) {
+      return $.data(this[0], baseName);
     }
     if (typeof options === 'string') {
       methodName = options;
@@ -1323,25 +1326,24 @@
         }
         return this;
       }
-      if (!(instance = $.data(this[0], baseName))) {
-        if (typeof console !== "undefined" && console !== null) {
-          console.warn("OriDomi: Can't call " + methodName + ", OriDomi hasn't been initialized on this element");
-        }
-        return this;
-      }
-      method.apply(instance, [].slice.call(arguments).slice(1));
-      return this;
-    } else {
       for (_i = 0, _len = this.length; _i < _len; _i++) {
         el = this[_i];
+        if (!(instance = $.data(el, baseName))) {
+          instance = $.data(el, baseName, new OriDomi(el, options));
+        }
+        method.apply(instance, Array.prototype.slice.call(arguments).slice(1));
+      }
+    } else {
+      for (_j = 0, _len1 = this.length; _j < _len1; _j++) {
+        el = this[_j];
         if (instance = $.data(el, baseName)) {
-          return instance;
+          continue;
         } else {
           $.data(el, baseName, new OriDomi(el, options));
         }
       }
-      return this;
     }
+    return this;
   };
 
 }).call(this);

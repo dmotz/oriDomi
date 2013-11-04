@@ -3706,7 +3706,8 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">return</span> @ <span class="keyword">unless</span> isSupported</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">return</span> @ <span class="keyword">unless</span> isSupported
+  <span class="keyword">return</span> $.data @[<span class="number">0</span>], baseName <span class="keyword">if</span> options <span class="keyword">is</span> <span class="literal">true</span></pre></div></div>
             
         </li>
         
@@ -3739,7 +3740,12 @@ Keeps first panel flat on page.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">unless</span> <span class="keyword">typeof</span> (method = OriDomi::[methodName]) <span class="keyword">is</span> <span class="string">'function'</span>
       console?.warn <span class="string">"OriDomi: No such method `<span class="subst">#{ methodName }</span>`"</span>
-      <span class="keyword">return</span> @</pre></div></div>
+      <span class="keyword">return</span> @
+
+    <span class="keyword">for</span> el <span class="keyword">in</span> @
+
+      <span class="keyword">unless</span> instance = $.data el, baseName
+        instance = $.data el, baseName, <span class="keyword">new</span> OriDomi el, options</pre></div></div>
             
         </li>
         
@@ -3750,13 +3756,11 @@ Keeps first panel flat on page.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-205">&#182;</a>
               </div>
-              <p>Warn if OriDomi hasn&#39;t been initialized on this element.</p>
+              <p>Call the requested method with arguments.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">unless</span> instance = $.data @[<span class="number">0</span>], baseName
-      console?.warn <span class="string">"OriDomi: Can't call <span class="subst">#{ methodName }</span>, OriDomi hasn't been initialized on this element"</span>
-      <span class="keyword">return</span> @</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      method.apply instance, Array::slice.call(arguments)[<span class="number">1.</span>..]</pre></div></div>
             
         </li>
         
@@ -3766,36 +3770,6 @@ Keeps first panel flat on page.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-206">&#182;</a>
-              </div>
-              <p>Call the requested method with arguments.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    method.apply instance, [].slice.call(arguments)[<span class="number">1.</span>..]</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-207">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-207">&#182;</a>
-              </div>
-              <p>Return selection.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    @</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-208">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-208">&#182;</a>
               </div>
               <p>If not calling a method, initialize OriDomi on the selection.</p>
 
@@ -3807,11 +3781,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-209">
+        <li id="section-207">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-209">&#182;</a>
+                <a class="pilcrow" href="#section-207">&#182;</a>
               </div>
               <p>If the element in the selection already has an instance of OriDomi
 attached to it, return the instance.</p>
@@ -3819,17 +3793,17 @@ attached to it, return the instance.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> instance = $.data el, baseName
-        <span class="keyword">return</span> instance
+        <span class="keyword">continue</span>
       <span class="keyword">else</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-210">
+        <li id="section-208">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-210">&#182;</a>
+                <a class="pilcrow" href="#section-208">&#182;</a>
               </div>
               <p>Create an instance of OriDomi and attach it to the element.</p>
 
@@ -3840,17 +3814,17 @@ attached to it, return the instance.</p>
         </li>
         
         
-        <li id="section-211">
+        <li id="section-209">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-211">&#182;</a>
+                <a class="pilcrow" href="#section-209">&#182;</a>
               </div>
               <p>Return the selection.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    @</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  @</pre></div></div>
             
         </li>
         
