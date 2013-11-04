@@ -272,7 +272,7 @@
       width: '100%',
       height: '100%',
       position: 'absolute',
-      transform: 'translateY(-100%)',
+      top: '0',
       transformStyle: p3d
     });
     addStyle(elClasses.stage, {
@@ -542,9 +542,7 @@
       this.el.innerHTML = '';
       this.el.appendChild(this._cloneEl);
       this.el.appendChild(this._stageHolder);
-      if ($) {
-        this.$el = $(this.el);
-      }
+      this.el.parentNode.style[css.transformStyle] = 'preserve-3d';
       this.accordion(0);
       if (this._config.ripple) {
         this.setRipple(this._config.ripple);
@@ -1027,7 +1025,7 @@
       if (this.isFrozen) {
         this.isFrozen = false;
         hideEl(this._cloneEl);
-        this._stageHolder.style[css.transform] = 'translateY(-100%)';
+        showEl(this._stageHolder);
         this._setCursor();
         this._lastOp.angle = 0;
       }
