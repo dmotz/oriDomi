@@ -201,7 +201,11 @@ var folded = new OriDomi('.paper');
 
 <pre>
 <code>
-var folded = $('.paper').oriDomi();
+var $folded = $('.paper').oriDomi({/* options object */});
+// when using jQuery, iterate OriDomi methods over multiple elements like this:
+$folded.oriDomi('accordion', 20);
+// to access the OriDomi instance at the top of the jQuery selection directly:
+var folded = $folded.oriDomi(true);
 </code>
 </pre>
 
