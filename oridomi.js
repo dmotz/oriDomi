@@ -418,6 +418,7 @@
         }
         return this;
       };
+      this._config.ripple = Number(this._config.ripple);
       this._queue = [];
       this._panels = {};
       this._stages = {};
@@ -545,9 +546,8 @@
         this.$el = $(this.el);
       }
       this.accordion(0);
-      this._config.ripple = Number(this._config.ripple);
       if (this._config.ripple) {
-        this._setTrans(this._config.speed, this._config.ripple);
+        this.setRipple(this._config.ripple);
       }
       if (this._config.touchEnabled) {
         this.enableTouch();
@@ -681,17 +681,19 @@
       }
     };
 
-    OriDomi.prototype._setTrans = function(duration, delay) {
+    OriDomi.prototype._setTrans = function(duration, delay, anchor) {
       var _this = this;
-      return this._iterate(this._lastOp.anchor, function(panel, i, len) {
-        return _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([duration], [delay]));
+      if (anchor == null) {
+        anchor = this._lastOp.anchor;
+      }
+      return this._iterate(anchor, function(panel, i, len) {
+        return _this._setPanelTrans.apply(_this, [anchor].concat(__slice.call(arguments), [duration], [delay]));
       });
     };
 
-    OriDomi.prototype._setPanelTrans = function(panel, i, len, duration, delay) {
-      var anchor, delayMs, shader, side, _i, _len, _ref1,
+    OriDomi.prototype._setPanelTrans = function(anchor, panel, i, len, duration, delay) {
+      var delayMs, shader, side, _i, _len, _ref1,
         _this = this;
-      anchor = this._lastOp.anchor;
       delayMs = (function() {
         switch (delay) {
           case 0:
@@ -946,11 +948,13 @@
     };
 
     OriDomi.prototype._unfold = function(callback) {
-      var _this = this;
+      var anchor,
+        _this = this;
       this._inTrans = true;
-      return this._iterate(this._lastOp.anchor, function(panel, i, len) {
+      anchor = this._lastOp.anchor;
+      return this._iterate(anchor, function(panel, i, len) {
         var delay;
-        delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([_this._config.speed], [1]));
+        delay = _this._setPanelTrans.apply(_this, [anchor].concat(__slice.call(arguments), [_this._config.speed], [1]));
         return (function(panel, i, delay) {
           return defer(function() {
             _this._transformPanel(panel, 0, _this._lastOp.anchor);
@@ -993,7 +997,11 @@
     };
 
     OriDomi.prototype.setSpeed = function(speed) {
-      this._setTrans((this._config.speed = speed), this._config.ripple);
+      var anchor, _i, _len;
+      for (_i = 0, _len = anchorList.length; _i < _len; _i++) {
+        anchor = anchorList[_i];
+        this._setTrans((this._config.speed = speed), this._config.ripple, anchor);
+      }
       return this;
     };
 
@@ -1054,7 +1062,7 @@
         dir = 1;
       }
       this._config.ripple = Number(dir);
-      this._setTrans(this._config.speed, dir);
+      this.setSpeed(this._config.speed);
       return this;
     };
 
@@ -1195,7 +1203,7 @@
           if (i === 0) {
             duration /= 2;
           }
-          delay = _this._setPanelTrans.apply(_this, __slice.call(arguments).concat([duration], [2]));
+          delay = _this._setPanelTrans.apply(_this, [anchor].concat(__slice.call(arguments), [duration], [2]));
           return (function(panel, i, delay) {
             return defer(function() {
               _this._transformPanel(panel, (i === 0 ? 90 : 170), anchor);

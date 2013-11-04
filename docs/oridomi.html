@@ -1391,6 +1391,21 @@ starting coordinate as first argument.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
+              <p>The ripple setting is converted to a number to allow boolean settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@_config</span>.ripple = Number <span class="property">@_config</span>.ripple</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
               <p>The queue holds animation sequences.</p>
 
             </div>
@@ -1402,11 +1417,11 @@ starting coordinate as first argument.</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>Set the starting anchor to left.</p>
 
@@ -1418,11 +1433,11 @@ starting coordinate as first argument.</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Alias <code>shading: true</code> as hard shading.</p>
 
@@ -1433,11 +1448,11 @@ starting coordinate as first argument.</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>The shader elements are constructed in a conditional so the process can be
 skipped if shading is disabled.</p>
@@ -1459,11 +1474,11 @@ skipped if shading is disabled.</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Each anchor has a unique set of panels.</p>
 
@@ -1492,11 +1507,11 @@ skipped if shading is disabled.</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>This loop builds all of the panels.</p>
 
@@ -1517,11 +1532,11 @@ skipped if shading is disabled.</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>Set the panel dimension to a percentage of the container.</p>
 
@@ -1535,11 +1550,11 @@ skipped if shading is disabled.</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p>The inner content retains the original dimensions of the element
 while being inside a small slice. By multiplying 100% by the number of
@@ -1563,11 +1578,11 @@ sizing flexibility is achieved.</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Only the first panel has its size set to a percentage since subsequent
 panels are nested children and will match its size.</p>
@@ -1580,11 +1595,11 @@ panels are nested children and will match its size.</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <p>The inner content of each panel is offset relative to the panel
 index to display a contiguous composition.</p>
@@ -1614,11 +1629,11 @@ index to display a contiguous composition.</p>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Panels are nested inside each other.</p>
 
@@ -1629,11 +1644,11 @@ index to display a contiguous composition.</p>
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Append the first panel to each stage.</p>
 
@@ -1650,11 +1665,11 @@ index to display a contiguous composition.</p>
         </li>
         
         
-        <li id="section-89">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>The original element is cloned and hidden via transforms so the dimensions
 of the OriDomi content are maintained by it.</p>
@@ -1668,11 +1683,11 @@ of the OriDomi content are maintained by it.</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Once the clone is stored the original element is emptied and appened with
 the clone and the OriDomi content.</p>
@@ -1687,34 +1702,19 @@ the clone and the OriDomi content.</p>
         </li>
         
         
-        <li id="section-91">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
-              </div>
-              <p>An effect method is called since touch events rely on using the last
-method called.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="property">@accordion</span> <span class="number">0</span></pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
-              <p>The ripple setting is converted to a number to allow boolean settings.</p>
+              <p>An effect method is called since touch events rely on using the last
+method called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="property">@_config</span>.ripple = Number <span class="property">@_config</span>.ripple
-    <span class="property">@_setTrans</span> <span class="property">@_config</span>.speed, <span class="property">@_config</span>.ripple <span class="keyword">if</span> <span class="property">@_config</span>.ripple
+            <div class="content"><div class='highlight'><pre>    <span class="property">@accordion</span> <span class="number">0</span>
+    <span class="property">@setRipple</span> <span class="property">@_config</span>.ripple <span class="keyword">if</span> <span class="property">@_config</span>.ripple
     <span class="property">@enableTouch</span>() <span class="keyword">if</span> <span class="property">@_config</span>.touchEnabled</pre></div></div>
             
         </li>
@@ -2048,8 +2048,8 @@ keeping it within the maximum range specified in the instance settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _setTrans: (duration, delay) -&gt;
-    <span class="property">@_iterate</span> <span class="property">@_lastOp</span>.anchor, (panel, i, len) =&gt; <span class="property">@_setPanelTrans</span> arguments..., duration, delay</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _setTrans: (duration, delay, anchor = <span class="property">@_lastOp</span>.anchor) -&gt;
+    <span class="property">@_iterate</span> anchor, (panel, i, len) =&gt; <span class="property">@_setPanelTrans</span> anchor, arguments..., duration, delay</pre></div></div>
             
         </li>
         
@@ -2064,8 +2064,7 @@ keeping it within the maximum range specified in the instance settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  _setPanelTrans: (panel, i, len, duration, delay) -&gt;
-    {anchor} = <span class="property">@_lastOp</span>
+            <div class="content"><div class='highlight'><pre>  _setPanelTrans: (anchor, panel, i, len, duration, delay) -&gt;
     delayMs  = <span class="keyword">do</span> =&gt;</pre></div></div>
             
         </li>
@@ -2740,8 +2739,9 @@ and skips the queue. Its public counterpart is a queued alias.</p>
             
             <div class="content"><div class='highlight'><pre>  _unfold: (callback) -&gt;
     <span class="property">@_inTrans</span> = <span class="literal">true</span>
-    <span class="property">@_iterate</span> <span class="property">@_lastOp</span>.anchor, (panel, i, len) =&gt;
-      delay = <span class="property">@_setPanelTrans</span> arguments..., <span class="property">@_config</span>.speed, <span class="number">1</span>
+    {anchor}  = <span class="property">@_lastOp</span>
+    <span class="property">@_iterate</span> anchor, (panel, i, len) =&gt;
+      delay = <span class="property">@_setPanelTrans</span> anchor, arguments..., <span class="property">@_config</span>.speed, <span class="number">1</span>
 
       <span class="keyword">do</span> (panel, i, delay) =&gt;
         defer =&gt;
@@ -2831,7 +2831,8 @@ and skips the queue. Its public counterpart is a queued alias.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  setSpeed: (speed) -&gt;
-    <span class="property">@_setTrans</span> (<span class="property">@_config</span>.speed = speed), <span class="property">@_config</span>.ripple
+    <span class="keyword">for</span> anchor <span class="keyword">in</span> anchorList
+      <span class="property">@_setTrans</span> (<span class="property">@_config</span>.speed = speed), <span class="property">@_config</span>.ripple, anchor
     @</pre></div></div>
             
         </li>
@@ -3091,7 +3092,7 @@ This is useful for certain user interactions on the inner content.</p>
             
             <div class="content"><div class='highlight'><pre>  setRipple: (dir = <span class="number">1</span>) -&gt;
     <span class="property">@_config</span>.ripple = Number dir
-    <span class="property">@_setTrans</span> <span class="property">@_config</span>.speed, dir
+    <span class="property">@setSpeed</span> <span class="property">@_config</span>.speed
     @</pre></div></div>
             
         </li>
@@ -3402,7 +3403,7 @@ appear smoother with higher panel counts.</p>
       <span class="property">@_iterate</span> anchor, (panel, i, len) =&gt;
         duration  = <span class="property">@_config</span>.speed
         duration /= <span class="number">2</span> <span class="keyword">if</span> i <span class="keyword">is</span> <span class="number">0</span>
-        delay     = <span class="property">@_setPanelTrans</span> arguments..., duration, <span class="number">2</span>
+        delay     = <span class="property">@_setPanelTrans</span> anchor, arguments..., duration, <span class="number">2</span>
 
         <span class="keyword">do</span> (panel, i, delay) =&gt;
           defer =&gt;
