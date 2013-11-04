@@ -572,6 +572,10 @@ class OriDomi
     @el.innerHTML   = ''
     @el.appendChild @_cloneEl
     @el.appendChild @_stageHolder
+    # This ensures mouse events work correctly when panels are transformed
+    # away from the viewer.
+    @el.parentNode.style[css.transformStyle] = 'preserve-3d'
+
     # An effect method is called since touch events rely on using the last
     # method called.
     @accordion 0
