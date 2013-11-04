@@ -1278,6 +1278,7 @@ return unless $
 $::oriDomi = (options) ->
   # Return selection if OriDomi is unsupported by the browser.
   return @ unless isSupported
+  return $.data @[0], baseName if options is true
 
   # If `options` is a string, assume it's a method call.
   if typeof options is 'string'
@@ -1287,17 +1288,14 @@ $::oriDomi = (options) ->
       console?.warn "OriDomi: No such method `#{ methodName }`"
       return @
 
+    for el in @
 
-    # Warn if OriDomi hasn't been initialized on this element.
-    unless instance = $.data @[0], baseName
-      console?.warn "OriDomi: Can't call #{ methodName }, OriDomi hasn't been initialized on this element"
-      return @
+      unless instance = $.data el, baseName
+        instance = $.data el, baseName, new OriDomi el, options
 
-    # Call the requested method with arguments.
-    method.apply instance, [].slice.call(arguments)[1...]
+      # Call the requested method with arguments.
+      method.apply instance, Array::slice.call(arguments)[1...]
 
-    # Return selection.
-    @
 
   # If not calling a method, initialize OriDomi on the selection.
   else
@@ -1305,10 +1303,12 @@ $::oriDomi = (options) ->
       # If the element in the selection already has an instance of OriDomi
       # attached to it, return the instance.
       if instance = $.data el, baseName
-        return instance
+        continue
       else
         # Create an instance of OriDomi and attach it to the element.
         $.data el, baseName, new OriDomi el, options
 
-    # Return the selection.
-    @
+
+  # Return the selection.
+  @
+
