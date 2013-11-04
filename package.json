@@ -1,21 +1,34 @@
 {
   "name": "oridomi",
-  "description": "Fold up the DOM like paper.",
-  "author": "Dan Motzenbecker <dan@oxism.com> (http://oxism.com)",
+  "description": "Origami for the web. Fold up the DOM like paper.",
+  "author": {
+    "name": "Dan Motzenbecker",
+    "email": "dan@oxism.com",
+    "url": "http://oxism.com"
+  },
   "homepage": "http://oridomi.com",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/dmotz/oriDomi.git"
   },
+  "main": "./oridomi",
   "keywords": [
+    "origami",
     "DOM",
     "paper",
-    "frontend",
-    "jquery"
+    "folding",
+    "frontend"
   ],
-  "dependencies": {
-      "coffee-script" : "1.4.x"
+  "devDependencies": {
+    "coffee-script": "1.6.x",
+    "uglify-js": "2.4.x",
+    "stylus": "0.38.x",
+    "nib": "1.0.x",
+    "docco": "0.6.x"
+  },
+  "bugs": {
+    "url" : "http://github.com/dmotz/oriDomi/issues"
   }
 }

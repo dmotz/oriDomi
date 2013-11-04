@@ -1,253 +1,621 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="author" content="Dan Motzenbecker">
-    <meta name="description" content="oriDomi - Fold up the DOM like paper - origami for the web">
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
-    <title>oriDomi - Fold up the DOM like paper - origami for the web</title>
-    <link href="demo/demo.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lato:100,900" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="favicon.ico">
+  <meta charset="utf-8">
+  <meta name="author" content="Dan Motzenbecker">
+  <meta name="description" content="OriDomi - origami for the web">
+  <meta name="viewport" content="width=device-width, initial-scale=0.6">
+  <title>OriDomi - origami for the web</title>
+  <link href="demo/demo.css" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
+  <link href="favicon.png" rel="icon" type="image/png" >
 </head>
 <body>
-    <div class="menu">
-        <ul>
-            <li><a href="#features">Features</a></li>
-            <li>
-                <a href="#examples">Examples</a>
-                    <ul>
-                        <li><a href="#example-reveal">Reveal</a></li>
-                        <li><a href="#example-stairs">Stairs</a></li>
-                        <li><a href="#example-accordion">Accordion</a></li>
-                        <li><a href="#example-curl">Curl</a></li>
-                        <li><a href="#example-fold-up">Fold Up</a></li>
-                    </ul>
-            </li>
-            <li><a href="#usage">Usage</a></li>
-            <li><a href="#caveats">Caveats</a></li>
-            <li><a href="#final">Final Thoughts</a></li>
-        </ul>
+
+  <header>
+    <h1 class="logo">OriDomi<sup>1.0</sup></h1>
+    <h2>The web is flat, but now you can fold it up.</h2>
+    <h5>open source JavaScript library by <a href="http://oxism.com">Dan Motzenbecker</a></h5>
+    <div>
+      <a class="button" href="https://github.com/dmotz/oriDomi">download on github</a>
+      <a class="button" href="docs/oridomi.html">view annotated source</a>
     </div>
+  </header>
 
-    <a href="https://github.com/dmotz/oridomi" target="_blank" class="fold-me">
-        <p>fold me on Github</p>
-    </a>
+  <ul id="menu">
+    <li><a href="#">OriDomi</a></li>
+    <li><a href="#demos">Demos</a></li>
+    <li><a href="#features">Features</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#initialization">Initialization</a></li>
+        <li><a href="#options">Options</a></li>
+        <li><a href="#effects">Effects</a></li>
+        <li><a href="#callbacks">Callbacks</a></li>
+        <li><a href="#queueing">Queueing</a></li>
+        <li><a href="#touch">Touch</a></li>
+        <li><a href="#content-manipulation">Content manipulation</a></li>
+        <li><a href="#ripple">Ripple</a></li>
+        <li><a href="#responsive">Responsive</a></li>
+        <li><a href="#custom">Custom behavior</a></li>
+        <li><a href="#minutiae">Minuti&aelig;</a></li>
+      </ul>
+    </li>
+    <li><a href="#coda">Coda</a></li>
+  </ul>
 
-    <header>
-        <div class="rotation">
-            <div class="demo1">
-                <h1>Hello.</h1>
-                <h4>my name is oriDomi.</h4>
-            </div>
+  <noscript>
+    <div class="warning">
+      Your browser has JavaScript disabled. OriDomi needs JavaScript turned on
+      to work. Otherwise, all you&rsquo;ll see here are some flat text and images.
+      Visit <a href="http://www.enable-javascript.com">this site</a> if you need
+      help turning it on.
+    </div>
+  </noscript>
+
+  <div id="unsupported" class="warning">
+    Sorry, looks like your browser is too old to support OriDomi, so all you&rsquo;ll
+    see below are some flat images and text. To get the most out of the web,
+    consider upgrading to a browser that supports modern standards. Try
+    <a href="https://www.google.com/chrome">Chrome</a>,
+    <a href="http://www.apple.com/safari">Safari</a>, or
+    <a href="http://www.firefox.com">Firefox</a>.
+  </div>
+
+  <section id="demos">
+    <h2>
+      Fold the
+      <a href="http://en.wikipedia.org/wiki/Document_Object_Model" target="_blank">DOM</a>
+      like paper.
+    </h2>
+    <h3>
+      Use your mouse or touch to manipulate these, or press the <b>fold</b>
+      button to see a random effect:
+    </h3>
+    <ul>
+      <li>
+        <div class="demo demo1">
+          <h3>Hello.</h3>
+          <p>from DOM-land</p>
         </div>
-
-        <div id="tagline">
-            <h1>Fold up the DOM like paper.</h1>
-        </div>
-        <p id="author">
-            by
-            <a href="http://oxism.com">Dan Motzenbecker</a>,
-            <a href="http://twitter.com/dcmotz">@dcmotz</a>
-        </p>
-        <h2><a href="oridomi.js">oridomi.js</a> / <a href="oridomi.min.js">oridomi.min.js</a></h2>
-        <br><br>
-        <h3 id="view-docs"><a href="docs/oridomi.html">Annotated source</a></h3>
-        <h3 id="get-source"><a href="https://github.com/dmotz/oridomi">Github repository</a></h3>
-
-    </header>
-
-
-    <section id="features">
         <div>
-            <h2>Features</h2>
-            <ul>
-                <li><em>zero</em> dependencies</li>
-                <li>less than 15k</li>
-                <li>optional jQuery support</li>
-                <li>works on iOS</li>
-                <li>built in touch handlers with callbacks</li>
-            </ul>
+          <div class="label">accordion(20)</div>
+          <div class="button" data-n="0">fold</div>
         </div>
-    </section>
+      </li>
 
-
-    <section id="examples">
-        <h2>Examples</h2>
-        <h5>(touch or drag to fold)</h5>
-
-        <ul>
-            <li id="example-reveal">
-                <article>
-                    <h4>Reveal</h4>
-                    <h5>(3 panels)</h5>
-                    <p>Keeps the anchor panel flat against the surface of the page.</p>
-                </article>
-                <div class="demo demo2">Late Capitalism</div>
-<pre>
-domi2.reveal(40);
-</pre>
-            </li>
-
-            <li id="example-stairs">
-                <article>
-                    <h4>Stairs</h4>
-                    <h5>(5 panels)</h5>
-                    <p>Panels ascend toward or descend away from the viewer.</p>
-                </article>
-                <div class="demo demo3">Delight</div>
-<pre>
-domi3.stairs(-25, 'right');
-</pre>
-            </li>
-
-            <li id="example-accordion">
-                <article>
-                    <h4>Accordion</h4>
-                    <h5>(6 panels)</h5>
-                    <p>Compresses the element like the bellows of its namesake.</p>
-                </article>
-                <div class="demo demo4"></div>
-<pre>
-domi4.accordion(-50);
-</pre>
-            </li>
-
-            <li id="example-curl">
-                <article>
-                    <h4>Curl</h4>
-                    <h5>(10 panels)</h5>
-                    <p>An alternative to sharp folds. Looks best with higher panel counts.</p>
-                </article>
-                <div class="demo demo5">Tennis Court Oath</div>
-<pre>
-domi5.curl(-60, 'top');
-</pre>
-            </li>
-
-            <li id="example-fold-up">
-                <article>
-                    <h4>Fold Up</h4>
-                    <h5>(5 panels)</h5>
-                    <p>
-                        Folds the composition up one panel at a time.<br>
-                        Calling <code>reset()</code> after any effect returns to the initial state.
-                    </p>
-                </article>
-                <div class="demo demo6"><p>TV<br>Sabbatical.</p></div>
-                <p>Click to toggle folding.</p>
-<pre>
-domi6.isFoldedUp ? domi6.reset() : domi6.foldUp();
-</pre>
-            </li>
-
-        </ul>
-    </section>
-
-    <section id="usage">
+      <li>
+        <div class="demo demo5"></div>
         <div>
-            <h2>Usage</h2>
-
-            <p><b>oriDomi</b> works with or without a DOM library like jQuery.</p>
-
-            <p>First, initialize your target element with <b>oriDomi</b> using either jQuery:</p>
-
-<pre>
-var $domi = $('.my-div').oriDomi();
-</pre>
-
-        <p>or using the standard DOM API:</p>
-
-<pre>
-var domi = new OriDomi(document.getElementsByClassName('my-div')[0]);
-</pre>
-
-        <p>You can pass a number of options when initializing <b>oriDomi</b> on an element.</p>
-
-        <p>Options can include the number of horizontal and vertical panels, speed, perspective distance, shading method,
-            as well as a few others.</p>
-
-        <p>For example:</p>
-
-<pre>
-var $domi = $('.my-div').oriDomi({ vPanels: 3, hPanels: 10,
-    perspective: 200, speed: 500, shading: false });
-</pre>
-
-            <p>Once <b>oriDomi</b> is initialized on an element, you can call methods like so:</p>
-
-<pre>
-$domi.oriDomi('accordion', -30, 'right');
-</pre>
-
-            <p>The first argument is the method to be called, the second is the angle to rotate by, and the third, optional
-            argument is the anchor from which to transform (left, right, top, bottom).<br>Left is default.</p>
-
-            <p>Alernatively, you can use this syntax style when using jQuery:</p>
-
-<pre>
-$domi.oriDomi().foldUp();
-</pre>
-
-            <p>You can also pass an options object
-            literal as another argument, which can include a callback function to run when the animation completes.</p>
-
-            <p>Methods include accordion, reveal, curl, collapse, ramp, foldUp, unfold and reset.</p>
-
-            <p>Keep in mind, you can pass shorthand anchor names such as
-                <code>'l'</code>, <code>'r'</code>, <code>'t'</code>, <code>'b'</code> or
-                <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>.</p>
-
-<pre>
-$domi.oriDomi('reveal', 44, 1,
-    { callback: function(){ alert('oriDomi reveal finished!') } });
-</pre>
-            <p>For a detailed look, read through the <a href="docs/oridomi.html">annotated source</a>.</p>
-
+          <div class="label">reveal(30)</div>
+          <div class="button" data-n="4">fold</div>
         </div>
-    </section>
+      </li>
 
-    <section id="caveats">
+      <li>
+        <div class="demo demo2">
+          <h3>Late<br>Capitalism</h3>
+        </div>
         <div>
-            <h2>Caveats</h2>
-            <ul>
-                <li><b>oriDomi</b> only works in modern browsers that support CSS 3D transforms<br>
-                <span>If a browser doesn&rsquo;t support <b>oriDomi</b>, the DOM won&rsquo;t be touched.</span></li>
-                <li><b>oriDomi</b> works best in WebKit browsers.<br>
-                    <span>Firefox is supported, but antialiasing doesn&rsquo;t work well yet.
-                        You can force antialiasing in Firefox with the <code>forceAntialiasing: true</code> option.</span>
-                 </li>
-                <li>If you&rsquo;re targeting an element that has dimensions defined by media it contains (e.g. an image),
-                    be sure to wait until the image is loaded before invoking <b>oriDomi</b>.<br>
-                    <span><b>oriDomi</b> works best when you define a width and height on the target element.</span>
-                </li>
-            </ul>
+          <div class="label">reveal(40)</div>
+          <div class="button" data-n="1">fold</div>
         </div>
-    </section>
+      </li>
 
-    <section id="final">
+      <li>
+        <div class="demo demo3">
+          <h3>Tennis<br>Court<br>Oath</h3>
+        </div>
         <div>
-            <h2>Final Thoughts</h2>
-            <p><b>oriDomi</b> is new, so it likely has some bugs.</p>
-            <p>If you have an idea or a bugfix, please contribute to the <a href="https://github.com/dmotz/oridomi">Github repo</a>.</p>
-            <p>If you enjoy <b>oriDomi</b>, check out my iPhone app <a href="http://chaincalapp.com">ChainCal</a>.</p>
-            <p>Or, <a href="http://twitter.com/dcmotz">follow me on twitter.</a></p>
-            <p>The DOM is your oyster.</p>
+          <div class="label">accordion(-20)</div>
+          <div class="button" data-n="2">fold</div>
         </div>
-    </section>
+      </li>
 
-    <script src="oridomi.js"></script>
-    <script src="demo/demo.js"></script>
-    <script>
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-33974399-1']);
-        _gaq.push(['_trackPageview']);
-        (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+      <li>
+        <div class="demo demo4">
+          Ersatz
+        </div>
+        <div>
+          <div class="label">stairs(18)</div>
+          <div class="button" data-n="3">fold</div>
+        </div>
+      </li>
+
+      <li>
+        <div class="demo demo6">
+<pre>
+
+/*
+
+ $$$$$$\            $$\ $$$$$$$\                          $$\
+$$  __$$\           \__|$$  __$$\                         \__|
+$$ /  $$ | $$$$$$\  $$\ $$ |  $$ | $$$$$$\  $$$$$$\$$$$\  $$\
+$$ |  $$ |$$  __$$\ $$ |$$ |  $$ |$$  __$$\ $$  _$$  _$$\ $$ |
+$$ |  $$ |$$ |  \__|$$ |$$ |  $$ |$$ /  $$ |$$ / $$ / $$ |$$ |
+$$ |  $$ |$$ |      $$ |$$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$ |
+ $$$$$$  |$$ |      $$ |$$$$$$$  |\$$$$$$  |$$ | $$ | $$ |$$ |
+ \______/ \__|      \__|\_______/  \______/ \__| \__| \__|\__|
+
+v. 1.0.0
+
+*/
+
+var demo6 = new OriDomi('.demo6', {
+  hPanels: 4,
+  ripple:  true,
+  shading: false
+});
+
+</pre>
+        </div>
+        <div>
+          <div class="label">stairs(20)</div>
+          <div class="button" data-n="5">fold</div>
+        </div>
+      </li>
+
+    </ul>
+
+  </section>
+
+  <section id="features">
+    <h1>Features</h1>
+    <ul>
+      <li>zero dependencies</li>
+      <li>fully responsive sizing</li>
+      <li>works with media queries</li>
+      <li>~20k minified</li>
+      <li>animation queueing</li>
+      <li>iOS compatible</li>
+      <li>touch &amp; mouse handlers</li>
+      <li>fluent interface</li>
+      <li>animation callbacks</li>
+      <li>optional jQuery plugin</li>
+    </ul>
+  </section>
+
+  <section id="usage">
+    <h1>Usage</h1>
+    <h2 id="initialization">Initialization</h2>
+
+    <p>
+      Create an OriDomi instance by passing your target element to the constructor:
+    </p>
+
+<pre>
+<code>
+var folded = new OriDomi(document.getElementsByClassName('paper')[0]);
+</code>
+</pre>
+
+    <p>
+      &hellip;or pass a selector string and OriDomi will use the first
+      element that matches:
+    </p>
+
+<pre>
+<code>
+var folded = new OriDomi('.paper');
+</code>
+</pre>
+
+    <p>If you prefer using jQuery, try this:</p>
+
+<pre>
+<code>
+var $folded = $('.paper').oriDomi({/* options object */});
+// when using jQuery, iterate OriDomi methods over multiple elements like this:
+$folded.oriDomi('accordion', 20);
+// to access the OriDomi instance at the top of the jQuery selection directly:
+var folded = $folded.oriDomi(true);
+</code>
+</pre>
+
+    <h2 id="options">Options</h2>
+
+    <p>
+      When creating a new OriDomi composition, you can pass a map of options
+      as the second argument:
+    </p>
+
+<pre>
+<code>
+var folded = new OriDomi('.paper', {
+  speed:           1200,  // folding duration in ms
+  ripple:          2,     // backwards ripple effect when animating
+  shadingIntesity: .5,    // lessen the shading effect
+  perspective:     800,   // smaller values exaggerate 3D distortion
+  maxAngle:        40,    // keep the user's folds within a range of -40 to 40 degrees
+  shading:         'soft' // change the shading type
+});
+</code>
+</pre>
+
+    <p>
+      A full list of options and their descriptions is available
+      <a href="./docs/oridomi.html#section-54">here in the source</a>.
+    </p>
+
+
+    <h2 id="effects">Effects</h2>
+
+    <p>
+      Most effect methods only require a folding angle as their first argument.
+    </p>
+
+<pre>
+<code>
+folded.accordion(30);
+</code>
+</pre>
+
+    <p>
+      You can specify the anchor to fold from (left, right, top, or bottom)
+      as the second argument:
+    </p>
+
+
+<pre>
+<code>
+folded.curl(-50, 'top');
+</code>
+</pre>
+
+
+    <p>
+      <code>foldUp()</code> is a unique effect method that doesn&rsquo;t take an
+      angle argument because it causes the OriDomi composition to roll up completely
+      in a staggered fashion.
+    </p>
+
+<pre>
+<code>
+// completely hides the element:
+folded.foldUp();
+</code>
+</pre>
+
+    <p>
+      Its counterpart <code>unfold()</code> will be automatically called before
+      another effect method can be applied.
+    </p>
+
+    <p>
+      You can browse through all the effect methods
+      <a href="./docs/oridomi.html#section-173">here in the source</a>.
+    </p>
+
+    <h2 id="callbacks">Callbacks</h2>
+
+
+    <p>
+      Maybe you&rsquo;d like to do something when an animation&rsquo;s complete?
+      Pass a callback function:
+    </p>
+
+<pre>
+<code>
+folded.curl(-50, 'top', function(event, instance) {
+  // arguments are the transition event and the OriDomi instance
+  alert('It seems my folding days are through.');
+});
+</code>
+</pre>
+
+
+  <p>
+    Keep in mind that arguments are flexible.
+    The anchor you used last is assumed when leaving out an anchor argument.
+    OriDomi can usually figure out what you meant:
+  </p>
+
+<pre>
+<code>
+folded.ramp(14, function() {
+  alert('A callback as a second argument...');
+});
+</code>
+</pre>
+
+
+    <h2 id="queueing">Queueing</h2>
+
+    <p>
+      Callbacks are useful, but can become cumbersome when creating
+      a sequence of animations:
+    </p>
+
+<pre>
+<code>
+// a pyramid you can choose to avoid:
+folded.curl(50, function() {
+  folded.collapse(function() {
+    folded.setSpeed(2000);
+    folded.stairs(-29, function() {
+      folded.foldUp(function() {
+        folded.unfold();
+      });
+    });
+  });
+});
+</code>
+</pre>
+
+    <p>
+      OriDomi features a built-in queueing system that can be used in harmony
+      with its fluent, chainable interface to easily create sequences:
+    </p>
+
+<pre>
+<code>
+// same result as the previous example:
+folded.curl(50).collapse().setSpeed(2000).stairs(-29).foldUp().unfold();
+</code>
+</pre>
+
+
+    <p>
+      In other words, you can call asynchronous methods synchronously and the
+      operations will intelligently queue themselves. There&rsquo;s even no need
+      to chain or make the calls within the same event loop.
+    </p>
+
+    <p>
+      You can programmatically empty the queue by calling <code>emptyQueue()</code>.
+      Touch and mouse events also immediately clear queued actions.
+    </p>
+
+    <p>
+      You can also call <code>wait()</code> with a value of milliseconds to
+      queue up a delay between actions:
+    </p>
+
+<pre>
+<code>
+folded.reveal(20).wait(3000).fracture(-30);
+</code>
+</pre>
+
+    <h2 id="touch">Touch</h2>
+
+    <p>
+      The ability to manipulate a composition with the mouse or by touch is
+      enabled by default. To create a non-interactive OriDomi composition, pass
+      this in the initialization options:
+    </p>
+
+<pre>
+<code>
+var handsOff = new OriDomi('.sandpaper', { touchEnabled: false });
+</code>
+</pre>
+
+    <p>You can also change it on the fly:</p>
+
+<pre>
+<code>
+handsOff.enableTouch();
+
+handsOff.disableTouch();
+</code>
+</pre>
+
+
+    <p>
+      If you&rsquo;re interested in tracking the user&rsquo;s actions without
+      dealing with event handlers yourself, you can specify callback functions
+      in the initialization options:
+    </p>
+
+<pre>
+<code>
+var slider = new Oridomi('.slider', {
+  touchStartCallback: function(startCoordinate, event) {},
+  touchMoveCallback:  function(movementAngle, event) {},
+  touchEndCallback:   function(endCoordinate, event) {}
+});
+</code>
+</pre>
+
+
+    <h2 id="content-manipulation">Content manipulation</h2>
+
+    <p>
+      OriDomi does plenty of DOM manipulation behind the scenes to create what
+      you see. If you want to change the content or the styling of the
+      element after it&rsquo;s been modified, OriDomi provides a setter method
+      to help you out:
+    </p>
+
+<pre>
+<code>
+folded.modifyContent(function(el) {
+  el.querySelector('h1').innerHTML = 'ch-ch-ch-ch-changes... turn and face the strange'
+  el.style.backgroundColor = '#000';
+});
+</code>
+</pre>
+
+    <p>
+      By passing a function to <code>modifyContent()</code>, you can easily apply
+      your manipulations on every panel in the composition, with the first argument
+      referring to an individual panel element. <code>modifyContent()</code> also
+      passes to the supplied function the anchor (top, left, right, or bottom)
+      and the panel&rsquo;s index within that anchor (as the second and third
+      arguments respectively) should you want to make precise and unique manipulations.
+    </p>
+
+    <p>
+      If you&rsquo;re feeling lazy, you can pass a map of selectors and
+      manipulation instructions instead:
+    </p>
+
+<pre>
+<code>
+folded.modifyContent({
+  h1: {
+    content: 'Hello there',
+    style: {
+      color: 'green',
+      textDecoration: 'underline'
+    }
+  },
+  'div > p': 'just some text.',
+  img: {
+    style: {
+      width: '99%'
+    }
+  }
+});
+</code>
+</pre>
+
+
+    <h2 id="ripple">Ripple</h2>
+
+    <p>
+      By default, every crease in an OriDomi composition will fold simultaneously.
+      For a staggered effect, you can enable &ldquo;ripple&rdquo; mode by either
+      passing <code>ripple: true</code> in the initial options or by calling
+      <code>setRipple()</code>:
+    </p>
+
+<pre>
+<code>
+// staggered, rippling animations:
+folded.setRipple().accordion(28).stairs(-40);
+
+// disable ripple:
+folded.setRipple(0);
+
+// ripple forwards (default):
+folded.setRipple(1);
+
+// ripple backwards:
+folded.setRipple(2);
+</code>
+</pre>
+
+    <p>The demos at the top of this page have it enabled.</p>
+
+
+    <h2 id="responsive">Responsive</h2>
+
+    <p>
+      OriDomi compositions adapt to dynamic dimensions just as well as normal
+      elements. This means that if your OriDomi composition's size is changed
+      by percentage-based sizing, media queries, CSS transitions, scripting, et
+      cetera, the panels will resize themselves relative to their parent container.
+    </p>
+
+    <p>
+      If you resize this site to a small width, you&rsquo;ll see the demos above
+      change width accordingly.
+    </p>
+
+
+    <h2 id="custom">Custom behavior</h2>
+
+    <p>
+      And now you&rsquo;ve decided the built-in effects just aren&rsquo;t good
+      enough for you?
+    </p>
+
+    <p>
+      Luckily, you can precisely control the folding behavior of every panel by
+      passing a custom function to the <code>map()</code> method:
+    </p>
+
+<pre>
+<code>
+folded.map(function(angle, index, length){ return angle * index * Math.random() })(20);
+</code>
+</pre>
+
+    <p>
+      In the contrived example above, an anonymous function is passed to
+      <code>map()</code> that simply multiplies the supplied angle by a given
+      panel&rsquo;s index and a random float. The function is called for every
+      panel in the series and may return a different value for each panel based
+      on the same input value.
+    </p>
+
+    <p>
+      Since the function you supply is called with the panel index and the set
+      length, you can create some complex behavior based on evens/odds, angle ranges,
+      or special behavior based on first/last position. For example, if you wanted
+      to create a fold-in effect that keeps the first and last panels flat against
+      the page surface, your function could return different values based on the
+      index and length arguments supplied to it.
+    </p>
+
+    <h2 id="minutiae">Minuti&aelig;</h2>
+
+    <p>
+      OriDomi requires a modern browser with support for CSS3 transforms,
+      particularly <code>preserve-3d</code> support. IE 10 and below lack this,
+      but I&rsquo;m sure you could&rsquo;ve guessed that.
+    </p>
+
+    <p>
+      You can test for browser support by checking <code>OriDomi.isSupported</code>
+      at runtime. Initializing an OriDomi instance on an unsupported browser will
+      return nothing so it&rsquo;s best to use a conditional around your code
+      dealing with OriDomi.
+    </p>
+
+    <p>
+      You may notice that OriDomi looks significantly worse in Firefox compared
+      to WebKit browsers. There is an open ticket for this aliasing issue
+      <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=766345">on Bugzilla</a>.
+    </p>
+
+    <p>
+      If you have an improvement for OriDomi, by all means
+      <a href="https://github.com/dmotz/oriDomi">fork and contribute it</a>.
+    </p>
+
+
+  </section>
+
+
+  <section id="coda">
+
+    <h1>Coda</h1>
+
+    <p>
+      I usually tweet about updates and other projects I&rsquo;m working on.
+      <a href="http://twitter.com/dcmotz">Follow me</a> if that sounds like it
+      might interest you.
+    </p>
+
+    <p>
+      For similar open-source projects, take a look at my
+      <a href="http://oxism.com">personal site</a>.
+    </p>
+
+    <p>And remember, <i>the DOM is your oyster.</i></p>
+
+  </section>
+
+
+  <footer>
+    &infin; <a href="http://oxism.com">oxism.com</a>
+  </footer>
+
+  <script src="oridomi.min.js"></script>
+  <script src="demo/demo.js"></script>
+  <script>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33974399-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </body>
 </html>

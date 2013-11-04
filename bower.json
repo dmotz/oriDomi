@@ -1,6 +1,5 @@
 {
   "name": "oridomi",
-  "repo": "dmotz/oriDomi",
   "description": "Origami for the web. Fold up the DOM like paper.",
   "version": "1.0.0",
   "main": "oridomi.js",

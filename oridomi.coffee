@@ -1,160 +1,381 @@
-# [oriDomi](http://oridomi.com)
-# =============================
+# # OriDomi
+# ### Fold up the DOM like paper.
+# 1.0.0
+
+# [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
-# Fold up the DOM like paper.
 
-# `0.2.2`
+# Copyright 2013, MIT License
 
-# Copyright 2012, MIT License
-
-# Setup
-# =====
-
-# Enable strict mode.
 'use strict'
 
-# Set a reference to the global object within this scope.
-root = @
-
-# An array to hold references to oriDomi instances so they can be easily freed
-# from memory via the `destroy()` method.
-instances = []
-
-# Set a reference to jQuery (or another `$`-aliased DOM library).
-# If it doesn't exist, set to false so oriDomi knows we are working without jQuery.
-# oriDomi doesn't require it to work, but offers a useful plugin bridge.
-$ = root.$ or false
-
-# `devMode` determines whether oriDomi is vocal in the console with warnings and benchmarks.
-# Turn it on externally by calling `OriDomi.devMode()`.
-devMode = false
-
 # This variable is set to true and negated later if the browser does
-# not support oriDomi.
-oriDomiSupport = true
+# not support OriDomi.
+isSupported = true
 
-# Create a div for testing CSS3 properties.
-testEl = document.createElement 'div'
+# Utility Functions
+# ================
 
-# Set a list of browser prefixes for testing CSS3 properties.
-prefixList = ['Webkit', 'Moz', 'O', 'ms', 'Khtml']
+# Used for informing the developer which required feature the browser lacks.
+supportWarning = (prop) ->
+  console?.warn "OriDomi: Missing support for `#{ prop }`."
+  isSupported = false
 
-# A map of the CSS3 properties needed to support oriDomi, with shorthand names as keys.
-css =
-  transform: 'transform'
-  origin: 'transformOrigin'
-  transformStyle: 'transformStyle'
-  transitionProp: 'transitionProperty'
-  transitionDuration: 'transitionDuration'
-  transitionEasing: 'transitionTimingFunction'
-  perspective: 'perspective'
-  backface: 'backfaceVisibility'
 
-# This function checks for the presence of CSS properties on the test div.
+# Checks for the presence of CSS properties on a test element.
 testProp = (prop) ->
-  # Capitalize the property name for camel-casing.
-  capProp = prop.charAt(0).toUpperCase() + prop.slice 1
-  # Loop through the vendor prefix list and return when we find a match.
+  # Loop through the vendor prefix list and return a match is found.
   for prefix in prefixList
-    if testEl.style[prefix + capProp]?
-      return prefix + capProp
-  # If the un-prefixed property is present, return it.
+    return full if testEl.style[(full = prefix + capitalize prop)]?
+
+  # If the unprefixed property is present, return it.
   return prop if testEl.style[prop]?
-  # If no matches are found, return false to denote that the browser is missing this property.
+  # If no matches are found, return false to denote that the browser is
+  # missing this property.
   false
 
 
-# Loop through the CSS hash and replace each value with the result of `testProp()`.
-for key, value of css
-  css[key] = testProp value
-  # If the returned value is false, warn the user that the browser doesn't support
-  # oriDomi, set `oriDomiSupport` to false, and break out of the loop.
-  unless css[key]
-    console.warn 'oriDomi: Browser does not support oriDomi' if devMode
-    oriDomiSupport = false
-    break
+# Generates CSS text based on a selector string and a map of styling rules.
+addStyle = (selector, rules) ->
+  style = ".#{ selector }{"
+  for prop, val of rules
+    # If the CSS property is among special properties defined later, prefix it.
+    if prop of css
+      prop = css[prop]
+      prop = '-' + prop if prop.match /^(webkit|moz|ms)/i
 
-# CSS3 gradients are used for shading.
-# Testing for them is different because they are prefixed values, not properties.
-# This invokes an anonymous function to loop through vendor-prefixed linear-gradients.
-css.gradientProp = do ->
-  for prefix in prefixList
-    hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
-    testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
-    # After setting a gradient background on the test div, attempt to retrieve it.
-    unless testEl.style.backgroundImage.indexOf('gradient') is -1
-      return hyphenated
-  # If none of the hyphenated values worked, return the unprefixed version.
-  'linear-gradient'
+    # Convert camelcase to hypenated.
+    style += "#{ prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() }:#{ val };"
 
-# The default cursor style is set to `grab` to prompt the user to interact with the element.
-[css.grab, css.grabbing] = do ->
-  for prefix in prefixList
-    plainGrab = 'grab'
-    testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
-    # If the cursor was set correctly, return the prefixed pair.
-    return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
-  # Otherwise try the unprefixed version.
-  testEl.style.cursor = plainGrab
-  if testEl.style.cursor is plainGrab
-    [plainGrab, 'grabbing']
-  else
-    # Fallback to `move`.
-    ['move', 'move']
-
-# Invoke a functional scope to set a hyphenated version of the transform property.
-css.transformProp = do ->
-  # Use a regex to pluck the prefix `testProp` found.
-  prefix = css.transform.match /(\w+)Transform/i
-  if prefix
-    "-#{ prefix[1].toLowerCase() }-transform"
-  else
-    'transform'
-
-# Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
-css.transitionEnd = do ->
-  switch css.transitionProp
-    when 'transitionProperty'
-      'transitionEnd'
-    when 'WebkitTransitionProperty'
-      'webkitTransitionEnd'
-    when 'MozTransitionProperty'
-      'transitionend'
-    when 'OTransitionProperty'
-      'oTransitionEnd'
-    when 'MSTransitionProperty'
-      'msTransitionEnd'
+  styleBuffer += style + '}'
 
 
-# This function is used to extend option object literals with a set of defaults.
-# It is simple and one dimensional.
-extendObj = (target, source) ->
-  # Check if the extension object is an object literal by casting it and comparing it.
-  if source isnt Object source
-    console.warn 'oriDomi: Must pass an object to extend with' if devMode
-    # Return the original target if its source isn't valid.
-    return target
-  # If the target isn't an object, set it to an empty object literal.
-  if target isnt Object target
-    target = {}
-  # Loop through the extension object and copy its values to the target if they don't exist.
-  for prop of source
-    if not target[prop]?
-      target[prop] = source[prop]
-
-  # Return the extended target object.
-  target
+# Defines gradient directions based on a given anchor.
+getGradient = (anchor) ->
+  "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
-# Defaults
-# ========
+# Used mainly when creating camelcased strings.
+capitalize = (s) ->
+  s[0].toUpperCase() + s[1...]
+
+
+# Create an element and look up the canonical class name.
+createEl = (className) ->
+  el = document.createElement 'div'
+  el.className = elClasses[className]
+  el
+
+
+# Clone an element, add an additional class, and return it.
+cloneEl = (parent, deep, className) ->
+  el = parent.cloneNode deep
+  el.classList.add elClasses[className]
+  el
+
+
+# GPU efficient ways of hiding and showing elements:
+hideEl = (el) ->
+  el.style[css.transform] = 'translate3d(-99999px, 0, 0)'
+
+
+showEl = (el) ->
+  el.style[css.transform] = 'translate3d(0, 0, 0)'
+
+
+# This decorator is used on public effect methods to invoke preliminary tasks
+# before the effect is applied.
+prep = (fn) ->
+  ->
+    # If the method has been initiated by a touch handler, skip this process.
+    if @_touchStarted
+      fn.apply @, arguments
+    else
+      [a0, a1, a2] = arguments
+      opt          = {}
+      angle        = anchor = null
+
+      # This switch is used to derive the intended order of arguments.
+      # This keeps argument requirements flexible, allowing most to be left out.
+      # By putting this logic in a decorator, it doesn't have to exist in any
+      # of the individual methods.
+
+      # Methods are inferred by their arity.
+      switch fn.length
+        when 1
+          opt.callback = a0
+          # If the composition is already folded up, skip the queueing process
+          # and invoke the supplied callback immediately.
+          return opt.callback?() unless @isFoldedUp
+        when 2
+          if typeof a0 is 'function'
+            opt.callback = a0
+          else
+            anchor       = a0
+            opt.callback = a1
+        when 3
+          angle = a0
+          if arguments.length is 2
+            if typeof a1 is 'object'
+              opt = a1
+            else if typeof a1 is 'function'
+              opt.callback = a1
+            else
+              anchor = a1
+          else if arguments.length is 3
+            anchor = a1
+            if typeof a2 is 'object'
+              opt = a2
+            else if typeof a2 is 'function'
+              opt.callback = a2
+
+      angle   ?= @_lastOp.angle or 0
+      anchor or= @_lastOp.anchor
+      # Here we add the called function and its normalized arguments to the
+      # instance's queue.
+      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]
+      # `_step()` manages the queue and decides whether the action will occur now
+      # or be deferred.
+      @_step()
+      # This decorator also returns the instance so effect methods are chainable.
+      @
+
+
+# It's necessary to defer many DOM manipulations to a subsequent event loop tick.
+defer = (fn) ->
+  setTimeout fn, 0
+
 
 # Empty function to be used as placeholder for callback defaults
 # (instead of creating separate empty functions).
 noOp = ->
 
 
-# Map of oriDomi instance defaults.
+# Setup
+# =====
+
+# Set a reference to jQuery (or another `$`-aliased DOM library).
+# If it doesn't exist, set to null so OriDomi knows we are working without jQuery.
+# OriDomi doesn't require it to work, but offers a useful plugin bridge if present.
+$ = if (window.jQuery or window.$)?.data then window.$ else null
+
+# List of anchors and their corresponding axis pairs.
+anchorList  = ['left', 'right', 'top', 'bottom']
+anchorListV = anchorList[..1]
+anchorListH = anchorList[2..]
+
+# Create a div for testing CSS3 properties.
+testEl = document.createElement 'div'
+
+# The style buffer is later populated with CSS rules and appended to the document.
+styleBuffer = ''
+
+# List of browser prefixes for testing CSS3 properties.
+prefixList = ['Webkit', 'Moz', 'ms']
+baseName   = 'oridomi'
+# CSS classes used by style rules.
+elClasses  =
+  active:       'active'
+  clone:        'clone'
+  holder:       'holder'
+  stage:        'stage'
+  stageLeft:    'stage-left'
+  stageRight:   'stage-right'
+  stageTop:     'stage-top'
+  stageBottom:  'stage-bottom'
+  content:      'content'
+  mask:         'mask'
+  maskH:        'mask-h'
+  maskV:        'mask-v'
+  panel:        'panel'
+  panelH:       'panel-h'
+  panelV:       'panel-v'
+  shader:       'shader'
+  shaderLeft:   'shader-left'
+  shaderRight:  'shader-right'
+  shaderTop:    'shader-top'
+  shaderBottom: 'shader-bottom'
+
+# Each class is namespaced to prevent styling collisions.
+elClasses[k] = "#{ baseName }-#{ v }" for k, v of elClasses
+
+# Map of the CSS3 properties needed to support OriDomi, with shorthand names as keys.
+# The keys and values are initialized as identical pairs to start with and prefixed
+# subsequently when necessary.
+css = new ->
+  @[key] = key for key in [
+    'transform'
+    'transformOrigin'
+    'transformStyle'
+    'transitionProperty'
+    'transitionDuration'
+    'transitionDelay'
+    'transitionTimingFunction'
+    'perspective'
+    'perspectiveOrigin'
+    'backfaceVisibility'
+    'boxSizing'
+  ]
+  @
+
+# This section is wrapped in an immediately invoked function so that it can exit
+# early when discovering a lack of browser support to prevent unnecessary work.
+do ->
+  # Loop through the CSS map and replace each value with the result of `testProp()`.
+  for key, value of css
+    css[key] = testProp value
+    # If the returned value is false, warn the user that the browser doesn't support
+    # OriDomi, set `isSupported` to false, and break out of the loop.
+    return supportWarning value unless css[key]
+
+  # Test for `preserve-3d` as a transform style. This is particularly important
+  # since it's necessary for nested 3D transforms and recent versions of IE that
+  # support 3D transforms lack it.
+  p3d = 'preserve-3d'
+  testEl.style[css.transformStyle] = p3d
+  # Failure is indicated when querying the style lacks the correct string.
+  unless testEl.style[css.transformStyle] is p3d
+    return supportWarning p3d
+
+  # CSS3 linear gradients are used for shading.
+  # Testing for them is different because they are prefixed values, not properties.
+  # This invokes an anonymous function to loop through vendor-prefixed linear gradients.
+  css.gradientProp = do ->
+    for prefix in prefixList
+      hyphenated = "-#{ prefix.toLowerCase() }-linear-gradient"
+      testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
+      # After setting a gradient background on the test div, attempt to retrieve it.
+      return hyphenated unless testEl.style.backgroundImage.indexOf('gradient') is -1
+    # If none of the hyphenated values worked, return the un-prefixed version.
+    'linear-gradient'
+
+  # The default cursor style is set to `grab` to prompt the user to interact with the element.
+  # `grab` as a value isn't supported in all browsers so it has to be detected.
+  [css.grab, css.grabbing] = do ->
+    for prefix in prefixList
+      plainGrab = 'grab'
+      testEl.style.cursor = (grabValue = "-#{ prefix.toLowerCase() }-#{ plainGrab }")
+      # If the cursor was set correctly, return the prefixed pair.
+      return [grabValue, "-#{ prefix.toLowerCase() }-grabbing"] if testEl.style.cursor is grabValue
+    # Otherwise try the unprefixed version.
+    testEl.style.cursor = plainGrab
+    if testEl.style.cursor is plainGrab
+      [plainGrab, 'grabbing']
+    else
+      # Fallback to `move`.
+      ['move', 'move']
+
+  # Like gradients, transform (as a transition value) needs to be detected and prefixed.
+  css.transformProp = do ->
+    # Use a regular expression to pluck the prefix `testProp` found.
+    if prefix = css.transform.match /(\w+)Transform/i
+      "-#{ prefix[1].toLowerCase() }-transform"
+    else
+      'transform'
+
+  # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
+  css.transitionEnd = do ->
+    switch css.transitionProperty.toLowerCase()
+      when 'transitionproperty'       then 'transitionEnd'
+      when 'webkittransitionproperty' then 'webkitTransitionEnd'
+      when 'moztransitionproperty'    then 'transitionend'
+      when 'mstransitionproperty'     then 'msTransitionEnd'
+
+
+  # These calls generate OriDomi's stylesheet.
+  addStyle elClasses.active,
+    backgroundColor: 'transparent !important'
+    backgroundImage: 'none !important'
+    boxSizing:       'border-box !important'
+    border:          'none !important'
+    outline:         'none !important'
+    padding:         '0 !important'
+    position:        'relative'
+    transformStyle:  p3d + ' !important'
+
+  addStyle elClasses.clone,
+    margin:    '0 !important'
+    boxSizing: 'border-box !important'
+    overflow:  'hidden !important'
+    display:   'block !important'
+
+  addStyle elClasses.holder,
+    width:          '100%'
+    height:         '100%'
+    position:       'absolute'
+    top:            '0'
+    transformStyle: p3d
+
+  addStyle elClasses.stage,
+    width:          '100%'
+    height:         '100%'
+    position:       'absolute'
+    transform:      'translate3d(-9999px, 0, 0)'
+    margin:         '0'
+    padding:        '0'
+    transformStyle: p3d
+
+  # Each anchor needs a particular perspective origin.
+  for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
+    addStyle elClasses['stage' + k], perspectiveOrigin: v
+
+  addStyle elClasses.shader,
+    width:              '100%'
+    height:             '100%'
+    position:           'absolute'
+    opacity:            '0'
+    top:                '0'
+    left:               '0'
+    pointerEvents:      'none'
+    transitionProperty: 'opacity'
+
+  # Linear gradient directions depend on their anchor.
+  for anchor in anchorList
+    addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
+
+  addStyle elClasses.content,
+    margin:    '0 !important'
+    position:  'relative !important'
+    float:     'none !important'
+    boxSizing: 'border-box !important'
+    overflow:  'hidden !important'
+
+  addStyle elClasses.mask,
+    width:              '100%'
+    height:             '100%'
+    position:           'absolute'
+    overflow:           'hidden'
+    transform:          'translate3d(0, 0, 0)'
+
+  addStyle elClasses.panel,
+    width:              '100%'
+    height:             '100%'
+    padding:            '0'
+    position:           'relative'
+    transitionProperty: css.transformProp
+    transformOrigin:    'left'
+    transformStyle:     p3d
+
+  addStyle elClasses.panelH, transformOrigin: 'top'
+  addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
+  addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
+
+  styleEl      = document.createElement 'style'
+  styleEl.type = 'text/css'
+
+  # Once the style buffer is ready, it's appended to the document as a stylesheet.
+  if styleEl.styleSheet
+    styleEl.styleSheet.cssText = styleBuffer
+  else
+    styleEl.appendChild document.createTextNode styleBuffer
+
+  document.head.appendChild styleEl
+
+
+# Defaults
+# ========
+
+# These defaults are used by all OriDomi instances unless overridden.
 defaults =
   # The number of vertical panels (for folding left or right).
   vPanels: 3
@@ -169,484 +390,353 @@ defaults =
   shading: 'hard'
   # Determines the duration of all animations in milliseconds.
   speed: 700
-  # This CSS class is applied to elements that oriDomi has been invoked so they can be
-  # easily targeted later if needed.
+  # Configurable maximum angle for effects. With most effects, exceeding 90/-90 usually
+  # makes the element wrap around and pass through itself leading to some glitchy visuals.
+  maxAngle: 90
+  # Ripple mode causes effects to fold in a staggered, cascading manner.
+  # `1` indicates a forward cascade, `2` is backwards. It is disabled by default.
+  ripple: 0
+  # This CSS class is applied to OriDomi elements so they can be easily targeted later.
   oriDomiClass: 'oridomi'
   # This is a multiplier that determines the darkness of shading.
   # If you need subtler shading, set this to a value below 1.
   shadingIntensity: 1
-  # This option allows you to supply the name of a custom easing method defined in one
-  # of your stylesheets. It defaults to a blank string which is interpreted as `ease`.
+  # This option allows you to supply the name of an easing method or a
+  # cubic bezier formula for customized animation easing.
   easingMethod: ''
-  # To prevent a possible "flash of unstyled content" you can hide your target elements
-  # and pass this setting as `true` to show them immediately after initializing them with oriDomi.
-  showOnStart: false
-  # Currently, Firefox doesn't handle edge anti-aliasing well and oriDomi edges look jagged.
-  # This setting forces Firefox to smooth edges, but usually results in poor performance,
-  # so it's not recommended for animation-heavy use of oriDomi until Firefox's transform performance improves.
-  forceAntialiasing: false
-  # Allow the user to fold the target by dragging a finger or the mouse.
+  # Allows the user to fold the element via touch or mouse.
   touchEnabled: true
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
   touchSensitivity: .25
-  # Custom callbacks for touch/drag events. Each one is invoked with a relevant value so they can
-  # be used to manipulate objects outside of the oriDomi instance (e.g. sliding panels).
-  # x values are returned when folding left and right, y values for top and bottom.
-  # These are empty functions by default.
-  # Invoked with starting coordinate as first argument.
+  # Custom callbacks for touch/drag events. Each one is invoked with a relevant
+  # value so they can be used to manipulate objects outside of the OriDomi
+  # instance (e.g. sliding panels). x values are returned when folding left and
+  # right, y values for top and bottom. The second argument passed is the original
+  # touch or mouse event. These are empty functions by default. Invoked with
+  # starting coordinate as first argument.
   touchStartCallback: noOp
-  # Invoked with current movement distance.
+  # Invoked with the folded angle.
   touchMoveCallback: noOp
   # Inkoked with ending point.
   touchEndCallback: noOp
 
 
-# oriDomi Class
-# =============
+# Constructor
+# ===========
 
 class OriDomi
-  # The constructor takes two arguments: a target element and an options object literal.
-  constructor: (@el, options) ->
-    # If `devMode` is enabled, start a benchmark timer for the constructor.
-    console.time 'oridomiConstruction' if devMode
-    # If the browser doesn't support oriDomi, return the element unmodified.
-    return @el unless oriDomiSupport
 
-    # If the constructor wasn't called with the `new` keyword, invoke it again.
-    unless @ instanceof OriDomi
-      return new oriDomi @el, @settings
-
-    # Extend any passed options with the defaults map.
-    @settings = extendObj options, defaults
-
-    # Return if the first argument isn't a DOM element.
-    if not @el or @el.nodeType isnt 1
-      console.warn 'oriDomi: First argument must be a DOM element' if devMode
+  constructor: (@el, options = {}) ->
+    return unless isSupported
+    # Prevent constructor calls made without `new`.
+    return new OriDomi arguments... unless @ instanceof OriDomi
+    # Support selector strings as well as elements.
+    @el = document.querySelector @el if typeof @el is 'string'
+    # Make sure element is valid.
+    unless @el and @el.nodeType is 1
+      console?.warn 'OriDomi: First argument must be a DOM element'
       return
 
-    # Clone the target element and save a copy of it.
-    @cleanEl = @el.cloneNode true
-    @cleanEl.style.margin = '0'
-    @cleanEl.style.position = 'absolute'
-    # A much faster version of `display: none` when using hardware acceleration.
-    @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-
-    # Destructure some instance variables from the settings object.
-    {@shading, @shadingIntensity, @vPanels, @hPanels} = @settings
-    # Record the current global styling of the target element.
-    @_elStyle = root.getComputedStyle @el
-
-    # Save the original CSS display of the target. If `none`, assume `block`.
-    @displayStyle = @_elStyle.display
-    @displayStyle = 'block' if @displayStyle is 'none'
-
-    # To calculate the full dimensions of the element, create arrays of relevant metric keys.
-    xMetrics = ['width', 'paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth']
-    yMetrics = ['height', 'paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
-
-    # Add up values for width and height using `_getMetric()`.
-    @width = 0
-    @height = 0
-    @width += @_getMetric metric for metric in xMetrics
-    @height += @_getMetric metric for metric in yMetrics
-
-    # Calculate the panel width and panel height by dividing the total width and
-    # height by the requested number of panels in each axis.
-    @panelWidth = @width / @vPanels
-    @panelHeight = @height / @hPanels
-
-    # Set our current fold angle at `0` and `isFoldedUp` as `false`.
-    @lastAngle = 0
-    @isFoldedUp = false
-    # `isFrozen` records if the oriDomi effect is temporarily disabled for easier
-    # manipulation of the target's inner contents later.
-    @isFrozen = false
-    # Set an array of anchor names.
-    @anchors = ['left', 'right', 'top', 'bottom']
-    # oriDomi starts oriented with the left anchor.
-    @lastAnchor = @anchors[0]
-    # Create object literals to store panels and stages.
-    @panels = {}
-    @stages = {}
-    # Create a stage div to serve as a prototype.
-    stage = document.createElement 'div'
-    # The stage should occupy the full width and height of the target element.
-    stage.style.width = @width + 'px'
-    stage.style.height = @height + 'px'
-    # By default, each stage is hidden and absolutely positioned so they stack
-    # on top of each other.
-    stage.style.display = 'none'
-    stage.style.position = 'absolute'
-    # Eliminate padding and margins since the stage is already the full width and height.
-    stage.style.padding = '0'
-    stage.style.margin = '0'
-    # Apply 3D perspective and preserve any parent perspective.
-    stage.style[css.perspective] = @settings.perspective + 'px'
-    stage.style[css.transformStyle] = 'preserve-3d'
-
-    # Loop through the anchors list and create a stage and empty panel set for each.
-    for anchor in @anchors
-      @panels[anchor] = []
-      @stages[anchor] = stage.cloneNode false
-      @stages[anchor].className = 'oridomi-stage-' + anchor
-
-    # If shading is enabled, create an object literal to hold shaders.
-    if @shading
-      @shaders = {}
-      # Loop through each anchor and create a nested object literal.
-      # For the left and right anchors, create arrays to hold the left and right
-      # shader for each panel. Do the same for top and bottom.
-      for anchor in @anchors
-        @shaders[anchor] = {}
-        if anchor is 'left' or anchor is 'right'
-          @shaders[anchor].left = []
-          @shaders[anchor].right = []
+    # Fill in passed options with defaults.
+    @_config = new ->
+      for k, v of defaults
+        if options[k]?
+          @[k] = options[k]
         else
-          @shaders[anchor].top = []
-          @shaders[anchor].bottom = []
+          @[k] = v
+      @
 
-      # Create a shader div prototype to clone.
-      shader = document.createElement 'div'
-      shader.style[css.transitionProp] = 'opacity'
-      shader.style[css.transitionDuration] = @settings.speed + 'ms'
-      shader.style[css.transitionEasing] = @settings.easingMethod
-      shader.style.position = 'absolute'
-      shader.style.width = '100%'
-      shader.style.height = '100%'
-      shader.style.opacity = '0'
-      shader.style.top = '0'
-      shader.style.left = '0'
-      shader.style.pointerEvents = 'none'
+    # The ripple setting is converted to a number to allow boolean settings.
+    @_config.ripple = Number @_config.ripple
+    # The queue holds animation sequences.
+    @_queue   = []
+    @_panels  = {}
+    @_stages  = {}
+    # Set the starting anchor to left.
+    @_lastOp  = anchor: anchorList[0]
+    @_shading = @_config.shading
+    # Alias `shading: true` as hard shading.
+    @_shading = 'hard' if @_shading is true
 
-    # The content holder is a clone of the target element.
-    # Every panel will contain one.
-    contentHolder = @el.cloneNode true
-    contentHolder.classList.add 'oridomi-content'
-    contentHolder.style.margin = '0'
-    contentHolder.style.position = 'relative'
-    contentHolder.style.float = 'none'
+    # The shader elements are constructed in a conditional so the process can be
+    # skipped if shading is disabled.
+    if @_shading
+      @_shaders    = {}
+      shaderProtos = {}
+      shaderProto  = createEl 'shader'
+      shaderProto.style[css.transitionDuration]       = @_config.speed + 'ms'
+      shaderProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
-    # Create a prototype mask div to clone.
-    # Masks serve to display only a small offset portion of the content they hold.
-    hMask = document.createElement 'div'
-    hMask.className = 'oridomi-mask-h'
-    hMask.style.position = 'absolute'
-    hMask.style.overflow = 'hidden'
-    hMask.style.width = '100%'
-    hMask.style.height = '100%'
-    # Adding `translate3d(0, 0, 0)` prevents flickering during transforms.
-    hMask.style[css.transform] = 'translate3d(0, 0, 0)'
-    # Add the `contentHolder` div to the mask prototype.
-    hMask.appendChild contentHolder
+    stageProto = createEl 'stage'
+    stageProto.style[css.perspective] = @_config.perspective + 'px'
 
-    # If shading is enabled, create top and bottom shaders for the horizontal
-    # mask prototype.
-    if @shading
-      topShader = shader.cloneNode false
-      topShader.className = 'oridomi-shader-top'
-      topShader.style.background = @_getShaderGradient 'top'
-      bottomShader = shader.cloneNode false
-      bottomShader.className = 'oridomi-shader-bottom'
-      bottomShader.style.background = @_getShaderGradient 'bottom'
-      hMask.appendChild topShader
-      hMask.appendChild bottomShader
-
-    # The bleed variable creates some overlap between the panels to prevent
-    # cracks in the paper.
-    bleed = 1.5
-    # The panel element holds both its respective mask and all subsequent sibling panels.
-    hPanel = document.createElement 'div'
-    hPanel.className = 'oridomi-panel-h'
-    hPanel.style.width = '100%'
-    hPanel.style.height = @panelHeight + bleed + 'px'
-    hPanel.style.padding = '0'
-    hPanel.style.position = 'relative'
-    # The panel element is the target of the transforms.
-    hPanel.style[css.transitionProp] = css.transformProp
-    hPanel.style[css.transitionDuration] = @settings.speed + 'ms'
-    hPanel.style[css.transitionEasing] = @settings.easingMethod
-    hPanel.style[css.origin] = 'top'
-    hPanel.style[css.transformStyle] = 'preserve-3d'
-    hPanel.style[css.backface] = 'hidden'
-
-    # Apply a transparent border to force edge smoothing on Firefox.
-    # (This setting hurts performance significantly.)
-    if @settings.forceAntialiasing
-      hPanel.style.outline = '1px solid transparent'
-
-    # Add the horizontal mask prototype to the horizontal panel prototype.
-    hPanel.appendChild hMask
-
-    # Loop through just the horizontal anchors.
-    for anchor in ['top', 'bottom']
-      # Loop through the number of horizontal panels.
-      for i in [0...@hPanels]
-        # Clone a copy of the panel prototype for manipulation.
-        panel = hPanel.cloneNode true
-        # Set a reference to its inner content.
-        content = panel.getElementsByClassName('oridomi-content')[0]
-
-        if anchor is 'top'
-          # The `yOffset` shifts the content of the panel down so they appear contiguous.
-          yOffset = -(i * @panelHeight)
-          # This conditional pushes each panel's position down so they stack on top of each other.
-          if i is 0
-            panel.style.top = '0'
-          else
-            panel.style.top = @panelHeight + 'px'
+    for anchor in anchorList
+      # Each anchor has a unique set of panels.
+      @_panels[anchor] = []
+      @_stages[anchor] = cloneEl stageProto, false, 'stage' + capitalize anchor
+      if @_shading
+        @_shaders[anchor] = {}
+        if anchor in anchorListV
+          @_shaders[anchor][side] = [] for side in anchorListV
         else
-          # For bottom panels, make sure the transform origin is `'bottom'`.
-          panel.style[css.origin] = 'bottom'
-          # For the bottom `yOffset` and top position, we need to work backwards.
-          yOffset = -((@hPanels * @panelHeight) - (@panelHeight * (i + 1)))
+          @_shaders[anchor][side] = [] for side in anchorListH
 
-          if i is 0
-            panel.style.top = @panelHeight * (@vPanels - 1) - bleed + 'px'
+        shaderProtos[anchor] = cloneEl shaderProto, false, 'shader' + capitalize anchor
+
+    contentHolder = cloneEl @el, true, 'content'
+
+    maskProto = createEl 'mask'
+    maskProto.appendChild contentHolder
+
+    panelProto = createEl 'panel'
+    panelProto.style[css.transitionDuration]       = @_config.speed + 'ms'
+    panelProto.style[css.transitionTimingFunction] = @_config.easingMethod
+
+    # This loop builds all of the panels.
+    for axis in ['x', 'y']
+      if axis is 'x'
+        anchorSet   = anchorListV
+        count       = @_config.vPanels
+        metric      = 'width'
+        classSuffix = 'V'
+      else
+        anchorSet   = anchorListH
+        count       = @_config.hPanels
+        metric      = 'height'
+        classSuffix = 'H'
+
+      # Set the panel dimension to a percentage of the container.
+      percent = 100 / count
+
+      mask    = cloneEl maskProto, true, 'mask' + classSuffix
+      content = mask.children[0]
+      # The inner content retains the original dimensions of the element
+      # while being inside a small slice. By multiplying 100% by the number of
+      # panels on this axis, the size reduction of the parent in undone and
+      # sizing flexibility is achieved.
+      content.style.width   = content.style.height = '100%'
+      content.style[metric] = content.style['max' + capitalize metric] = count * 100 + '%'
+      if @_shading
+        mask.appendChild shaderProtos[anchor] for anchor in anchorSet
+
+      proto = cloneEl panelProto, false, 'panel' + classSuffix
+      proto.appendChild mask
+
+      for anchor, n in anchorSet
+        for panelN in [0...count]
+          panel = proto.cloneNode true
+          # Only the first panel has its size set to a percentage since subsequent
+          # panels are nested children and will match its size.
+          panel.style[metric] = percent + '%' if panelN is 0
+          content = panel.children[0].children[0]
+
+          # The inner content of each panel is offset relative to the panel
+          # index to display a contiguous composition.
+          if n is 0
+            content.style[anchor] = -panelN * 100 + '%'
+            if panelN is 0
+              panel.style[anchor] = '0'
+            else
+              panel.style[anchor] = '100%'
           else
-            panel.style.top = -@panelHeight + 'px'
+            content.style[anchorSet[0]] = (count - panelN - 1) * -100 + '%'
+            panel.style[css.origin] = anchor
+            if panelN is 0
+              panel.style[anchorSet[0]] = 100 - percent + '%'
+            else
+              panel.style[anchorSet[0]] = '-100%'
 
-        content.style.top = yOffset + 'px'
+          if @_shading
+            for a, i in anchorSet
+              @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
-        # Store references to the shader divs in the `shaders` object.
-        if @shading
-          @shaders[anchor].top[i] = panel.getElementsByClassName('oridomi-shader-top')[0]
-          @shaders[anchor].bottom[i] = panel.getElementsByClassName('oridomi-shader-bottom')[0]
+          @_panels[anchor][panelN] = panel
+          # Panels are nested inside each other.
+          @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
-        # Store a reference to this panel in the `panels` object.
-        @panels[anchor][i] = panel
+        # Append the first panel to each stage.
+        @_stages[anchor].appendChild @_panels[anchor][0]
 
-        # Append each panel to its previous sibling (unless it's the first panel).
-        @panels[anchor][i - 1].appendChild panel unless i is 0
+    @_stageHolder = createEl 'holder'
+    @_stageHolder.appendChild @_stages[anchor] for anchor in anchorList
 
-      # Append the first panel (containing all of its siblings) to its respective stage.
-      @stages[anchor].appendChild @panels[anchor][0]
+    @el.classList.add elClasses.active
+    showEl @_stages.left
+    # The original element is cloned and hidden via transforms so the dimensions
+    # of the OriDomi content are maintained by it.
+    @_cloneEl = cloneEl @el, true, 'clone'
+    @_cloneEl.classList.remove elClasses.active
+    hideEl @_cloneEl
+    # Once the clone is stored the original element is emptied and appened with
+    # the clone and the OriDomi content.
+    @el.innerHTML   = ''
+    @el.appendChild @_cloneEl
+    @el.appendChild @_stageHolder
+    # This ensures mouse events work correctly when panels are transformed
+    # away from the viewer.
+    @el.parentNode.style[css.transformStyle] = 'preserve-3d'
 
-    # Now that the horizontal panels are done, we can clone the `hMask` for the vertical mask prototype.
-    vMask = hMask.cloneNode true
-    vMask.className = 'oridomi-mask-v'
-
-    # Create left and right shaders if applicable.
-    if @shading
-      leftShader = vMask.getElementsByClassName('oridomi-shader-top')[0]
-      leftShader.className = 'oridomi-shader-left'
-      leftShader.style.background = @_getShaderGradient 'left'
-      rightShader = vMask.getElementsByClassName('oridomi-shader-bottom')[0]
-      rightShader.className = 'oridomi-shader-right'
-      rightShader.style.background = @_getShaderGradient 'right'
-
-    # Clone the `hPanel` prototype and adjust its styling for vertical use.
-    vPanel = hPanel.cloneNode false
-    vPanel.className = 'oridomi-panel-v'
-    vPanel.style.width = @panelWidth + bleed + 'px'
-    vPanel.style.height = '100%'
-    vPanel.style[css.origin] = 'left'
-    vPanel.appendChild vMask
-
-    # Repeat a similar panel creation process for vertical panels.
-    for anchor in ['left', 'right']
-      for i in [0...@vPanels]
-        panel = vPanel.cloneNode true
-        content = panel.getElementsByClassName('oridomi-content')[0]
-
-        if anchor is 'left'
-          xOffset = -(i * @panelWidth)
-          if i is 0
-            panel.style.left = '0'
-          else
-            panel.style.left = @panelWidth + 'px'
-        else
-          panel.style[css.origin] = 'right'
-          xOffset = -((@vPanels * @panelWidth) - (@panelWidth * (i + 1)))
-          if i is 0
-            panel.style.left = @panelWidth * (@vPanels - 1) - 1 + 'px'
-          else
-            panel.style.left = -@panelWidth + 'px'
-
-        content.style.left = xOffset + 'px'
-
-        if @shading
-          @shaders[anchor].left[i]  = panel.getElementsByClassName('oridomi-shader-left')[0]
-          @shaders[anchor].right[i] = panel.getElementsByClassName('oridomi-shader-right')[0]
-
-        @panels[anchor][i] = panel
-        @panels[anchor][i - 1].appendChild panel unless i is 0
-
-      @stages[anchor].appendChild @panels[anchor][0]
-
-
-    # Add a special class to the target element.
-    @el.classList.add @settings.oriDomiClass
-
-    # Remove its padding and set a fixed width and height.
-    @el.style.padding = '0'
-    @el.style.width = @width + 'px'
-    @el.style.height = @height + 'px'
-    # Remove its background, border, and outline.
-    @el.style.backgroundColor = 'transparent'
-    @el.style.backgroundImage = 'none'
-    @el.style.border = 'none'
-    @el.style.outline = 'none'
-    # Show the left stage to start with.
-    @stages.left.style.display = 'block'
-
-    # Create an element to hold stages.
-    @stageEl = document.createElement 'div'
-    # Array of event type pairs.
-    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
-                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
-    # Detect native `mouseleave` support.
-    mouseLeaveSupport = 'onmouseleave' of window
-    # Attach touch/drag event listeners in related pairs.
-    for eventPair in eventPairs
-      for eString in eventPair
-        unless eString is 'TouchLeave' and not mouseLeaveSupport
-          @stageEl.addEventListener eString.toLowerCase(), @['_on' + eventPair[0]], false
-        else
-          @stageEl.addEventListener 'mouseout', @['_onMouseOut'], false
-          break
-
-    @enableTouch() if @settings.touchEnabled
-
-    # Append each stage to the target element.
-    @stageEl.appendChild @stages[anchor] for anchor in @anchors
-
-    # Show the target if applicable.
-    if @settings.showOnStart
-      @el.style.display = 'block'
-      @el.style.visibility = 'visible'
-
-    # Hide the original content and insert the oriDomi version.
-    @el.innerHTML = ''
-    @el.appendChild @cleanEl
-    @el.appendChild @stageEl
-
-    # These properties record starting angles for touch/drag events.
-    # Initialize both to zero.
-    [@_xLast, @_yLast] = [0, 0]
-    # This property determines the effect used during touch/drag events.
-    @lastOp = method: 'accordion', options: {}
-
-    # Cache a jQuery object of the element if applicable.
-    @$el = $ @el if $
-    # Push this instance into the instances collection.
-    instances.push @
-    # If a callback was passed in the constructor options, run it.
-    @_callback @settings
-    # End the constructor benchmark if `devMode` is active.
-    console.timeEnd 'oridomiConstruction' if devMode
+    # An effect method is called since touch events rely on using the last
+    # method called.
+    @accordion 0
+    @setRipple @_config.ripple if @_config.ripple
+    @enableTouch() if @_config.touchEnabled
 
 
   # Internal Methods
   # ================
 
-  # `_callback` normalizes callback handling for all public methods.
-  _callback: (options) ->
-    if typeof options.callback is 'function'
-      # Create a local callback for the animation's end.
-      onTransitionEnd = (e) =>
-        # Remove the event listener immediately to prevent bubbling.
-        e.currentTarget.removeEventListener css.transitionEnd, onTransitionEnd, false
-        # Invoke the callback.
-        options.callback()
+  # This method is called for the action shifted off the queue.
+  _step: =>
+    # Return if the composition is currently in transition or the queue is empty.
+    return if @_inTrans or !@_queue.length
+    @_inTrans = true
+    # Destructure action arguments from the front of the queue.
+    [fn, angle, anchor, options] = @_queue.shift()
+    @unfreeze() if @isFrozen
 
-      # If there was no transformation (0 degrees) invoke the callback immediately.
-      if @lastAngle is 0
-        options.callback()
-      # Otherwise, attach an event listener to be called on the transition's end.
+    # A local function for the next action is created should the call need to be
+    # deferred (if the stage is folded up or on the wrong anchor).
+    next = =>
+      @_setCallback {angle, anchor, options, fn}
+      args = [angle, anchor, options]
+      args.shift() if fn.length < 3
+      fn.apply @, args
+
+    if @isFoldedUp
+      if fn.length is 2
+        next()
       else
-        @panels[@lastAnchor][0].addEventListener css.transitionEnd, onTransitionEnd, false
+        @_unfold next
+    else if anchor isnt @_lastOp.anchor
+      @_stageReset anchor, next
+    else
+      next()
 
 
-  # `_getMetric` returns an integer of pixels for a style key.
-  _getMetric: (metric) ->
-    parseInt @_elStyle[metric], 10
+  # This method tests if the called action is identical to the previous one.
+  # If two identical operations were called in a row, the transition callback
+  # wouldn't be called due to no animation taking place. This method reasons if
+  # movement has taken place, avoiding this pitfall of transition listeners.
+  _isIdenticalOperation: (op) ->
+    return true unless @_lastOp.fn
+    return false if @_lastOp.reset
+    (return false if @_lastOp[key] isnt op[key]) for key in ['angle', 'anchor', 'fn']
+    (return false if v isnt @_lastOp.options[k] and k isnt 'callback') for k, v of op.options
+    true
 
 
-  # `_transform` returns a `rotate3d` transform string based on the anchor and angle.
-  _transform: (angle, fracture) ->
-    switch @lastAnchor
+  # This method normalizes callback handling for all public methods.
+  _setCallback: (operation) ->
+    # If there was no transformation, invoke the callback immediately.
+    if @_isIdenticalOperation operation
+      @_conclude operation.options.callback
+    # Otherwise, attach an event listener to be called on the transition's end.
+    else
+      @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, @_onTransitionEnd, false
+
+    (@_lastOp = operation).reset = false
+
+
+  # Handler called when a CSS transition ends.
+  _onTransitionEnd: (e) =>
+    # Remove the event listener immediately to prevent bubbling.
+    e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, false
+    # Initialize the transition teardown process.
+    @_conclude @_lastOp.options.callback, e
+
+
+  # Used to handle the end process of transitions and to initialize queued operations.
+  _conclude: (cb, event) =>
+    defer =>
+      @_inTrans = false
+      @_step()
+      cb? event, @
+
+
+  # Transforms a given element based on angle, anchor, and fracture boolean.
+  _transformPanel: (el, angle, anchor, fracture) ->
+    # The values of 1 and -1 are used to try to prevent small gaps from
+    # appearing between panels during transforms.
+    x = y = z = 0
+    switch anchor
       when 'left'
-        axes = [0, 1, 0, angle]
+        y = angle
+        translate = 'X(-1'
       when 'right'
-        axes = [0, 1, 0, -angle]
+        y = -angle
+        translate = 'X(1'
       when 'top'
-        axes = [1, 0, 0, -angle]
+        x = -angle
+        translate = 'Y(-1'
       when 'bottom'
-        axes = [1, 0, 0, angle]
+        x = angle
+        translate = 'Y(1'
 
-    # `fracture` is a special option that splits up the panels by rotating them on all axes.
-    if fracture
-      [axes[0], axes[1], axes[2]] = [1, 1, 1]
+    # Rotate on every axis in fracture mode.
+    x = y = z = angle if fracture
 
-    "rotate3d(#{ axes[0] }, #{ axes[1] }, #{ axes[2] }, #{ axes[3] }deg)"
+    el.style[css.transform] = """
+                              rotateX(#{ x }deg)
+                              rotateY(#{ y }deg)
+                              rotateZ(#{ z }deg)
+                              translate#{ translate }px)
+                              """
 
 
-  # `_normalizeAngle` validates a given angle by making sure it's a float and by
-  # keeping it within a range of -89/89 degrees. Fully 90 degree angles tend to look glitchy.
+  # This validates a given angle by making sure it's a float and by
+  # keeping it within the maximum range specified in the instance settings.
   _normalizeAngle: (angle) ->
     angle = parseFloat angle, 10
+    max   = @_config.maxAngle
     if isNaN angle
       0
-    else if angle > 89
-      89
-    else if angle < -89
-      -89
+    else if angle > max
+      max
+    else if angle < -max
+      -max
     else
       angle
 
 
-  # `_normalizeArgs` normalizes every public method's arguments and makes sure the current
-  # axis unfolds if ordered to switch to another axis.
-  _normalizeArgs: (method, args) ->
-    @unfreeze() if @isFrozen
-    # Get a valid angle.
-    angle = @_normalizeAngle args[0]
-    # Get the full anchor name.
-    anchor = @_getLonghandAnchor args[1] or @lastAnchor
-    # Extend the given options with the method's defaults.
-    options = extendObj args[2], @_methodDefaults[method]
-    # Store a record of this operation for future touch events.
-    @lastOp = method: method, options: options, negative: angle < 0
-
-    # If the user is trying to transform using a different anchor, we must first
-    # unfold the current anchor for transition purposes.
-    if anchor isnt @lastAnchor or (method is 'foldUp' and @lastAngle isnt 0) or @isFoldedUp
-      # Call `reset` and pass a callback to be run when the unfolding is complete.
-      @reset =>
-        # Show the stage element of the originally requested anchor.
-        @_showStage anchor
-        # Since the anchor changed, update the mouse drag cursor.
-        @_setCursor() if @_touchEnabled
-        # Defer this operation until the next event loop to prevent a sudden jump.
-        setTimeout =>
-          # `foldUp` is a special method that doesn't accept an angle argument.
-          args.shift() if method is 'foldUp'
-          # We can now call the originally requested method.
-          @[method].apply @, args
-
-        , 0
-
-      # Return `false` here to inform the caller method to abort its operation
-      # and wait to be called when the stage is ready.
-      false
-    else
-      # Set an instance reference to the last called angle and return the normalized arguments.
-      @lastAngle = angle
-      [angle, anchor, options]
+  # Allows other methods to change the transiton duration/delay or disable it altogether.
+  _setTrans: (duration, delay, anchor = @_lastOp.anchor) ->
+    @_iterate anchor, (panel, i, len) => @_setPanelTrans anchor, arguments..., duration, delay
 
 
-  # `_setShader` determines a shader's opacity based upon panel position, anchor, and angle.
-  _setShader: (i, anchor, angle) ->
+  # This method changes the transition duration and delay of panels and shaders.
+  _setPanelTrans: (anchor, panel, i, len, duration, delay) ->
+    delayMs  = do =>
+      # Delay is a `ripple` value. The milliseconds are derived based on the
+      # speed setting and the number of panels.
+      switch delay
+        when 0 then 0
+        when 1 then @_config.speed / len * i
+        when 2 then @_config.speed / len * (len - i - 1)
+
+    panel.style[css.transitionDuration] = duration + 'ms'
+    panel.style[css.transitionDelay]    = delayMs  + 'ms'
+    if @_shading
+      for side in (if anchor in anchorListV then anchorListV else anchorListH)
+        shader = @_shaders[anchor][side][i]
+        shader.style[css.transitionDuration] = duration + 'ms'
+        shader.style[css.transitionDelay]    = delayMs  + 'ms'
+
+    delayMs
+
+
+  # Determines a shader's opacity based upon panel position, anchor, and angle.
+  _setShader: (n, anchor, angle) ->
     # Store the angle's absolute value and generate an opacity based on `shadingIntensity`.
-    abs = Math.abs angle
-    opacity = abs / 90 * @shadingIntensity
+    abs     = Math.abs angle
+    opacity = abs / 90 * @_config.shadingIntensity
 
     # With hard shading, opacity is reduced and `angle` is based on the global
     # `lastAngle` so all panels' shaders share the same direction. Soft shaders
     # have alternating directions.
-    if @shading is 'hard'
+    if @_shading is 'hard'
       opacity *= .15
-      if @lastAngle < 0
+      if @_lastOp.angle < 0
         angle = abs
       else
         angle = -abs
@@ -655,145 +745,141 @@ class OriDomi
 
     # This block makes sure left and top shaders appear for negative angles and right
     # and bottom shaders appear for positive ones.
-    switch anchor
-      when 'left', 'top'
-        if angle < 0
-          a = opacity
-          b = 0
-        else
-          a = 0
-          b = opacity
-      when 'right', 'bottom'
-        if angle < 0
-          a = 0
-          b = opacity
-        else
-          a = opacity
-          b = 0
-
-    # Only manipulate shader opacity for the current axis.
-    if anchor is 'left' or anchor is 'right'
-      @shaders[anchor].left[i].style.opacity = a
-      @shaders[anchor].right[i].style.opacity = b
+    if anchor in anchorListV
+      if angle < 0
+        a = opacity
+        b = 0
+      else
+        a = 0
+        b = opacity
+      @_shaders[anchor].left[n].style.opacity  = a
+      @_shaders[anchor].right[n].style.opacity = b
     else
-      @shaders[anchor].top[i].style.opacity = a
-      @shaders[anchor].bottom[i].style.opacity = b
-
-
-  # This is a simple method used by the constructor to set CSS gradient styles.
-  # It accepts an anchor argument to start the gradient slope.
-  _getShaderGradient: (anchor) ->
-    "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
+      if angle < 0
+        a = 0
+        b = opacity
+      else
+        a = opacity
+        b = 0
+      @_shaders[anchor].top[n].style.opacity    = a
+      @_shaders[anchor].bottom[n].style.opacity = b
 
 
   # This method shows the requested stage element and sets a reference to it as
   # the current stage.
   _showStage: (anchor) ->
-    if anchor isnt @lastAnchor
-      @stages[anchor].style.display = 'block'
-      @stages[@lastAnchor].style.display = 'none'
-      @lastAnchor = anchor
+    if anchor isnt @_lastOp.anchor
+      hideEl @_stages[@_lastOp.anchor]
+      @_lastOp.anchor = anchor
+      @_lastOp.reset  = true
+      @_stages[anchor].style[css.transform] = 'translate3d(' + do =>
+        switch anchor
+          when 'left'
+            '0, 0, 0)'
+          when 'right'
+            "-#{ @_config.vPanels * 1 }px, 0, 0)"
+          when 'top'
+            '0, 0, 0)'
+          when 'bottom'
+            "0, -#{ (@_config.hPanels + 2) * 1 }px, 0)"
 
 
-  # Simple method that returns the correct panel set based on an anchor.
-  _getPanelType: (anchor) ->
-    if anchor is 'left' or anchor is 'right'
-      @vPanels
-    else
-      @hPanels
+  # If the composition needs to switch stages or fold up, it must first unfold
+  # all panels to 0 degrees.
+  _stageReset: (anchor, cb) =>
+    fn = (e) =>
+      e.currentTarget.removeEventListener css.transitionEnd, fn, false if e
+      @_showStage anchor
+      defer cb
+
+    # If already unfolded to 0, immediately invoke the change function.
+    return fn() if @_lastOp.angle is 0
+    @_panels[@_lastOp.anchor][0].addEventListener css.transitionEnd, fn, false
+
+    @_iterate @_lastOp.anchor, (panel, i) =>
+      @_transformPanel panel, 0, @_lastOp.anchor
+      @_setShader i, @_lastOp.anchor, 0 if @_shading
 
 
   # Converts a shorthand anchor name to a full one.
   _getLonghandAnchor: (shorthand) ->
-    switch shorthand
-      when 'left', 'l', '4', 4
+    switch shorthand.toString()
+      when 'left',   'l', '4'
         'left'
-      when 'right', 'r', '2', 2
+      when 'right',  'r', '2'
         'right'
-      when 'top', 't', '1', 1
+      when 'top',    't', '1'
         'top'
-      when 'bottom', 'b', '3', 3
+      when 'bottom', 'b', '3'
         'bottom'
       else
         # Left is always default.
         'left'
 
 
-  # Allows other methods to change the tween duration or disable it altogether.
-  _setTweening: (speed) ->
-    # If the speed value is `true` reset the speed to the original settings.
-    # Set it to zero if `false`.
-    if typeof speed is 'boolean'
-      speed = if speed then @settings.speed + 'ms' else '0ms'
-
-    # To loop through the shaders, derive the correct pair from the current anchor.
-    if @lastAnchor is 'left' or @lastAnchor is 'right'
-      shaderPair = ['left', 'right']
-    else
-      shaderPair = ['top', 'bottom']
-
-    # Loop through the panels in this anchor and set the transition duration to the new speed.
-    for panel, i in @panels[@lastAnchor]
-      panel.style[css.transitionDuration] = speed
-      if @shading
-        @shaders[@lastAnchor][shaderPair[0]][i].style[css.transitionDuration] = speed
-        @shaders[@lastAnchor][shaderPair[1]][i].style[css.transitionDuration] = speed
-
-    # Return null and not the loop's result.
-    null
-
-
   # Gives the element a resize cursor to prompt the user to drag the mouse.
-  _setCursor: ->
-    if @_touchEnabled
-      @stageEl.style.cursor = css.grab
+  _setCursor: (bool = @_touchEnabled) ->
+    if bool
+      @el.style.cursor = css.grab
     else
-      @stageEl.style.cursor = 'default'
-
-
-  # Map of defaults for each method. Some are empty for now.
-  _methodDefaults:
-    accordion:
-      # Sticky keeps the first panel flat on the page.
-      sticky: false
-      # Stairs creates a stairway effect.
-      stairs: false
-      # Twist and fracture are similar effects that result in wild non-origami-like splits.
-      fracture: false
-      twist: false
-    curl:
-      twist: false
-    ramp: {}
-    foldUp: {}
+      @el.style.cursor = 'default'
 
 
   # Touch / Drag Event Handlers
   # ===========================
 
+  # Adds or removes handlers from the element based on the boolean argument given.
+  _setTouch: (toggle) ->
+    if toggle
+      return @ if @_touchEnabled
+      listenFn = 'addEventListener'
+    else
+      return @ unless @_touchEnabled
+      listenFn = 'removeEventListener'
+
+    @_touchEnabled = toggle
+    @_setCursor()
+    # Array of event type pairs.
+    eventPairs = [['TouchStart', 'MouseDown'], ['TouchEnd', 'MouseUp'],
+                  ['TouchMove', 'MouseMove'], ['TouchLeave', 'MouseLeave']]
+    # Detect native `mouseleave` support.
+    mouseLeaveSupport = 'onmouseleave' of window
+    # Attach touch/drag event listeners in related pairs.
+    for eventPair in eventPairs
+      for eString in eventPair
+        unless eString is 'TouchLeave' and !mouseLeaveSupport
+          @el[listenFn] eString.toLowerCase(), @['_on' + eventPair[0]], false
+        else
+          @el[listenFn] 'mouseout', @_onMouseOut, false
+          break
+    @
+
 
   # This method is called when a finger or mouse button is pressed on the element.
   _onTouchStart: (e) =>
-    return unless @_touchEnabled
+    return if !@_touchEnabled or @isFoldedUp
     e.preventDefault()
+    # Clear queued animations.
+    @emptyQueue()
     # Set a property to track touch starts.
     @_touchStarted = true
     # Change the cursor to the active `grabbing` state.
-    @stageEl.style.cursor = css.grabbing
+    @el.style.cursor = css.grabbing
     # Disable tweening to enable instant 1 to 1 movement.
-    @_setTweening false
+    @_setTrans 0, 0
     # Derive the axis to fold on.
-    @_touchAxis = if @lastAnchor is 'left' or @lastAnchor is 'right' then 'x' else 'y'
+    @_touchAxis = if @_lastOp.anchor in anchorListV then 'x' else 'y'
     # Set a reference to the last folded angle to accurately derive deltas.
-    @["_#{ @_touchAxis }Last"] = @lastAngle
-
+    @["_#{ @_touchAxis }Last"] = @_lastOp.angle
+    axis1 = "_#{ @_touchAxis }1"
     # Determine the starting tap's coordinate for touch and mouse events.
     if e.type is 'mousedown'
-      @["_#{ @_touchAxis }1"] = e["page#{ @_touchAxis.toUpperCase() }"]
+      @[axis1] = e["page#{ @_touchAxis.toUpperCase() }"]
     else
-      @["_#{ @_touchAxis }1"] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
+      @[axis1] = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Return that value to an external listener.
-    @settings.touchStartCallback @["_#{ @_touchAxis }1"]
+    @_config.touchStartCallback @[axis1], e
 
 
   # Called on touch/mouse movement.
@@ -807,71 +893,104 @@ class OriDomi
       current = e.targetTouches[0]["page#{ @_touchAxis.toUpperCase() }"]
 
     # Calculate distance and multiply by `touchSensitivity`.
-    distance = (current - @["_#{ @_touchAxis }1"]) * @settings.touchSensitivity
+    distance = (current - @["_#{ @_touchAxis }1"]) * @_config.touchSensitivity
 
     # Calculate final delta based on starting angle, anchor, and what side of zero
     # the last operation was on.
-    if @lastOp.negative
-      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+    if @_lastOp.angle < 0
+      if @_lastOp.anchor is 'right' or @_lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] - distance
       else
         delta = @["_#{ @_touchAxis }Last"] + distance
       delta = 0 if delta > 0
     else
-      if @lastAnchor is 'right' or @lastAnchor is 'bottom'
+      if @_lastOp.anchor is 'right' or @_lastOp.anchor is 'bottom'
         delta = @["_#{ @_touchAxis }Last"] + distance
       else
         delta = @["_#{ @_touchAxis }Last"] - distance
       delta = 0 if delta < 0
 
-    # Invoke the effect method with the delta as an angle argument.
-    @[@lastOp.method] delta, @lastAnchor, @lastOp.options
-    # Pass the delta to the movement callback.
-    @settings.touchMoveCallback delta
+
+    @_lastOp.angle = delta = @_normalizeAngle delta
+    @_lastOp.fn.call @, delta, @_lastOp.anchor, @_lastOp.options
+    @_config.touchMoveCallback delta, e
+
 
 
   # Teardown process when touch/drag event ends.
-  _onTouchEnd: =>
+  _onTouchEnd: (e) =>
     return unless @_touchEnabled
     # Restore the initial touch status and cursor.
-    @_touchStarted = false
-    @stageEl.style.cursor = css.grab
+    @_touchStarted = @_inTrans = false
+    @el.style.cursor = css.grab
     # Enable tweening again.
-    @_setTweening true
-    # Pass callback final value.
-    @settings.touchEndCallback @["_#{ @_touchAxis }Last"]
+    @_setTrans @_config.speed, @_config.ripple
+    # Pass callback final coordinate.
+    @_config.touchEndCallback @["_#{ @_touchAxis }Last"], e
 
 
   # End folding when the mouse or finger leaves the composition.
-  _onTouchLeave: =>
+  _onTouchLeave: (e) =>
     return unless @_touchEnabled and @_touchStarted
-    @_onTouchEnd()
+    @_onTouchEnd e
 
 
   # A fallback for browsers that don't support `mouseleave`.
   _onMouseOut: (e) =>
     return unless @_touchEnabled and @_touchStarted
-    @_onTouchEnd() if e.toElement and not @el.contains e.toElement
+    @_onTouchEnd e if e.toElement and !@el.contains e.toElement
+
+
+  # This method unfolds the composition after it's been folded up. It's private
+  # and doesn't use the decorator because it's used internally by other methods
+  # and skips the queue. Its public counterpart is a queued alias.
+  _unfold: (callback) ->
+    @_inTrans = true
+    {anchor}  = @_lastOp
+    @_iterate anchor, (panel, i, len) =>
+      delay = @_setPanelTrans anchor, arguments..., @_config.speed, 1
+
+      do (panel, i, delay) =>
+        defer =>
+          @_transformPanel panel, 0, @_lastOp.anchor
+          setTimeout =>
+            showEl panel.children[0]
+            if i is len - 1
+              @_inTrans = @isFoldedUp = false
+              callback?()
+              @_lastOp.fn    = @accordion
+              @_lastOp.angle = 0
+            defer => panel.style[css.transitionDuration] = @_config.speed
+          , delay + @_config.speed * .25
+
+
+  # This method is used by many others to iterate among panels within a given anchor.
+  _iterate: (anchor, fn) ->
+    fn.call @, panel, i, panels.length for panel, i in panels = @_panels[anchor]
 
 
   # Public Methods
   # ==============
 
 
-  # Reset handles resetting all panels back to zero degrees.
-  reset: (callback) ->
-    # If the stage is folded up, unfold it first.
-    return @unfold callback if @isFoldedUp
-
-    for panel, i in @panels[@lastAnchor]
-      panel.style[css.transform] = @_transform 0
-      @_setShader i, @lastAnchor, 0 if @shading
-
-    # When called internally, `reset` comes with a callback to advance to the next transformation.
-    @_callback callback: callback
+  # Enables touch events.
+  enableTouch: ->
+    @_setTouch true
 
 
-  # Disables oriDomi slicing by showing the original, untouched target element.
+  # Disables touch events.
+  disableTouch: ->
+    @_setTouch false
+
+
+  # Public setter for transition durations.
+  setSpeed: (speed) ->
+    for anchor in anchorList
+      @_setTrans (@_config.speed = speed), @_config.ripple, anchor
+    @
+
+
+  # Disables OriDomi slicing by showing the original, untouched target element.
   # This is useful for certain user interactions on the inner content.
   freeze: (callback) ->
     # Return if already frozen.
@@ -879,75 +998,126 @@ class OriDomi
       callback?()
     else
       # Make sure to reset folding first.
-      @reset =>
+      @_stageReset @_lastOp.anchor, =>
         @isFrozen = true
         # Swap the visibility of the elements.
-        @stageEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-        @cleanEl.style[css.transform] = 'translate3d(0, 0, 0)'
+        hideEl @_stageHolder
+        showEl @_cloneEl
+        @_setCursor false
         callback?()
+    @
 
 
-  # Restores the oriDomi version of the element for folding purposes.
+  # Restores the OriDomi version of the element for folding purposes.
   unfreeze: ->
     # Only unfreeze if already frozen.
     if @isFrozen
       @isFrozen = false
       # Swap the visibility of the elements.
-      @cleanEl.style[css.transform] = 'translate3d(-9999px, 0, 0)'
-      @stageEl.style[css.transform] = 'translate3d(0, 0, 0)'
+      hideEl @_cloneEl
+      showEl @_stageHolder
+      @_setCursor()
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
-      @lastAngle = 0
+      @_lastOp.angle = 0
+    @
 
 
-  # Removes the oriDomi element and marks its instance for garbage collection.
+  # Removes the OriDomi element and restores the original element.
   destroy: (callback) ->
     # First restore the original element.
     @freeze =>
       # Remove event listeners.
-      @stageEl.removeEventListener 'touchstart', @_onTouchStart, false
-      @stageEl.removeEventListener 'mousedown', @_onTouchStart, false
-      @stageEl.removeEventListener 'touchend', @_onTouchEnd, false
-      @stageEl.removeEventListener 'mouseup', @_onTouchEnd, false
-
+      @_setTouch false
       # Remove the data reference if using jQuery.
-      $.data @el, 'oriDomi', null if $
-      # Remove the oriDomi element from the DOM.
-      @el.innerHTML = @cleanEl.innerHTML
-
-      # Reset original styles.
-      changedKeys = ['padding', 'width', 'height', 'backgroundColor', 'backgroundImage', 'border', 'outline']
-      @el.style[key] = @_elStyle[key] for key in changedKeys
-
-      # Free up this instance for garbage collection.
-      instances[instances.indexOf @] = null
+      $.data @el, baseName, null if $
+      # Remove the OriDomi element from the DOM.
+      @el.innerHTML = @_cloneEl.innerHTML
+      # Reset original styling.
+      @el.classList.remove elClasses.active
       callback?()
+    null
 
 
-  # Enables touch events and sets cursor.
-  enableTouch: ->
-    @_touchEnabled = true
-    @_setCursor()
+  # Empties the queue should you want to cancel scheduled animations.
+  emptyQueue: ->
+    @_queue = []
+    defer => @_inTrans = false
+    @
 
 
-  # Disables touch events.
-  disableTouch: ->
-    @_touchEnabled = false
-    @_setCursor()
+  # Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.
+  setRipple: (dir = 1) ->
+    @_config.ripple = Number dir
+    @setSpeed @_config.speed
+    @
 
 
-  # oriDomi's most basic effect. Transforms the target like its namesake.
-  accordion: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'accordion', arguments
-    # If `_normalizeArgs` returns false, we need to abort for a reset operation.
-    return unless normalized
-    # Otherwise, destructure the normalized arguments into some local variables.
-    [angle, anchor, options] = normalized
+  # Setter method for `maxAngle`.
+  constrainAngle: (angle) ->
+    @_config.maxAngle = parseFloat(angle, 10) or defaults.maxAngle
+    @
 
-    # Loop through the panels in this stage.
-    for panel, i in @panels[anchor]
 
-      # If it's an odd-numbered panel, reverse the angle.
-      if i % 2 isnt 0 and not options.twist
+  # Pause in the midst of an animation sequence, in milliseconds.
+  # E.g.: el.reveal(20).wait()
+  wait: (ms) ->
+    fn = => setTimeout @_conclude, ms
+    if @_inTrans
+      @_queue.push [fn, @_lastOp.angle, @_lastOp.anchor, @_lastOp.options]
+    else
+      fn()
+    @
+
+
+  # This method is used to externally manipulate the styling or contents of the
+  # composition. Manipulation instructions can be supplied via a function (invoked
+  # with each panel element), or a map of selectors with instructions.
+  # Instruction values can be text to implicitly update `innerHTML` content or
+  # objects with `style` and/or `content` keys. Style keys should contain object
+  # literals with camel-cased CSS properties as keys.
+  modifyContent: (fn) ->
+    if typeof fn isnt 'function'
+      selectors = fn
+
+      set = (el, content, style) ->
+        el.innerHTML = content if content
+        if style
+          el.style[key] = value for key, value of style
+          null
+
+      fn = (el) ->
+        for selector, value of selectors
+          content = style = null
+          if typeof value is 'string'
+            content = value
+          else
+            {content, style} = value
+
+          if selector is ''
+            set el, content, style
+            continue
+
+          set match, content, style for match in el.querySelectorAll selector
+
+        null
+
+    for anchor in anchorList
+      for panel, i in @_panels[anchor]
+        fn panel.children[0].children[0], i, anchor
+    @
+
+
+  # Effect Methods
+  # ==============
+
+
+  # Base effect with alternating peaks and valleys.
+  # `reveal` relies on it by calling it with `sticky: true` to keep the first
+  # panel flat.
+  accordion: prep (angle, anchor, options) ->
+    @_iterate anchor, (panel, i) =>
+      # With an odd-numbered panel, reverse the angle.
+      if i % 2 isnt 0 and !options.twist
         deg = -angle
       else
         deg = angle
@@ -963,147 +1133,84 @@ class OriDomi
         deg *= 2 unless i is 0
 
       # In stairs mode, keep all the angles on the same side of 0.
-      if options.stairs
-        deg = -deg
+      deg *= -1 if options.stairs
 
       # Set the CSS transformation.
-      panel.style[css.transform] = @_transform deg, options.fracture
-      # Apply shaders.
-      if @shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
+      @_transformPanel panel, deg, anchor, options.fracture
+
+      if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
         @_setShader i, anchor, deg
 
-    # Ask `_callback` to check for a callback.
-    @_callback options
 
-
-  # `curl` appears to bend rather than fold the paper. Its curves can appear smoother
-  # with higher panel counts.
-  curl: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'curl', arguments
-    return unless normalized
-    [angle, anchor, options] = normalized
+  # This effect appears to bend rather than fold the paper. Its curves can
+  # appear smoother with higher panel counts.
+  curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /=  @_getPanelType anchor
+    angle /= if anchor in anchorListV then @_config.vPanels else @_config.hPanels
 
-    for panel, i in @panels[anchor]
-      panel.style[css.transform] = @_transform angle
-      @_setShader i, anchor, 0 if @shading
-
-    @_callback options
+    @_iterate anchor, (panel, i) =>
+      @_transformPanel panel, angle, anchor
+      @_setShader i, anchor, 0 if @_shading
 
 
-  # `ramp` lifts up all panels after the first one.
-  ramp: (angle, anchor, options) ->
-    normalized = @_normalizeArgs 'ramp', arguments
-    return unless normalized
-    [angle, anchor, options] = normalized
+  # Lifts up all panels after the first one.
+  ramp: prep (angle, anchor, options) ->
     # Rotate the second panel for the lift up.
-    @panels[anchor][1].style[css.transform] = @_transform angle
+    @_transformPanel @_panels[anchor][1], angle, anchor
 
-    # For all but the first two panels, set the angle to 0.
-    for panel, i in @panels[anchor]
-      if i > 1
-        @panels[anchor][i].style[css.transform] = @_transform 0
-
-      if @shading
-        @_setShader i, anchor, 0
-
-    @_callback options
+    # For all but the second panel, set the angle to 0.
+    @_iterate anchor, (panel, i) =>
+      @_transformPanel panel, 0, anchor if i isnt 1
+      @_setShader i, anchor, 0 if @_shading
 
 
-  # `foldUp` folds up all panels in separate synchronous animations.
-  foldUp: (anchor, callback) ->
-    # Default to left anchor.
-    unless anchor
-      anchor = 'left'
-    # Check if callback is the first argument.
-    else if typeof anchor is 'function'
-      callback = anchor
+  # Hides the element by folding each panel in a cascade of animations.
+  foldUp: prep (anchor, callback) ->
+    return callback?() if @isFoldedUp
+    @_stageReset anchor, =>
+      @_inTrans = @isFoldedUp = true
 
-    # `foldUp` uses irregular arguments, so we manually construct the arguments array.
-    normalized = @_normalizeArgs 'foldUp', [0, anchor, {}]
-    return unless normalized
-    anchor = normalized[1]
-    # Set `isFoldedUp` to `true` so we are forced to unfold before calling other methods.
-    @isFoldedUp = true
-    # Start an iterator at the last panel in this anchor.
-    i = @panels[anchor].length - 1
-    # Rotate 100 degrees.
-    angle = 100
+      @_iterate anchor, (panel, i, len) =>
+        duration  = @_config.speed
+        duration /= 2 if i is 0
+        delay     = @_setPanelTrans anchor, arguments..., duration, 2
 
-    # Local function that sets an event listener on the current panel and transforms it.
-    nextPanel = =>
-      @panels[anchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
-      @panels[anchor][i].style[css.transform] = @_transform angle
-      @_setShader i, anchor, angle if @shading
+        do (panel, i, delay) =>
+          defer =>
+            @_transformPanel panel, (if i is 0 then 90 else 170), anchor
+            setTimeout =>
+              if i is 0
+                @_inTrans = false
+                callback?()
+              else
+                hideEl panel.children[0]
 
-    # Called when each panel finishes folding in.
-    onTransitionEnd = (e) =>
-      # Remove the listener.
-      @panels[anchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
-      # Hide the panel so it doesn't collide when bending around.
-      @panels[anchor][i].style.display = 'none'
-      # Decrement the iterator and check if we're on the first panel.
-      if --i is 0
-        # If so, invoke the callback directly if applicable.
-        callback?()
-      else
-        # Otherwise, defer until the next event loop and fold back the next panel.
-        setTimeout nextPanel, 0
-
-    # Start the chain of folds.
-    nextPanel()
+            , delay + @_config.speed * .25
 
 
-  # Essentially the inverse of `foldUp`.
-  unfold: (callback) ->
-    # If the target isn't folded up, there's no reason to call this method and
-    # the callback is immediately invoked.
-    callback?() unless @isFoldedUp
+  # This is the queued version of `_unfold`.
+  unfold: prep (callback) -> @_unfold arguments...
 
-    # Reset `isFoldedUp`.
-    @isFoldedUp = false
-    # Start the iterator on the second panel.
-    i = 1
-    # Rotate back to 0.
-    angle = 0
 
-    nextPanel = =>
-      # Show the panel again.
-      @panels[@lastAnchor][i].style.display = 'block'
-      # Wait for the next event loop so the transition listener works.
-      setTimeout =>
-        @panels[@lastAnchor][i].addEventListener css.transitionEnd, onTransitionEnd, false
-        @panels[@lastAnchor][i].style[css.transform] = @_transform angle
-        @_setShader i, @lastAnchor, angle if @shading
-      , 0
-
-    onTransitionEnd = (e) =>
-      @panels[@lastAnchor][i].removeEventListener css.transitionEnd, onTransitionEnd, false
-      # Increment the iterator and check if we're past the last panel.
-      if ++i is @panels[@lastAnchor].length
-        callback?()
-      else
-        setTimeout nextPanel, 0
-
-    # Start the sequence.
-    nextPanel()
+  # For custom folding behavior, you can pass a function to map that will
+  # determine the folding angle applied to each panel. The passed function
+  # is supplied with the input angle, the panel index, and the number of
+  # panels in the active anchor. Calling map returns a new function bound to
+  # the instance and the lambda, e.g. `oridomi.map(randomFn)(30).reveal(20)`.
+  map: (fn) ->
+    prep (angle, anchor, options) =>
+      @_iterate anchor, (panel, i, len) =>
+        @_transformPanel panel, fn(angle, i, len), anchor, options.fracture
+    .bind @
 
 
   # Convenience Methods
   # ===================
 
 
-  # Completely folds in target.
-  collapse: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion -89, anchor, options
-
-
-  # Same as `collapse`, but uses negative angle for slightly different effect.
-  collapseAlt: (anchor, options = {}) ->
-    options.sticky = false
-    @accordion 89, anchor, options
+  # Resets all panels back to zero degrees.
+  reset: (callback) ->
+    @accordion 0, {callback}
 
 
   # Simply proxy for calling `accordion` with `sticky` enabled.
@@ -1115,92 +1222,96 @@ class OriDomi
 
   # Proxy to enable stairs mode on `accordion`.
   stairs: (angle, anchor, options = {}) ->
-    options.stairs = true
-    options.sticky = true
+    options.stairs = options.sticky =  true
     @accordion angle, anchor, options
 
 
-  # `fracture: true` proxy.
+  # The composition is split apart by its panels rather than folded.
   fracture: (angle, anchor, options = {}) ->
     options.fracture = true
     @accordion angle, anchor, options
 
 
-  # `twist: true` proxy.
+  # Similar to `fracture`, but the panels are twisted as well.
   twist: (angle, anchor, options = {}) ->
-    options.fracture = true
-    options.twist = true
+    options.fracture = options.twist = true
     @accordion angle / 10, anchor, options
 
 
-  # Class Members
-  # =============
+  # Convenience proxy to accordion-fold instance to maximum angle.
+  collapse: (anchor, options = {}) ->
+    options.sticky = false
+    @accordion -@_config.maxAngle, anchor, options
+
+
+  # Same as `collapse`, but uses positive angle for slightly different effect.
+  collapseAlt: (anchor, options = {}) ->
+    options.sticky = false
+    @accordion @_config.maxAngle, anchor, options
+
+
+  # Statics
+  # =======
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '0.2.2'
+  @VERSION = '1.0.0'
+
+  # Externally check if OriDomi is supported by the browser.
+  @isSupported = isSupported
 
 
-  # Externally check if oriDomi is supported by the browser.
-  @isSupported = oriDomiSupport
+# Expose the OriDomi constructor via CommonJS, AMD, or the window object.
+if module?.exports
+  module.exports = OriDomi
+else if define?.amd
+  define -> OriDomi
+else
+  window.OriDomi = OriDomi
 
-
-  # External function to enable `devMode`.
-  @devMode = -> devMode = true
-
-# Attach `OriDomi` constructor to `window`.
-root.OriDomi = OriDomi
 
 
 # Plugin Bridge
 # =============
 
 
-# Only create bridge if jQuery (or the like) exists.
-if $
-  # Attach an `oriDomi` method to `$`'s prototype.
-  $.fn.oriDomi = (options) ->
-    # Return selection if oriDomi is unsupported by the browser.
-    return @ unless oriDomiSupport
+# Only create bridge if jQuery (or an imitation supporting `data()`) exists.
+return unless $
+# Attach an `OriDomi` method to `$`'s prototype.
+$::oriDomi = (options) ->
+  # Return selection if OriDomi is unsupported by the browser.
+  return @ unless isSupported
+  return $.data @[0], baseName if options is true
 
-    # If `options` is a string, assume it's a method call.
-    if typeof options is 'string'
+  # If `options` is a string, assume it's a method call.
+  if typeof options is 'string'
+    methodName = options
+    # Check if method exists and warn if it doesn't.
+    unless typeof (method = OriDomi::[methodName]) is 'function'
+      console?.warn "OriDomi: No such method `#{ methodName }`"
+      return @
 
-      # Check if method exists and warn if it doesn't.
-      unless typeof OriDomi::[options] is 'function'
-        console.warn "oriDomi: No such method '#{ options }'" if devMode
-        return
+    for el in @
 
-      # Loop through the jQuery selection.
-      for el in @
-        # Retrieve the instance of oriDomi attached to the element.
-        instance = $.data el, 'oriDomi'
+      unless instance = $.data el, baseName
+        instance = $.data el, baseName, new OriDomi el, options
 
-        # Warn if oriDomi hasn't been initialized on this element.
-        unless instance?
-          console.warn "oriDomi: Can't call #{ options }, oriDomi hasn't been initialized on this element" if devMode
-          return
+      # Call the requested method with arguments.
+      method.apply instance, Array::slice.call(arguments)[1...]
 
-        # Convert arguments to a proper array and remove the first element.
-        args = Array::slice.call arguments
-        args.shift()
-        # Call the requested method with arguments.
-        instance[options].apply instance, args
 
-      # Return selection.
-      @
+  # If not calling a method, initialize OriDomi on the selection.
+  else
+    for el in @
+      # If the element in the selection already has an instance of OriDomi
+      # attached to it, return the instance.
+      if instance = $.data el, baseName
+        continue
+      else
+        # Create an instance of OriDomi and attach it to the element.
+        $.data el, baseName, new OriDomi el, options
 
-    # If not calling a method, initialize oriDomi on the selection.
-    else
-      for el in @
-        # If the element in the selection already has an instance of oriDomi
-        # attached to it, return the instance.
-        instance = $.data el, 'oriDomi'
-        if instance
-          return instance
-        else
-          # Create an instance of oriDomi and attach it to the element.
-          $.data el, 'oriDomi', new OriDomi el, options
 
-      # Return the selection.
-      @
+  # Return the selection.
+  @
+
