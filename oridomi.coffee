@@ -572,7 +572,6 @@ class OriDomi
     @el.innerHTML   = ''
     @el.appendChild @_cloneEl
     @el.appendChild @_stageHolder
-    @$el = $ @el if $
     # An effect method is called since touch events rely on using the last
     # method called.
     @accordion 0
