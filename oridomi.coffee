@@ -303,7 +303,7 @@ do ->
     width:          '100%'
     height:         '100%'
     position:       'absolute'
-    transform:      'translateY(-100%)'
+    top:            '0'
     transformStyle: p3d
 
   addStyle elClasses.stage,
@@ -1011,7 +1011,7 @@ class OriDomi
       @isFrozen = false
       # Swap the visibility of the elements.
       hideEl @_cloneEl
-      @_stageHolder.style[css.transform] = 'translateY(-100%)'
+      showEl @_stageHolder
       @_setCursor()
       # Set `lastAngle` to 0 so an immediately subsequent call to `freeze` triggers the callback.
       @_lastOp.angle = 0
