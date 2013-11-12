@@ -181,7 +181,7 @@
 
   css = new function() {
     var key, _i, _len, _ref1;
-    _ref1 = ['transform', 'transformOrigin', 'transformStyle', 'transitionProperty', 'transitionDuration', 'transitionDelay', 'transitionTimingFunction', 'perspective', 'perspectiveOrigin', 'backfaceVisibility', 'boxSizing'];
+    _ref1 = ['transform', 'transformOrigin', 'transformStyle', 'transitionProperty', 'transitionDuration', 'transitionDelay', 'transitionTimingFunction', 'perspective', 'perspectiveOrigin', 'backfaceVisibility', 'boxSizing', 'mask'];
     for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
       key = _ref1[_i];
       this[key] = key;
@@ -260,7 +260,8 @@
       outline: 'none !important',
       padding: '0 !important',
       position: 'relative',
-      transformStyle: p3d + ' !important'
+      transformStyle: p3d + ' !important',
+      mask: 'none !important'
     });
     addStyle(elClasses.clone, {
       margin: '0 !important',
@@ -1286,7 +1287,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.0.0';
+    OriDomi.VERSION = '1.0.1';
 
     OriDomi.isSupported = isSupported;
 
