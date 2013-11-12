@@ -215,6 +215,7 @@ css = new ->
     'perspectiveOrigin'
     'backfaceVisibility'
     'boxSizing'
+    'mask'
   ]
   @
 
@@ -292,6 +293,7 @@ do ->
     padding:         '0 !important'
     position:        'relative'
     transformStyle:  p3d + ' !important'
+    mask:            'none !important'
 
   addStyle elClasses.clone,
     margin:    '0 !important'
