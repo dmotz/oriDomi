@@ -562,6 +562,10 @@ class OriDomi
     @_stageHolder = createEl 'holder'
     @_stageHolder.appendChild @_stages[anchor] for anchor in anchorList
 
+    # Override default styling if original positioning is absolute.
+    if window.getComputedStyle(@el).position is 'absolute'
+      @el.style.position = 'absolute'
+
     @el.classList.add elClasses.active
     showEl @_stages.left
     # The original element is cloned and hidden via transforms so the dimensions
