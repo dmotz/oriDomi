@@ -303,9 +303,9 @@ do ->
 
   addStyle elClasses.holder,
     width:          '100%'
-    height:         '100%'
     position:       'absolute'
     top:            '0'
+    bottom:         '0'
     transformStyle: p3d
 
   addStyle elClasses.stage,
