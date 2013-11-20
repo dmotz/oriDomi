@@ -271,9 +271,9 @@
     });
     addStyle(elClasses.holder, {
       width: '100%',
-      height: '100%',
       position: 'absolute',
       top: '0',
+      bottom: '0',
       transformStyle: p3d
     });
     addStyle(elClasses.stage, {
@@ -534,6 +534,9 @@
       for (_q = 0, _len7 = anchorList.length; _q < _len7; _q++) {
         anchor = anchorList[_q];
         this._stageHolder.appendChild(this._stages[anchor]);
+      }
+      if (window.getComputedStyle(this.el).position === 'absolute') {
+        this.el.style.position = 'absolute';
       }
       this.el.classList.add(elClasses.active);
       showEl(this._stages.left);
@@ -1287,7 +1290,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.0.1';
+    OriDomi.VERSION = '1.0.2';
 
     OriDomi.isSupported = isSupported;
 
