@@ -24,3 +24,4 @@ Pull requests are welcome. When contributing, please commit just the `.coffee`
 file and I'll update the build when it's merged.
 
 The DOM is your oyster.
+
