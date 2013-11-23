@@ -4,9 +4,9 @@
 
 [@dcmotz](http://twitter.com/dcmotz)
 
-#![oriDomi](http://oridomi.com/demo/images/readme1.png)
-#![oriDomi](http://oridomi.com/demo/images/readme2.png)
-#![oriDomi](http://oridomi.com/demo/images/readme3.gif)
+#![oriDomi](http://oridomi.com/demo/images/readme/1.png)
+#![oriDomi](http://oridomi.com/demo/images/readme/2.png)
+#![oriDomi](http://oridomi.com/demo/images/readme/3.gif)
 
 Visit [oridomi.com](http://oridomi.com) for examples, documentation and notes.
 
