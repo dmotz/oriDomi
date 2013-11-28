@@ -403,7 +403,7 @@ defaults =
   # This is a multiplier that determines the darkness of shading.
   # If you need subtler shading, set this to a value below 1.
   shadingIntensity: 1
-  # This option allows you to supply the name of an easing method or a
+  # This option allows you to supply the name of a CSS easing method or a
   # cubic bezier formula for customized animation easing.
   easingMethod: ''
   # Allows the user to fold the element via touch or mouse.
