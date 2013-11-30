@@ -348,6 +348,7 @@ do ->
     position:           'absolute'
     overflow:           'hidden'
     transform:          'translate3d(0, 0, 0)'
+    outline:            '1px solid transparent'
 
   addStyle elClasses.panel,
     width:              '100%'
