@@ -1,6 +1,6 @@
 # # OriDomi
 # ### Fold up the DOM like paper.
-# 1.0.3
+# 1.0.4
 
 # [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
@@ -348,6 +348,7 @@ do ->
     position:           'absolute'
     overflow:           'hidden'
     transform:          'translate3d(0, 0, 0)'
+    outline:            '1px solid transparent'
 
   addStyle elClasses.panel,
     width:              '100%'
@@ -1261,7 +1262,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '1.0.3'
+  @VERSION = '1.0.4'
 
   # Externally check if OriDomi is supported by the browser.
   @isSupported = isSupported

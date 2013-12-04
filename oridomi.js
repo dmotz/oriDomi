@@ -325,7 +325,8 @@
       height: '100%',
       position: 'absolute',
       overflow: 'hidden',
-      transform: 'translate3d(0, 0, 0)'
+      transform: 'translate3d(0, 0, 0)',
+      outline: '1px solid transparent'
     });
     addStyle(elClasses.panel, {
       width: '100%',
@@ -1290,7 +1291,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.0.3';
+    OriDomi.VERSION = '1.0.4';
 
     OriDomi.isSupported = isSupported;
 
