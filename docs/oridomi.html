@@ -23,7 +23,7 @@
               </div>
               <h1>OriDomi</h1>
 <h3>Fold up the DOM like paper.</h3>
-<p>1.0.2</p>
+<p>1.0.3</p>
 <p><a href="http://oridomi.com">oridomi.com</a></p>
 <h4>by <a href="http://oxism.com">Dan Motzenbecker</a></h4>
 <p>Copyright 2013, MIT License</p>
@@ -1891,7 +1891,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="property">@_isIdenticalOperation</span> operation
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> !<span class="property">@_config</span>.speed <span class="keyword">or</span> <span class="property">@_isIdenticalOperation</span> operation
       <span class="property">@_conclude</span> operation.options.callback</pre></div></div>
             
         </li>
@@ -3646,7 +3646,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="property">@VERSION</span> = <span class="string">'1.0.2'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="property">@VERSION</span> = <span class="string">'1.0.3'</span></pre></div></div>
             
         </li>
         

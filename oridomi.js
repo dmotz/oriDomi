@@ -620,7 +620,7 @@
     };
 
     OriDomi.prototype._setCallback = function(operation) {
-      if (this._isIdenticalOperation(operation)) {
+      if (!this._config.speed || this._isIdenticalOperation(operation)) {
         this._conclude(operation.options.callback);
       } else {
         this._panels[this._lastOp.anchor][0].addEventListener(css.transitionEnd, this._onTransitionEnd, false);
@@ -1290,7 +1290,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.0.2';
+    OriDomi.VERSION = '1.0.3';
 
     OriDomi.isSupported = isSupported;
 
