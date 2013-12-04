@@ -635,7 +635,7 @@ class OriDomi
   # This method normalizes callback handling for all public methods.
   _setCallback: (operation) ->
     # If there was no transformation, invoke the callback immediately.
-    if @_isIdenticalOperation operation
+    if !@_config.speed or @_isIdenticalOperation operation
       @_conclude operation.options.callback
     # Otherwise, attach an event listener to be called on the transition's end.
     else
