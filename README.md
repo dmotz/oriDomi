@@ -23,9 +23,10 @@ Run `cake watch` to automatically compile as you work.
 Pull requests are welcome. When contributing, please commit just the `.coffee`
 file and I'll update the build when it's merged.
 
-
-#### ROR
-If you are a Ruby on Rails user, you can use the [oridomi-rails](https://rubygems.org/gems/oridomi-rails) gem
-
 The DOM is your oyster.
 
+
+#### Integration Projects
+* [Bespoke OriDomi](https://github.com/ebow/bespoke-oridomi)
+* [Ruby on Rails Gem](https://rubygems.org/gems/oridomi-rails)
+* [app-UI](https://github.com/triceam/app-UI)
