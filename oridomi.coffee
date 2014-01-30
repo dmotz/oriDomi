@@ -5,7 +5,7 @@
 # [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
 
-# Copyright 2013, MIT License
+# Copyright 2014, MIT License
 
 'use strict'
 
@@ -14,7 +14,7 @@
 isSupported = true
 
 # Utility Functions
-# ================
+# =================
 
 # Used for informing the developer which required feature the browser lacks.
 supportWarning = (prop) ->
@@ -247,7 +247,7 @@ do ->
       testEl.style.backgroundImage = "#{ hyphenated }(left, #000, #fff)"
       # After setting a gradient background on the test div, attempt to retrieve it.
       return hyphenated unless testEl.style.backgroundImage.indexOf('gradient') is -1
-    # If none of the hyphenated values worked, return the un-prefixed version.
+    # If none of the hyphenated values worked, return the unprefixed version.
     'linear-gradient'
 
   # The default cursor style is set to `grab` to prompt the user to interact with the element.
@@ -420,7 +420,7 @@ defaults =
   touchStartCallback: noOp
   # Invoked with the folded angle.
   touchMoveCallback: noOp
-  # Inkoked with ending point.
+  # Invoked with ending point.
   touchEndCallback: noOp
 
 
@@ -574,7 +574,7 @@ class OriDomi
     @_cloneEl = cloneEl @el, true, 'clone'
     @_cloneEl.classList.remove elClasses.active
     hideEl @_cloneEl
-    # Once the clone is stored the original element is emptied and appened with
+    # Once the clone is stored the original element is emptied and appended with
     # the clone and the OriDomi content.
     @el.innerHTML   = ''
     @el.appendChild @_cloneEl
@@ -706,7 +706,7 @@ class OriDomi
       angle
 
 
-  # Allows other methods to change the transiton duration/delay or disable it altogether.
+  # Allows other methods to change the transition duration/delay or disable it altogether.
   _setTrans: (duration, delay, anchor = @_lastOp.anchor) ->
     @_iterate anchor, (panel, i, len) => @_setPanelTrans anchor, arguments..., duration, delay
 
@@ -809,6 +809,7 @@ class OriDomi
 
 
   # Converts a shorthand anchor name to a full one.
+  # Numerical shorthands are based on CSS shorthand ordering.
   _getLonghandAnchor: (shorthand) ->
     switch shorthand.toString()
       when 'left',   'l', '4'
@@ -930,7 +931,7 @@ class OriDomi
     # Restore the initial touch status and cursor.
     @_touchStarted = @_inTrans = false
     @el.style.cursor = css.grab
-    # Enable tweening again.
+    # Enable transitions again.
     @_setTrans @_config.speed, @_config.ripple
     # Pass callback final coordinate.
     @_config.touchEndCallback @["_#{ @_touchAxis }Last"], e
