@@ -266,7 +266,7 @@ do ->
       ['move', 'move']
 
   # Like gradients, transform (as a transition value) needs to be detected and prefixed.
-  css.transformProp = do ->
+  css.transformProp =
     # Use a regular expression to pluck the prefix `testProp` found.
     if prefix = css.transform.match /(\w+)Transform/i
       "-#{ prefix[1].toLowerCase() }-transform"
@@ -274,7 +274,7 @@ do ->
       'transform'
 
   # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
-  css.transitionEnd = do ->
+  css.transitionEnd =
     switch css.transitionProperty.toLowerCase()
       when 'transitionproperty'       then 'transitionEnd'
       when 'webkittransitionproperty' then 'webkitTransitionEnd'
@@ -712,7 +712,7 @@ class OriDomi
 
   # This method changes the transition duration and delay of panels and shaders.
   _setPanelTrans: (anchor, panel, i, len, duration, delay) ->
-    delayMs  = do =>
+    delayMs =
       # Delay is a `ripple` value. The milliseconds are derived based on the
       # speed setting and the number of panels.
       switch delay
