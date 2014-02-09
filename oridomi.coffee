@@ -778,7 +778,7 @@ class OriDomi
       hideEl @_stages[@_lastOp.anchor]
       @_lastOp.anchor = anchor
       @_lastOp.reset  = true
-      @_stages[anchor].style[css.transform] = 'translate3d(' + do =>
+      @_stages[anchor].style[css.transform] = 'translate3d(' +
         switch anchor
           when 'left'
             '0, 0, 0)'
