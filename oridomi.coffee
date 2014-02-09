@@ -25,10 +25,10 @@ supportWarning = (prop) ->
 testProp = (prop) ->
   # Loop through the vendor prefix list and return a match is found.
   for prefix in prefixList
-    return full if testEl.style[(full = prefix + capitalize prop)]?
+    return full if (full = prefix + capitalize prop) of testEl.style
 
   # If the unprefixed property is present, return it.
-  return prop if testEl.style[prop]?
+  return prop if prop of testEl.style
   # If no matches are found, return false to denote that the browser is
   # missing this property.
   false
@@ -442,7 +442,7 @@ class OriDomi
     # Fill in passed options with defaults.
     @_config = new ->
       for k, v of defaults
-        if options[k]?
+        if k of options
           @[k] = options[k]
         else
           @[k] = v
