@@ -7,7 +7,6 @@
 
 # Copyright 2014, MIT License
 
-'use strict'
 
 # This variable is set to true and negated later if the browser does
 # not support OriDomi.
