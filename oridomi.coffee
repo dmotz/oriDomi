@@ -406,6 +406,9 @@ defaults =
   # This option allows you to supply the name of a CSS easing method or a
   # cubic bezier formula for customized animation easing.
   easingMethod: ''
+  # Number of pixels to offset each panel to prevent small gaps from appearing
+  # between them. This is configurable if you have a need for precision.
+  gapNudge: 1
   # Allows the user to fold the element via touch or mouse.
   touchEnabled: true
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
@@ -686,7 +689,7 @@ class OriDomi
                               rotateX(#{ x }deg)
                               rotateY(#{ y }deg)
                               rotateZ(#{ z }deg)
-                              translate#{ translate }px)
+                              translate#{ translate }#{ @_config.gapNudge }px)
                               "
 
 
