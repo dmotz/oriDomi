@@ -1199,7 +1199,7 @@ class OriDomi
   unfold: prep (callback) -> @_unfold arguments...
 
 
-  # For custom folding behavior, you can pass a function to map that will
+  # For custom folding behavior, you can pass a function to `map()` that will
   # determine the folding angle applied to each panel. The passed function
   # is supplied with the input angle, the panel index, and the number of
   # panels in the active anchor. Calling map returns a new function bound to
@@ -1264,7 +1264,7 @@ class OriDomi
   # Set a version flag for easy external retrieval.
   @VERSION = '1.0.4'
 
-  # Externally check if OriDomi is supported by the browser.
+  # Externally reveal if OriDomi is supported by the browser.
   @isSupported = isSupported
 
 
