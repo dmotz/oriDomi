@@ -501,66 +501,92 @@ class OriDomi
     panelProto.style[css.transitionDuration]       = @_config.speed + 'ms'
     panelProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
+    # These arrays store panel offsets so they don't have to be computed twice
+    # for each axis.
+    offsets = left: [], top: []
+
     # This loop builds all of the panels.
     for axis in ['x', 'y']
       if axis is 'x'
         anchorSet   = anchorListV
-        count       = @_config.vPanels
         metric      = 'width'
         classSuffix = 'V'
       else
         anchorSet   = anchorListH
-        count       = @_config.hPanels
         metric      = 'height'
         classSuffix = 'H'
 
-      # Set the panel dimension to a percentage of the container.
-      percent = 100 / count
+      panelConfig = @_config[panelKey = classSuffix.toLowerCase() + 'Panels']
 
-      mask    = cloneEl maskProto, true, 'mask' + classSuffix
-      content = mask.children[0]
-      # The inner content retains the original dimensions of the element
-      # while being inside a small slice. By multiplying 100% by the number of
-      # panels on this axis, the size reduction of the parent in undone and
-      # sizing flexibility is achieved.
-      content.style.width   = content.style.height = '100%'
-      content.style[metric] = content.style['max' + capitalize metric] = count * 100 + '%'
+      # If the panel set configuration is an integer (as it is by default),
+      # an array is filled with equal percentages.
+      if typeof panelConfig is 'number'
+        count       = Math.abs parseInt panelConfig, 10
+        percent     = 100 / count
+        panelConfig = @_config[panelKey] = (percent for [0...count])
+      else
+        count = panelConfig.length
+        unless 99 <= panelConfig.reduce((p, c) -> p + c) <= 100.1
+          throw new Error 'OriDomi: Panel percentages do not sum to 100'
+
+      # Clone a new mask element and append it to a panel element prototype.
+      mask = cloneEl maskProto, true, 'mask' + classSuffix
+
       if @_shading
         mask.appendChild shaderProtos[anchor] for anchor in anchorSet
 
       proto = cloneEl panelProto, false, 'panel' + classSuffix
       proto.appendChild mask
 
-      for anchor, n in anchorSet
+      for anchor, rightOrBottom in anchorSet
         for panelN in [0...count]
-          panel = proto.cloneNode true
-          # Only the first panel has its size set to a percentage since subsequent
-          # panels are nested children and will match its size.
-          panel.style[metric] = percent + '%' if panelN is 0
+          panel   = proto.cloneNode true
           content = panel.children[0].children[0]
+          content.style.width = content.style.height = '100%'
 
-          # The inner content of each panel is offset relative to the panel
-          # index to display a contiguous composition.
-          if n is 0
-            content.style[anchor] = -panelN * 100 + '%'
-            if panelN is 0
-              panel.style[anchor] = '0'
-            else
-              panel.style[anchor] = '100%'
-          else
-            content.style[anchorSet[0]] = (count - panelN - 1) * -100 + '%'
+          if rightOrBottom
             panel.style[css.origin] = anchor
+            # Panels on the right and bottom axes are placed backwards.
+            index = panelConfig.length - panelN - 1
+            prev  = index + 1
+          else
+            index = panelN
+            prev  = index - 1
+            # The inner content of each panel is offset relative to the panel
+            # index to display a contiguous composition.
             if panelN is 0
-              panel.style[anchorSet[0]] = 100 - percent + '%'
+              offsets[anchor].push 0
             else
-              panel.style[anchorSet[0]] = '-100%'
+              offsets[anchor].push (offsets[anchor][prev] - 100) * (panelConfig[prev] / panelConfig[index])
+
+          if panelN is 0
+            panel.style[anchor] = '0'
+            # Only the first panel has its size set to the nominal target percentage.
+            panel.style[metric] = panelConfig[index] + '%'
+          else
+            # Each subsequent panel is offset by its predecessor/parent's size.
+            panel.style[anchor] = '100%'
+            # Subsequent panels have their percentages set relative to their
+            # parent panel's percentage to counteract it in an absolute sense.
+            panel.style[metric] = panelConfig[index] / panelConfig[prev] * 100 + '%'
 
           if @_shading
             for a, i in anchorSet
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
+          # The inner content retains the original dimensions of the element
+          # while being inside a small slice. By manipulating the number based
+          # on the total number of panels and the absolute percentage, the size
+          # reduction of the parent is undone and sizing flexibility is achieved.
+          content.style[metric] =
+            content.style['max' + capitalize metric] =
+              (count / panelConfig[index] * 10000 / count) + '%'
+
+          content.style[anchorSet[0]] = offsets[anchorSet[0]][index] + '%'
+
           @_transformPanel panel, 0, anchor
           @_panels[anchor][panelN] = panel
+
           # Panels are nested inside each other.
           @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
