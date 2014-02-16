@@ -26,13 +26,13 @@ document.addEventListener 'DOMContentLoaded', ->
   , 1000
 
 
-  methods = ['accordion', 'curl', 'foldUp', 'reveal', 'fracture', 'ramp', 'stairs', 'twist']
+  methods = ['accordion', 'stairs', 'curl', 'reveal', 'foldUp', 'ramp', 'twist', 'fracture']
 
   document.getElementById('demos').addEventListener 'click', (e) ->
 
     return unless (el = e.target).className is 'button'
     n      = el.getAttribute 'data-n'
-    method = methods[Math.floor Math.random() * methods.length]
+    method = methods[Math.abs Math.floor Math.random() * methods.length - Math.random()]
     angle  = Math.floor Math.random() * 80 * (if Math.random() > .5 then -1 else 1)
 
     demos[n][method] if method isnt 'foldUp' then angle else undefined
