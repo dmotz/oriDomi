@@ -43,7 +43,7 @@ addStyle = (selector, rules) ->
       prop = css[prop]
       prop = '-' + prop if prop.match /^(webkit|moz|ms)/i
 
-    # Convert camelcase to hypenated.
+    # Convert camel case to hyphenated.
     style += "#{ prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() }:#{ val };"
 
   styleBuffer += style + '}'
@@ -54,7 +54,7 @@ getGradient = (anchor) ->
   "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
-# Used mainly when creating camelcased strings.
+# Used mainly when creating camel cased strings.
 capitalize = (s) ->
   s[0].toUpperCase() + s[1...]
 
@@ -218,7 +218,7 @@ css = new ->
   ]
   @
 
-# This section is wrapped in an immediately invoked function so that it can exit
+# This section is wrapped in a function call so that it can exit
 # early when discovering a lack of browser support to prevent unnecessary work.
 do ->
   # Loop through the CSS map and replace each value with the result of `testProp()`.
