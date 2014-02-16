@@ -559,6 +559,7 @@ class OriDomi
             for a, i in anchorSet
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
+          @_transformPanel panel, 0, anchor
           @_panels[anchor][panelN] = panel
           # Panels are nested inside each other.
           @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
