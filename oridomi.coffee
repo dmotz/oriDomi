@@ -353,7 +353,7 @@ do ->
     width:              '100%'
     height:             '100%'
     padding:            '0'
-    position:           'relative'
+    position:           'absolute'
     transitionProperty: css.transformProp
     transformOrigin:    'left'
     transformStyle:     p3d
