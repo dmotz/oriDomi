@@ -682,12 +682,12 @@ class OriDomi
     # Rotate on every axis in fracture mode.
     x = y = z = angle if fracture
 
-    el.style[css.transform] = """
+    el.style[css.transform] = "
                               rotateX(#{ x }deg)
                               rotateY(#{ y }deg)
                               rotateZ(#{ z }deg)
                               translate#{ translate }px)
-                              """
+                              "
 
 
   # This validates a given angle by making sure it's a float and by
