@@ -1,13 +1,12 @@
 # # OriDomi
 # ### Fold up the DOM like paper.
-# 1.0.4
+# 1.1.0
 
 # [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
 
 # Copyright 2014, MIT License
 
-'use strict'
 
 # This variable is set to true and negated later if the browser does
 # not support OriDomi.
@@ -26,10 +25,10 @@ supportWarning = (prop) ->
 testProp = (prop) ->
   # Loop through the vendor prefix list and return a match is found.
   for prefix in prefixList
-    return full if testEl.style[(full = prefix + capitalize prop)]?
+    return full if (full = prefix + capitalize prop) of testEl.style
 
   # If the unprefixed property is present, return it.
-  return prop if testEl.style[prop]?
+  return prop if prop of testEl.style
   # If no matches are found, return false to denote that the browser is
   # missing this property.
   false
@@ -44,7 +43,7 @@ addStyle = (selector, rules) ->
       prop = css[prop]
       prop = '-' + prop if prop.match /^(webkit|moz|ms)/i
 
-    # Convert camelcase to hypenated.
+    # Convert camel case to hyphenated.
     style += "#{ prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() }:#{ val };"
 
   styleBuffer += style + '}'
@@ -55,7 +54,7 @@ getGradient = (anchor) ->
   "#{ css.gradientProp }(#{ anchor }, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%)"
 
 
-# Used mainly when creating camelcased strings.
+# Used mainly when creating camel cased strings.
 capitalize = (s) ->
   s[0].toUpperCase() + s[1...]
 
@@ -219,7 +218,7 @@ css = new ->
   ]
   @
 
-# This section is wrapped in an immediately invoked function so that it can exit
+# This section is wrapped in a function call so that it can exit
 # early when discovering a lack of browser support to prevent unnecessary work.
 do ->
   # Loop through the CSS map and replace each value with the result of `testProp()`.
@@ -267,7 +266,7 @@ do ->
       ['move', 'move']
 
   # Like gradients, transform (as a transition value) needs to be detected and prefixed.
-  css.transformProp = do ->
+  css.transformProp =
     # Use a regular expression to pluck the prefix `testProp` found.
     if prefix = css.transform.match /(\w+)Transform/i
       "-#{ prefix[1].toLowerCase() }-transform"
@@ -275,7 +274,7 @@ do ->
       'transform'
 
   # Set a `transitionEnd` property based on the browser's prefix for `transitionProperty`.
-  css.transitionEnd = do ->
+  css.transitionEnd =
     switch css.transitionProperty.toLowerCase()
       when 'transitionproperty'       then 'transitionEnd'
       when 'webkittransitionproperty' then 'webkitTransitionEnd'
@@ -354,7 +353,7 @@ do ->
     width:              '100%'
     height:             '100%'
     padding:            '0'
-    position:           'relative'
+    position:           'absolute'
     transitionProperty: css.transformProp
     transformOrigin:    'left'
     transformStyle:     p3d
@@ -381,8 +380,12 @@ do ->
 # These defaults are used by all OriDomi instances unless overridden.
 defaults =
   # The number of vertical panels (for folding left or right).
+  # You can use either an integer, or an array of percentages if you want custom
+  # panel widths, e.g. `[20, 10, 10, 20, 10, 20, 10]`.
+  # The numbers must add up to 100 (or near it, so you can use values like
+  # `[33, 33, 33]`).
   vPanels: 3
-  # The number of horizontal panels (for folding top or bottom).
+  # The number of horizontal panels (for folding top or bottom) or an array of percentages.
   hPanels: 3
   # The determines the distance in pixels (z axis) of the camera/viewer to the paper.
   # The smaller the value, the more distorted and exaggerated the effects will appear.
@@ -407,6 +410,9 @@ defaults =
   # This option allows you to supply the name of a CSS easing method or a
   # cubic bezier formula for customized animation easing.
   easingMethod: ''
+  # Number of pixels to offset each panel to prevent small gaps from appearing
+  # between them. This is configurable if you have a need for precision.
+  gapNudge: 1
   # Allows the user to fold the element via touch or mouse.
   touchEnabled: true
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
@@ -431,8 +437,8 @@ class OriDomi
 
   constructor: (@el, options = {}) ->
     return unless isSupported
-    # Prevent constructor calls made without `new`.
-    return new OriDomi arguments... unless @ instanceof OriDomi
+    # Fix constructor calls made without `new`.
+    return new OriDomi @el, options unless @ instanceof OriDomi
     # Support selector strings as well as elements.
     @el = document.querySelector @el if typeof @el is 'string'
     # Make sure element is valid.
@@ -443,7 +449,7 @@ class OriDomi
     # Fill in passed options with defaults.
     @_config = new ->
       for k, v of defaults
-        if options[k]?
+        if k of options
           @[k] = options[k]
         else
           @[k] = v
@@ -495,65 +501,92 @@ class OriDomi
     panelProto.style[css.transitionDuration]       = @_config.speed + 'ms'
     panelProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
+    # These arrays store panel offsets so they don't have to be computed twice
+    # for each axis.
+    offsets = left: [], top: []
+
     # This loop builds all of the panels.
     for axis in ['x', 'y']
       if axis is 'x'
         anchorSet   = anchorListV
-        count       = @_config.vPanels
         metric      = 'width'
         classSuffix = 'V'
       else
         anchorSet   = anchorListH
-        count       = @_config.hPanels
         metric      = 'height'
         classSuffix = 'H'
 
-      # Set the panel dimension to a percentage of the container.
-      percent = 100 / count
+      panelConfig = @_config[panelKey = classSuffix.toLowerCase() + 'Panels']
 
-      mask    = cloneEl maskProto, true, 'mask' + classSuffix
-      content = mask.children[0]
-      # The inner content retains the original dimensions of the element
-      # while being inside a small slice. By multiplying 100% by the number of
-      # panels on this axis, the size reduction of the parent in undone and
-      # sizing flexibility is achieved.
-      content.style.width   = content.style.height = '100%'
-      content.style[metric] = content.style['max' + capitalize metric] = count * 100 + '%'
+      # If the panel set configuration is an integer (as it is by default),
+      # an array is filled with equal percentages.
+      if typeof panelConfig is 'number'
+        count       = Math.abs parseInt panelConfig, 10
+        percent     = 100 / count
+        panelConfig = @_config[panelKey] = (percent for [0...count])
+      else
+        count = panelConfig.length
+        unless 99 <= panelConfig.reduce((p, c) -> p + c) <= 100.1
+          throw new Error 'OriDomi: Panel percentages do not sum to 100'
+
+      # Clone a new mask element and append it to a panel element prototype.
+      mask = cloneEl maskProto, true, 'mask' + classSuffix
+
       if @_shading
         mask.appendChild shaderProtos[anchor] for anchor in anchorSet
 
       proto = cloneEl panelProto, false, 'panel' + classSuffix
       proto.appendChild mask
 
-      for anchor, n in anchorSet
+      for anchor, rightOrBottom in anchorSet
         for panelN in [0...count]
-          panel = proto.cloneNode true
-          # Only the first panel has its size set to a percentage since subsequent
-          # panels are nested children and will match its size.
-          panel.style[metric] = percent + '%' if panelN is 0
+          panel   = proto.cloneNode true
           content = panel.children[0].children[0]
+          content.style.width = content.style.height = '100%'
 
-          # The inner content of each panel is offset relative to the panel
-          # index to display a contiguous composition.
-          if n is 0
-            content.style[anchor] = -panelN * 100 + '%'
-            if panelN is 0
-              panel.style[anchor] = '0'
-            else
-              panel.style[anchor] = '100%'
-          else
-            content.style[anchorSet[0]] = (count - panelN - 1) * -100 + '%'
+          if rightOrBottom
             panel.style[css.origin] = anchor
+            # Panels on the right and bottom axes are placed backwards.
+            index = panelConfig.length - panelN - 1
+            prev  = index + 1
+          else
+            index = panelN
+            prev  = index - 1
+            # The inner content of each panel is offset relative to the panel
+            # index to display a contiguous composition.
             if panelN is 0
-              panel.style[anchorSet[0]] = 100 - percent + '%'
+              offsets[anchor].push 0
             else
-              panel.style[anchorSet[0]] = '-100%'
+              offsets[anchor].push (offsets[anchor][prev] - 100) * (panelConfig[prev] / panelConfig[index])
+
+          if panelN is 0
+            panel.style[anchor] = '0'
+            # Only the first panel has its size set to the nominal target percentage.
+            panel.style[metric] = panelConfig[index] + '%'
+          else
+            # Each subsequent panel is offset by its predecessor/parent's size.
+            panel.style[anchor] = '100%'
+            # Subsequent panels have their percentages set relative to their
+            # parent panel's percentage to counteract it in an absolute sense.
+            panel.style[metric] = panelConfig[index] / panelConfig[prev] * 100 + '%'
 
           if @_shading
             for a, i in anchorSet
               @_shaders[anchor][a][panelN] = panel.children[0].children[i + 1]
 
+          # The inner content retains the original dimensions of the element
+          # while being inside a small slice. By manipulating the number based
+          # on the total number of panels and the absolute percentage, the size
+          # reduction of the parent is undone and sizing flexibility is achieved.
+          content.style[metric] =
+            content.style['max' + capitalize metric] =
+              (count / panelConfig[index] * 10000 / count) + '%'
+
+          content.style[anchorSet[0]] = offsets[anchorSet[0]][index] + '%'
+
+          @_transformPanel panel, 0, anchor
           @_panels[anchor][panelN] = panel
+
           # Panels are nested inside each other.
           @_panels[anchor][panelN - 1].appendChild panel unless panelN is 0
 
@@ -669,26 +702,26 @@ class OriDomi
     switch anchor
       when 'left'
         y = angle
-        translate = 'X(-1'
+        transPrefix = 'X(-'
       when 'right'
         y = -angle
-        translate = 'X(1'
+        transPrefix = 'X('
       when 'top'
         x = -angle
-        translate = 'Y(-1'
+        transPrefix = 'Y(-'
       when 'bottom'
         x = angle
-        translate = 'Y(1'
+        transPrefix = 'Y('
 
     # Rotate on every axis in fracture mode.
     x = y = z = angle if fracture
 
-    el.style[css.transform] = """
+    el.style[css.transform] = "
                               rotateX(#{ x }deg)
                               rotateY(#{ y }deg)
                               rotateZ(#{ z }deg)
-                              translate#{ translate }px)
-                              """
+                              translate#{ transPrefix }#{ @_config.gapNudge }px)
+                              "
 
 
   # This validates a given angle by making sure it's a float and by
@@ -713,7 +746,7 @@ class OriDomi
 
   # This method changes the transition duration and delay of panels and shaders.
   _setPanelTrans: (anchor, panel, i, len, duration, delay) ->
-    delayMs  = do =>
+    delayMs =
       # Delay is a `ripple` value. The milliseconds are derived based on the
       # speed setting and the number of panels.
       switch delay
@@ -779,16 +812,16 @@ class OriDomi
       hideEl @_stages[@_lastOp.anchor]
       @_lastOp.anchor = anchor
       @_lastOp.reset  = true
-      @_stages[anchor].style[css.transform] = 'translate3d(' + do =>
+      @_stages[anchor].style[css.transform] = 'translate3d(' +
         switch anchor
           when 'left'
             '0, 0, 0)'
           when 'right'
-            "-#{ @_config.vPanels * 1 }px, 0, 0)"
+            "-#{ @_config.vPanels.length }px, 0, 0)"
           when 'top'
             '0, 0, 0)'
           when 'bottom'
-            "0, -#{ (@_config.hPanels + 2) * 1 }px, 0)"
+            "0, -#{ @_config.hPanels.length }px, 0)"
 
 
   # If the composition needs to switch stages or fold up, it must first unfold
@@ -1154,7 +1187,7 @@ class OriDomi
   # appear smoother with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /= if anchor in anchorListV then @_config.vPanels else @_config.hPanels
+    angle /= if anchor in anchorListV then @_config.vPanels.length else @_config.hPanels.length
 
     @_iterate anchor, (panel, i) =>
       @_transformPanel panel, angle, anchor
@@ -1200,7 +1233,7 @@ class OriDomi
   unfold: prep (callback) -> @_unfold arguments...
 
 
-  # For custom folding behavior, you can pass a function to map that will
+  # For custom folding behavior, you can pass a function to `map()` that will
   # determine the folding angle applied to each panel. The passed function
   # is supplied with the input angle, the panel index, and the number of
   # panels in the active anchor. Calling map returns a new function bound to
@@ -1263,9 +1296,9 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '1.0.4'
+  @VERSION = '1.1.0'
 
-  # Externally check if OriDomi is supported by the browser.
+  # Externally reveal if OriDomi is supported by the browser.
   @isSupported = isSupported
 
 
