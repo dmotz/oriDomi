@@ -380,8 +380,12 @@ do ->
 # These defaults are used by all OriDomi instances unless overridden.
 defaults =
   # The number of vertical panels (for folding left or right).
+  # You can use either an integer, or an array of percentages if you want custom
+  # panel widths, e.g. `[20, 10, 10, 20, 10, 20, 10]`.
+  # The numbers must add up to 100 (or near it, so you can use values like
+  # `[33, 33, 33]`).
   vPanels: 3
-  # The number of horizontal panels (for folding top or bottom).
+  # The number of horizontal panels (for folding top or bottom) or an array of percentages.
   hPanels: 3
   # The determines the distance in pixels (z axis) of the camera/viewer to the paper.
   # The smaller the value, the more distorted and exaggerated the effects will appear.
@@ -786,11 +790,11 @@ class OriDomi
           when 'left'
             '0, 0, 0)'
           when 'right'
-            "-#{ @_config.vPanels * 1 }px, 0, 0)"
+            "-#{ @_config.vPanels.length }px, 0, 0)"
           when 'top'
             '0, 0, 0)'
           when 'bottom'
-            "0, -#{ (@_config.hPanels + 2) * 1 }px, 0)"
+            "0, -#{ @_config.hPanels.length }px, 0)"
 
 
   # If the composition needs to switch stages or fold up, it must first unfold
@@ -1156,7 +1160,7 @@ class OriDomi
   # appear smoother with higher panel counts.
   curl: prep (angle, anchor, options) ->
     # Reduce the angle based on the number of panels in this axis.
-    angle /= if anchor in anchorListV then @_config.vPanels else @_config.hPanels
+    angle /= if anchor in anchorListV then @_config.vPanels.length else @_config.hPanels.length
 
     @_iterate anchor, (panel, i) =>
       @_transformPanel panel, angle, anchor
