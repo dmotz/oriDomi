@@ -430,8 +430,8 @@ class OriDomi
 
   constructor: (@el, options = {}) ->
     return unless isSupported
-    # Prevent constructor calls made without `new`.
-    return new OriDomi arguments... unless @ instanceof OriDomi
+    # Fix constructor calls made without `new`.
+    return new OriDomi @el, options unless @ instanceof OriDomi
     # Support selector strings as well as elements.
     @el = document.querySelector @el if typeof @el is 'string'
     # Make sure element is valid.
