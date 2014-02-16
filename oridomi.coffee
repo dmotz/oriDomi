@@ -671,16 +671,16 @@ class OriDomi
     switch anchor
       when 'left'
         y = angle
-        translate = 'X(-1'
+        transPrefix = 'X(-'
       when 'right'
         y = -angle
-        translate = 'X(1'
+        transPrefix = 'X('
       when 'top'
         x = -angle
-        translate = 'Y(-1'
+        transPrefix = 'Y(-'
       when 'bottom'
         x = angle
-        translate = 'Y(1'
+        transPrefix = 'Y('
 
     # Rotate on every axis in fracture mode.
     x = y = z = angle if fracture
@@ -689,7 +689,7 @@ class OriDomi
                               rotateX(#{ x }deg)
                               rotateY(#{ y }deg)
                               rotateZ(#{ z }deg)
-                              translate#{ translate }#{ @_config.gapNudge }px)
+                              translate#{ transPrefix }#{ @_config.gapNudge }px)
                               "
 
 
