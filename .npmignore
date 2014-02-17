@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+etc/
+docs/
+demo/
+index.html
+bower.json
+CNAME
+component.json
+favicon.png
+oridomi.jquery.json
+
