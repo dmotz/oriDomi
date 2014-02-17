@@ -38,6 +38,7 @@
         <li><a href="#content-manipulation">Content manipulation</a></li>
         <li><a href="#ripple">Ripple</a></li>
         <li><a href="#responsive">Responsive</a></li>
+        <li><a href="#custom-sizing">Custom panel sizing</a></li>
         <li><a href="#custom">Custom behavior</a></li>
         <li><a href="#minutiae">Minuti&aelig;</a></li>
       </ul>
@@ -515,6 +516,33 @@ folded.setRipple(2);
     <p>
       If you resize this site to a small width, you&rsquo;ll see the demos above
       change width accordingly.
+    </p>
+
+
+    <h2 id="custom-sizing">Custom panel sizing</h2>
+
+    <p>
+      If you&rsquo;d like uneven panel sizing, you can pass an array of percentages
+      in the options instead of a number:
+    </p>
+
+<pre>
+<code>
+var simple = new OriDomi('.simple', { vPanels: [10, 10, 10, 70] });
+
+var fibonacci = new OriDomi('.fibonacci',
+  {
+    vPanels: [1, 1, 2, 3, 5, 8, 13, 21, 34].map(function(n) {
+      return n * 1.1363636363636365;
+    })
+  }
+);
+</code>
+</pre>
+
+    <p>
+      The only requirement is that the percentages sum to 100 or near it
+      (for example, <code>[33, 33, 33]</code> is valid).
     </p>
 
 
