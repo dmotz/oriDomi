@@ -1,5 +1,5 @@
 @font-face {
-  font-family: 'Adventor Bold';
+  font-family: 'adv';
   src: url("./fonts/adventor-bold.eot");
   src: url("./fonts/adventor-bold.eot?#iefix") format('embedded-opentype'), url("./fonts/adventor-bold.woff") format('woff'), url("./fonts/adventor-bold.ttf") format('truetype'), url("./fonts/adventor-bold.svg#texgyreadventorbold") format('svg');
   font-weight: bold;
@@ -43,7 +43,7 @@ body {
   text-align: center;
 }
 .logo {
-  font-family: 'Adventor Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'adv', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   display: inline-block;
   font-size: 11rem;
   background-color: #222;
@@ -81,12 +81,12 @@ header {
 }
 header h2 {
   margin: 2.2rem 0;
-  font-size: 3rem;
+  font-size: 3.4rem;
   letter-spacing: -0.1rem;
   font-weight: 200;
 }
 header h5 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   line-height: 1;
   margin-bottom: 3rem;
   font-weight: 400;
@@ -181,17 +181,19 @@ section {
   overflow: hidden;
 }
 section h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   line-height: 2;
+  font-family: 'adv', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 p,
 pre {
-  max-width: 60rem;
+  max-width: 65rem;
   margin: 2rem auto;
   text-align: left;
 }
 p {
-  font-size: 1.7rem;
+  font-family: Georgia, Times, 'Times New Roman', serif;
+  font-size: 2.2rem;
   line-height: 1.5;
 }
 p a {
@@ -208,7 +210,7 @@ p code {
   -webkit-border-radius: 2px;
   border-radius: 2px;
   padding: 0.3rem;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 pre {
   background-color: #f8f8f8;
@@ -216,7 +218,7 @@ pre {
   padding: 1rem;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   padding: 0 2rem;
   overflow: scroll;
 }
@@ -239,7 +241,7 @@ code {
 #demos > h2,
 #demos > h3 {
   color: #aaa;
-  font-size: 3rem;
+  font-size: 3.4rem;
   font-weight: 200;
 }
 #demos > h2 {
@@ -286,7 +288,7 @@ code {
   position: relative;
 }
 .demo1 {
-  font-family: 'Adventor Bold', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'adv', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   height: 30rem;
   color: #fff;
   background-image: url("./images/road.jpg");
@@ -307,6 +309,7 @@ code {
   background-color: #333;
   display: inline-block;
   padding: 0.8rem;
+  font-family: 'adv', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 100;
   letter-spacing: 0;
   pointer-events: none;
@@ -406,8 +409,9 @@ code {
   margin-left: 4rem;
 }
 #usage h2 {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-top: 5rem;
+  font-family: 'adv', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 #initialization {
   margin-top: 2rem !important;

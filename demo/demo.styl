@@ -2,22 +2,12 @@
 
 $gold    = #e2bb7c
 $helv    = 'Helvetica Neue', Helvetica, Arial, sans-serif
-$advBold = 'Adventor Bold', $helv
+$advBold = 'adv', $helv
 $abril   = 'Abril Fatface', 'Hoefler Text', Constantia, Palatino, Georgia, serif
+$serif   = Georgia, Times, 'Times New Roman', serif
 
 @font-face
-  font-family: 'Adventor Regular'
-  src: url('./fonts/adventor-regular.eot')
-  src: url('./fonts/adventor-regular.eot?#iefix') format('embedded-opentype'),
-       url('./fonts/adventor-regular.woff') format('woff'),
-       url('./fonts/adventor-regular.ttf') format('truetype'),
-       url('./fonts/adventor-regular.svg#texgyreadventorregular') format('svg')
-  font-weight: normal
-  font-style: normal
-
-
-@font-face
-  font-family: 'Adventor Bold'
+  font-family: 'adv'
   src: url('./fonts/adventor-bold.eot')
   src: url('./fonts/adventor-bold.eot?#iefix') format('embedded-opentype'),
        url('./fonts/adventor-bold.woff') format('woff'),
@@ -104,12 +94,12 @@ header
 
   h2
     margin: 2.2rem 0
-    font-size: 3rem
+    font-size: 3.4rem
     letter-spacing: -.1rem
     font-weight: 200
 
   h5
-    font-size: 1.6rem
+    font-size: 1.8rem
     line-height: 1
     margin-bottom: 3rem
     font-weight: 400
@@ -195,18 +185,20 @@ section
   overflow: hidden
 
   h1
-    font-size: 3rem
+    font-size: 4rem
     line-height: 2
+    font-family: $advBold
 
 
 p, pre
-  max-width: 60rem
+  max-width: 65rem
   margin: 2rem auto
   text-align: left
 
 
 p
-  font-size: 1.7rem
+  font-family: $serif
+  font-size: 2.2rem
   line-height: 1.5
 
   a
@@ -223,7 +215,7 @@ p
     border: 1px solid #ddd
     border-radius: 2px
     padding: .3rem
-    font-size: 1.4rem
+    font-size: 1.6rem
 
 
 pre
@@ -231,7 +223,7 @@ pre
   color: #555
   padding: 1rem
   border-radius: 3px
-  font-size: 1.3rem
+  font-size: 1.6rem
   padding: 0 2rem
   overflow: scroll
 
@@ -253,7 +245,7 @@ code
 
   > h2, > h3
     color: #aaa
-    font-size: 3rem
+    font-size: 3.4rem
     font-weight: 200
 
 
@@ -318,7 +310,7 @@ code
     background-color: #333
     display: inline-block
     padding: .8rem
-    //font-style: italic
+    font-family: $advBold
     font-weight: 100
     letter-spacing: 0
     pointer-events: none
@@ -421,8 +413,10 @@ code
 
 #usage
   h2
-    font-size: 2rem
+    font-size: 3rem
     margin-top: 5rem
+    font-family: $advBold
+    //color: #555
 
 
 #initialization
