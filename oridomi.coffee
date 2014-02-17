@@ -609,7 +609,7 @@ class OriDomi
     hideEl @_cloneEl
     # Once the clone is stored the original element is emptied and appended with
     # the clone and the OriDomi content.
-    @el.innerHTML   = ''
+    @el.innerHTML = ''
     @el.appendChild @_cloneEl
     @el.appendChild @_stageHolder
     # This ensures mouse events work correctly when panels are transformed
