@@ -14,6 +14,8 @@ document.addEventListener 'DOMContentLoaded', ->
     new OriDomi '.demo4', vPanels: 4, ripple: true
     new OriDomi '.demo5', hPanels: 4, ripple: true
     new OriDomi '.demo6', hPanels: 4, ripple: true, shading: false
+    new OriDomi '.demo7',
+      vPanels: [1, 1, 2, 3, 5, 8, 13, 21, 34].map((n) -> n * 1.1363636363636365).reverse()
   ]
 
   setTimeout ->
@@ -23,6 +25,7 @@ document.addEventListener 'DOMContentLoaded', ->
     demos[3].stairs 18, 'right'
     demos[4].reveal 30, 'top'
     demos[5].stairs 20, 'bottom'
+    demos[6].reveal 45, 'left'
   , 1000
 
 

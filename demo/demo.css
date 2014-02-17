@@ -275,6 +275,14 @@ code {
   margin: 0 auto;
   margin-bottom: 2rem;
 }
+.note {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  color: #999;
+  text-align: center;
+  max-width: 40rem;
+}
 .label {
   background-color: #f8f8f8;
   color: #999;
@@ -386,6 +394,14 @@ code {
 }
 .demo6:hover .oridomi-content {
   background-color: #aa2861;
+}
+.demo7 {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  background-image: url("./images/lbj.jpg");
+  width: 221%;
+  height: 40rem;
 }
 #features ul {
   font-size: 1.8rem;

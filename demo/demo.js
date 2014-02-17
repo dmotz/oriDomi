@@ -31,6 +31,10 @@
         hPanels: 4,
         ripple: true,
         shading: false
+      }), new OriDomi('.demo7', {
+        vPanels: [1, 1, 2, 3, 5, 8, 13, 21, 34].map(function(n) {
+          return n * 1.1363636363636365;
+        }).reverse()
       })
     ];
     setTimeout(function() {
@@ -39,7 +43,8 @@
       demos[2].accordion(-20, 'left');
       demos[3].stairs(18, 'right');
       demos[4].reveal(30, 'top');
-      return demos[5].stairs(20, 'bottom');
+      demos[5].stairs(20, 'bottom');
+      return demos[6].reveal(45, 'left');
     }, 1000);
     methods = ['accordion', 'stairs', 'curl', 'reveal', 'foldUp', 'ramp', 'twist', 'fracture'];
     return document.getElementById('demos').addEventListener('click', function(e) {
