@@ -134,7 +134,7 @@
 
   noOp = function() {};
 
-  $ = ((_ref = window.jQuery || window.$) != null ? _ref.data : void 0) ? window.$ : null;
+  $ = (typeof window !== "undefined" && window !== null ? (_ref = window.$) != null ? _ref.data : void 0 : void 0) ? window.$ : null;
 
   anchorList = ['left', 'right', 'top', 'bottom'];
 

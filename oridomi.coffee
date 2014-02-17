@@ -156,7 +156,7 @@ noOp = ->
 # Set a reference to jQuery (or another `$`-aliased DOM library).
 # If it doesn't exist, set to null so OriDomi knows we are working without jQuery.
 # OriDomi doesn't require it to work, but offers a useful plugin bridge if present.
-$ = if (window.jQuery or window.$)?.data then window.$ else null
+$ = if window?.$?.data then window.$ else null
 
 # List of anchors and their corresponding axis pairs.
 anchorList  = ['left', 'right', 'top', 'bottom']

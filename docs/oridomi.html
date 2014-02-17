@@ -542,7 +542,7 @@ OriDomi doesn’t require it to work, but offers a useful plugin bridge if prese
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>$ = <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.jQuery <span class="hljs-keyword">or</span> <span class="hljs-built_in">window</span>.$)?.data <span class="hljs-keyword">then</span> <span class="hljs-built_in">window</span>.$ <span class="hljs-keyword">else</span> <span class="hljs-literal">null</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>$ = <span class="hljs-keyword">if</span> <span class="hljs-built_in">window</span>?.$?.data <span class="hljs-keyword">then</span> <span class="hljs-built_in">window</span>.$ <span class="hljs-keyword">else</span> <span class="hljs-literal">null</span></pre></div></div>
             
         </li>
         
