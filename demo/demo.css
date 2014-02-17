@@ -1,11 +1,4 @@
 @font-face {
-  font-family: 'Adventor Regular';
-  src: url("./fonts/adventor-regular.eot");
-  src: url("./fonts/adventor-regular.eot?#iefix") format('embedded-opentype'), url("./fonts/adventor-regular.woff") format('woff'), url("./fonts/adventor-regular.ttf") format('truetype'), url("./fonts/adventor-regular.svg#texgyreadventorregular") format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
   font-family: 'Adventor Bold';
   src: url("./fonts/adventor-bold.eot");
   src: url("./fonts/adventor-bold.eot?#iefix") format('embedded-opentype'), url("./fonts/adventor-bold.woff") format('woff'), url("./fonts/adventor-bold.ttf") format('truetype'), url("./fonts/adventor-bold.svg#texgyreadventorbold") format('svg');
