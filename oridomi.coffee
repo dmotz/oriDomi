@@ -696,8 +696,6 @@ class OriDomi
 
   # Transforms a given element based on angle, anchor, and fracture boolean.
   _transformPanel: (el, angle, anchor, fracture) ->
-    # The values of 1 and -1 are used to try to prevent small gaps from
-    # appearing between panels during transforms.
     x = y = z = 0
     switch anchor
       when 'left'

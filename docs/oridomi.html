@@ -2184,23 +2184,8 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_transformPanel</span>: <span class="hljs-function"><span class="hljs-params">(el, angle, anchor, fracture)</span> -&gt;</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-122">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-122">&#182;</a>
-              </div>
-              <p>The values of 1 and -1 are used to try to prevent small gaps from
-appearing between panels during transforms.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    x = y = z = <span class="hljs-number">0</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_transformPanel</span>: <span class="hljs-function"><span class="hljs-params">(el, angle, anchor, fracture)</span> -&gt;</span>
+    x = y = z = <span class="hljs-number">0</span>
     <span class="hljs-keyword">switch</span> anchor
       <span class="hljs-keyword">when</span> <span class="hljs-string">'left'</span>
         y = angle
@@ -2218,11 +2203,11 @@ appearing between panels during transforms.</p>
         </li>
         
         
-        <li id="section-123">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-123">&#182;</a>
+                <a class="pilcrow" href="#section-122">&#182;</a>
               </div>
               <p>Rotate on every axis in fracture mode.</p>
 
@@ -2240,11 +2225,11 @@ appearing between panels during transforms.</p>
         </li>
         
         
-        <li id="section-124">
+        <li id="section-123">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-124">&#182;</a>
+                <a class="pilcrow" href="#section-123">&#182;</a>
               </div>
               <p>This validates a given angle by making sure it’s a float and by
 keeping it within the maximum range specified in the instance settings.</p>
@@ -2266,11 +2251,11 @@ keeping it within the maximum range specified in the instance settings.</p>
         </li>
         
         
-        <li id="section-125">
+        <li id="section-124">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-125">&#182;</a>
+                <a class="pilcrow" href="#section-124">&#182;</a>
               </div>
               <p>Allows other methods to change the transition duration/delay or disable it altogether.</p>
 
@@ -2282,11 +2267,11 @@ keeping it within the maximum range specified in the instance settings.</p>
         </li>
         
         
-        <li id="section-126">
+        <li id="section-125">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-126">&#182;</a>
+                <a class="pilcrow" href="#section-125">&#182;</a>
               </div>
               <p>This method changes the transition duration and delay of panels and shaders.</p>
 
@@ -2298,11 +2283,11 @@ keeping it within the maximum range specified in the instance settings.</p>
         </li>
         
         
-        <li id="section-127">
+        <li id="section-126">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-127">&#182;</a>
+                <a class="pilcrow" href="#section-126">&#182;</a>
               </div>
               <p>Delay is a <code>ripple</code> value. The milliseconds are derived based on the
 speed setting and the number of panels.</p>
@@ -2327,11 +2312,11 @@ speed setting and the number of panels.</p>
         </li>
         
         
-        <li id="section-128">
+        <li id="section-127">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-128">&#182;</a>
+                <a class="pilcrow" href="#section-127">&#182;</a>
               </div>
               <p>Determines a shader’s opacity based upon panel position, anchor, and angle.</p>
 
@@ -2342,11 +2327,11 @@ speed setting and the number of panels.</p>
         </li>
         
         
-        <li id="section-129">
+        <li id="section-128">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-129">&#182;</a>
+                <a class="pilcrow" href="#section-128">&#182;</a>
               </div>
               <p>Store the angle’s absolute value and generate an opacity based on <code>shadingIntensity</code>.</p>
 
@@ -2358,11 +2343,11 @@ speed setting and the number of panels.</p>
         </li>
         
         
-        <li id="section-130">
+        <li id="section-129">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-130">&#182;</a>
+                <a class="pilcrow" href="#section-129">&#182;</a>
               </div>
               <p>With hard shading, opacity is reduced and <code>angle</code> is based on the global
 <code>lastAngle</code> so all panels’ shaders share the same direction. Soft shaders
@@ -2382,11 +2367,11 @@ have alternating directions.</p>
         </li>
         
         
-        <li id="section-131">
+        <li id="section-130">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-131">&#182;</a>
+                <a class="pilcrow" href="#section-130">&#182;</a>
               </div>
               <p>This block makes sure left and top shaders appear for negative angles and right
 and bottom shaders appear for positive ones.</p>
@@ -2415,11 +2400,11 @@ and bottom shaders appear for positive ones.</p>
         </li>
         
         
-        <li id="section-132">
+        <li id="section-131">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-132">&#182;</a>
+                <a class="pilcrow" href="#section-131">&#182;</a>
               </div>
               <p>This method shows the requested stage element and sets a reference to it as
 the current stage.</p>
@@ -2445,11 +2430,11 @@ the current stage.</p>
         </li>
         
         
-        <li id="section-133">
+        <li id="section-132">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-133">&#182;</a>
+                <a class="pilcrow" href="#section-132">&#182;</a>
               </div>
               <p>If the composition needs to switch stages or fold up, it must first unfold
 all panels to 0 degrees.</p>
@@ -2465,11 +2450,11 @@ all panels to 0 degrees.</p>
         </li>
         
         
-        <li id="section-134">
+        <li id="section-133">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-134">&#182;</a>
+                <a class="pilcrow" href="#section-133">&#182;</a>
               </div>
               <p>If already unfolded to 0, immediately invoke the change function.</p>
 
@@ -2485,11 +2470,11 @@ all panels to 0 degrees.</p>
         </li>
         
         
-        <li id="section-135">
+        <li id="section-134">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-135">&#182;</a>
+                <a class="pilcrow" href="#section-134">&#182;</a>
               </div>
               <p>Converts a shorthand anchor name to a full one.
 Numerical shorthands are based on CSS shorthand ordering.</p>
@@ -2511,11 +2496,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-136">
+        <li id="section-135">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-136">&#182;</a>
+                <a class="pilcrow" href="#section-135">&#182;</a>
               </div>
               <p>Left is always default.</p>
 
@@ -2526,11 +2511,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-137">
+        <li id="section-136">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-137">&#182;</a>
+                <a class="pilcrow" href="#section-136">&#182;</a>
               </div>
               <p>Gives the element a resize cursor to prompt the user to drag the mouse.</p>
 
@@ -2545,14 +2530,26 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
+        <li id="section-137">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-137">&#182;</a>
+              </div>
+              <h1 id="touch-drag-event-handlers">Touch / Drag Event Handlers</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-138">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-138">&#182;</a>
               </div>
-              <h1 id="touch-drag-event-handlers">Touch / Drag Event Handlers</h1>
-
+              
             </div>
             
         </li>
@@ -2563,18 +2560,6 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-139">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-140">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-140">&#182;</a>
               </div>
               <p>Adds or removes handlers from the element based on the boolean argument given.</p>
 
@@ -2594,11 +2579,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-141">
+        <li id="section-140">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-141">&#182;</a>
+                <a class="pilcrow" href="#section-140">&#182;</a>
               </div>
               <p>Array of event type pairs.</p>
 
@@ -2610,11 +2595,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-142">
+        <li id="section-141">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-142">&#182;</a>
+                <a class="pilcrow" href="#section-141">&#182;</a>
               </div>
               <p>Detect native <code>mouseleave</code> support.</p>
 
@@ -2625,11 +2610,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-143">
+        <li id="section-142">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-143">&#182;</a>
+                <a class="pilcrow" href="#section-142">&#182;</a>
               </div>
               <p>Attach touch/drag event listeners in related pairs.</p>
 
@@ -2647,11 +2632,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-144">
+        <li id="section-143">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-144">&#182;</a>
+                <a class="pilcrow" href="#section-143">&#182;</a>
               </div>
               <p>This method is called when a finger or mouse button is pressed on the element.</p>
 
@@ -2664,11 +2649,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-145">
+        <li id="section-144">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-145">&#182;</a>
+                <a class="pilcrow" href="#section-144">&#182;</a>
               </div>
               <p>Clear queued animations.</p>
 
@@ -2679,11 +2664,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-146">
+        <li id="section-145">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-146">&#182;</a>
+                <a class="pilcrow" href="#section-145">&#182;</a>
               </div>
               <p>Set a property to track touch starts.</p>
 
@@ -2694,11 +2679,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-147">
+        <li id="section-146">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-147">&#182;</a>
+                <a class="pilcrow" href="#section-146">&#182;</a>
               </div>
               <p>Change the cursor to the active <code>grabbing</code> state.</p>
 
@@ -2709,11 +2694,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-148">
+        <li id="section-147">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-148">&#182;</a>
+                <a class="pilcrow" href="#section-147">&#182;</a>
               </div>
               <p>Disable tweening to enable instant 1 to 1 movement.</p>
 
@@ -2724,11 +2709,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-149">
+        <li id="section-148">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-149">&#182;</a>
+                <a class="pilcrow" href="#section-148">&#182;</a>
               </div>
               <p>Derive the axis to fold on.</p>
 
@@ -2739,11 +2724,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-150">
+        <li id="section-149">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-150">&#182;</a>
+                <a class="pilcrow" href="#section-149">&#182;</a>
               </div>
               <p>Set a reference to the last folded angle to accurately derive deltas.</p>
 
@@ -2755,11 +2740,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-151">
+        <li id="section-150">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-151">&#182;</a>
+                <a class="pilcrow" href="#section-150">&#182;</a>
               </div>
               <p>Determine the starting tap’s coordinate for touch and mouse events.</p>
 
@@ -2773,11 +2758,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-152">
+        <li id="section-151">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-152">&#182;</a>
+                <a class="pilcrow" href="#section-151">&#182;</a>
               </div>
               <p>Return that value to an external listener.</p>
 
@@ -2788,11 +2773,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-153">
+        <li id="section-152">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-153">&#182;</a>
+                <a class="pilcrow" href="#section-152">&#182;</a>
               </div>
               <p>Called on touch/mouse movement.</p>
 
@@ -2805,11 +2790,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-154">
+        <li id="section-153">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-154">&#182;</a>
+                <a class="pilcrow" href="#section-153">&#182;</a>
               </div>
               <p>Set a reference to the current x or y position.</p>
 
@@ -2823,11 +2808,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-155">
+        <li id="section-154">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-155">&#182;</a>
+                <a class="pilcrow" href="#section-154">&#182;</a>
               </div>
               <p>Calculate distance and multiply by <code>touchSensitivity</code>.</p>
 
@@ -2838,11 +2823,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
         </li>
         
         
-        <li id="section-156">
+        <li id="section-155">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-156">&#182;</a>
+                <a class="pilcrow" href="#section-155">&#182;</a>
               </div>
               <p>Calculate final delta based on starting angle, anchor, and what side of zero
 the last operation was on.</p>
@@ -2870,11 +2855,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-157">
+        <li id="section-156">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-157">&#182;</a>
+                <a class="pilcrow" href="#section-156">&#182;</a>
               </div>
               <p>Teardown process when touch/drag event ends.</p>
 
@@ -2886,11 +2871,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-158">
+        <li id="section-157">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-158">&#182;</a>
+                <a class="pilcrow" href="#section-157">&#182;</a>
               </div>
               <p>Restore the initial touch status and cursor.</p>
 
@@ -2902,11 +2887,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-159">
+        <li id="section-158">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-159">&#182;</a>
+                <a class="pilcrow" href="#section-158">&#182;</a>
               </div>
               <p>Enable transitions again.</p>
 
@@ -2917,11 +2902,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-160">
+        <li id="section-159">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-160">&#182;</a>
+                <a class="pilcrow" href="#section-159">&#182;</a>
               </div>
               <p>Pass callback final coordinate.</p>
 
@@ -2932,11 +2917,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-161">
+        <li id="section-160">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-161">&#182;</a>
+                <a class="pilcrow" href="#section-160">&#182;</a>
               </div>
               <p>End folding when the mouse or finger leaves the composition.</p>
 
@@ -2949,11 +2934,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-162">
+        <li id="section-161">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-162">&#182;</a>
+                <a class="pilcrow" href="#section-161">&#182;</a>
               </div>
               <p>A fallback for browsers that don’t support <code>mouseleave</code>.</p>
 
@@ -2966,11 +2951,11 @@ the last operation was on.</p>
         </li>
         
         
-        <li id="section-163">
+        <li id="section-162">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-163">&#182;</a>
+                <a class="pilcrow" href="#section-162">&#182;</a>
               </div>
               <p>This method unfolds the composition after it’s been folded up. It’s private
 and doesn’t use the decorator because it’s used internally by other methods
@@ -3000,11 +2985,11 @@ and skips the queue. Its public counterpart is a queued alias.</p>
         </li>
         
         
-        <li id="section-164">
+        <li id="section-163">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-164">&#182;</a>
+                <a class="pilcrow" href="#section-163">&#182;</a>
               </div>
               <p>This method is used by many others to iterate among panels within a given anchor.</p>
 
@@ -3016,14 +3001,26 @@ and skips the queue. Its public counterpart is a queued alias.</p>
         </li>
         
         
+        <li id="section-164">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-164">&#182;</a>
+              </div>
+              <h1 id="public-methods">Public Methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-165">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-165">&#182;</a>
               </div>
-              <h1 id="public-methods">Public Methods</h1>
-
+              
             </div>
             
         </li>
@@ -3035,18 +3032,6 @@ and skips the queue. Its public counterpart is a queued alias.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-166">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-167">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-167">&#182;</a>
-              </div>
               <p>Enables touch events.</p>
 
             </div>
@@ -3057,11 +3042,11 @@ and skips the queue. Its public counterpart is a queued alias.</p>
         </li>
         
         
-        <li id="section-168">
+        <li id="section-167">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-168">&#182;</a>
+                <a class="pilcrow" href="#section-167">&#182;</a>
               </div>
               <p>Disables touch events.</p>
 
@@ -3073,11 +3058,11 @@ and skips the queue. Its public counterpart is a queued alias.</p>
         </li>
         
         
-        <li id="section-169">
+        <li id="section-168">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-169">&#182;</a>
+                <a class="pilcrow" href="#section-168">&#182;</a>
               </div>
               <p>Public setter for transition durations.</p>
 
@@ -3091,11 +3076,11 @@ and skips the queue. Its public counterpart is a queued alias.</p>
         </li>
         
         
-        <li id="section-170">
+        <li id="section-169">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-170">&#182;</a>
+                <a class="pilcrow" href="#section-169">&#182;</a>
               </div>
               <p>Disables OriDomi slicing by showing the original, untouched target element.
 This is useful for certain user interactions on the inner content.</p>
@@ -3107,11 +3092,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-171">
+        <li id="section-170">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-171">&#182;</a>
+                <a class="pilcrow" href="#section-170">&#182;</a>
               </div>
               <p>Return if already frozen.</p>
 
@@ -3124,11 +3109,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-172">
+        <li id="section-171">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-172">&#182;</a>
+                <a class="pilcrow" href="#section-171">&#182;</a>
               </div>
               <p>Make sure to reset folding first.</p>
 
@@ -3140,11 +3125,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-173">
+        <li id="section-172">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-173">&#182;</a>
+                <a class="pilcrow" href="#section-172">&#182;</a>
               </div>
               <p>Swap the visibility of the elements.</p>
 
@@ -3159,11 +3144,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-174">
+        <li id="section-173">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-174">&#182;</a>
+                <a class="pilcrow" href="#section-173">&#182;</a>
               </div>
               <p>Restores the OriDomi version of the element for folding purposes.</p>
 
@@ -3174,11 +3159,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-175">
+        <li id="section-174">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-175">&#182;</a>
+                <a class="pilcrow" href="#section-174">&#182;</a>
               </div>
               <p>Only unfreeze if already frozen.</p>
 
@@ -3190,11 +3175,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-176">
+        <li id="section-175">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-176">&#182;</a>
+                <a class="pilcrow" href="#section-175">&#182;</a>
               </div>
               <p>Swap the visibility of the elements.</p>
 
@@ -3207,11 +3192,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-177">
+        <li id="section-176">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-177">&#182;</a>
+                <a class="pilcrow" href="#section-176">&#182;</a>
               </div>
               <p>Set <code>lastAngle</code> to 0 so an immediately subsequent call to <code>freeze</code> triggers the callback.</p>
 
@@ -3223,11 +3208,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-178">
+        <li id="section-177">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-178">&#182;</a>
+                <a class="pilcrow" href="#section-177">&#182;</a>
               </div>
               <p>Removes the OriDomi element and restores the original element.</p>
 
@@ -3238,11 +3223,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-179">
+        <li id="section-178">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-179">&#182;</a>
+                <a class="pilcrow" href="#section-178">&#182;</a>
               </div>
               <p>First restore the original element.</p>
 
@@ -3253,11 +3238,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-180">
+        <li id="section-179">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-180">&#182;</a>
+                <a class="pilcrow" href="#section-179">&#182;</a>
               </div>
               <p>Remove event listeners.</p>
 
@@ -3268,11 +3253,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-181">
+        <li id="section-180">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-181">&#182;</a>
+                <a class="pilcrow" href="#section-180">&#182;</a>
               </div>
               <p>Remove the data reference if using jQuery.</p>
 
@@ -3283,11 +3268,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-182">
+        <li id="section-181">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-182">&#182;</a>
+                <a class="pilcrow" href="#section-181">&#182;</a>
               </div>
               <p>Remove the OriDomi element from the DOM.</p>
 
@@ -3298,11 +3283,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-183">
+        <li id="section-182">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-183">&#182;</a>
+                <a class="pilcrow" href="#section-182">&#182;</a>
               </div>
               <p>Reset original styling.</p>
 
@@ -3315,11 +3300,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-184">
+        <li id="section-183">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-184">&#182;</a>
+                <a class="pilcrow" href="#section-183">&#182;</a>
               </div>
               <p>Empties the queue should you want to cancel scheduled animations.</p>
 
@@ -3333,11 +3318,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-185">
+        <li id="section-184">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-185">&#182;</a>
+                <a class="pilcrow" href="#section-184">&#182;</a>
               </div>
               <p>Enable or disable ripple. 1 is forwards, 2 is backwards, 0 is disabled.</p>
 
@@ -3351,11 +3336,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-186">
+        <li id="section-185">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-186">&#182;</a>
+                <a class="pilcrow" href="#section-185">&#182;</a>
               </div>
               <p>Setter method for <code>maxAngle</code>.</p>
 
@@ -3368,11 +3353,11 @@ This is useful for certain user interactions on the inner content.</p>
         </li>
         
         
-        <li id="section-187">
+        <li id="section-186">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-187">&#182;</a>
+                <a class="pilcrow" href="#section-186">&#182;</a>
               </div>
               <p>Pause in the midst of an animation sequence, in milliseconds.
 E.g.: el.reveal(20).wait()</p>
@@ -3390,11 +3375,11 @@ E.g.: el.reveal(20).wait()</p>
         </li>
         
         
-        <li id="section-188">
+        <li id="section-187">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-188">&#182;</a>
+                <a class="pilcrow" href="#section-187">&#182;</a>
               </div>
               <p>This method is used to externally manipulate the styling or contents of the
 composition. Manipulation instructions can be supplied via a function (invoked
@@ -3439,14 +3424,26 @@ literals with camel-cased CSS properties as keys.</p>
         </li>
         
         
+        <li id="section-188">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-188">&#182;</a>
+              </div>
+              <h1 id="effect-methods">Effect Methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-189">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-189">&#182;</a>
               </div>
-              <h1 id="effect-methods">Effect Methods</h1>
-
+              
             </div>
             
         </li>
@@ -3457,18 +3454,6 @@ literals with camel-cased CSS properties as keys.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-190">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-191">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-191">&#182;</a>
               </div>
               <p>Base effect with alternating peaks and valleys.
 <code>reveal</code> relies on it by calling it with <code>sticky: true</code> to keep the first
@@ -3482,11 +3467,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-192">
+        <li id="section-191">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-192">&#182;</a>
+                <a class="pilcrow" href="#section-191">&#182;</a>
               </div>
               <p>With an odd-numbered panel, reverse the angle.</p>
 
@@ -3500,11 +3485,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-193">
+        <li id="section-192">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-193">&#182;</a>
+                <a class="pilcrow" href="#section-192">&#182;</a>
               </div>
               <p>If sticky, keep the first panel flat.</p>
 
@@ -3520,11 +3505,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-194">
+        <li id="section-193">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-194">&#182;</a>
+                <a class="pilcrow" href="#section-193">&#182;</a>
               </div>
               <p>Double the angle to counteract the angle of the parent panel.</p>
 
@@ -3535,11 +3520,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-195">
+        <li id="section-194">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-195">&#182;</a>
+                <a class="pilcrow" href="#section-194">&#182;</a>
               </div>
               <p>In stairs mode, keep all the angles on the same side of 0.</p>
 
@@ -3550,11 +3535,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-196">
+        <li id="section-195">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-196">&#182;</a>
+                <a class="pilcrow" href="#section-195">&#182;</a>
               </div>
               <p>Set the CSS transformation.</p>
 
@@ -3568,11 +3553,11 @@ panel flat.</p>
         </li>
         
         
-        <li id="section-197">
+        <li id="section-196">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-197">&#182;</a>
+                <a class="pilcrow" href="#section-196">&#182;</a>
               </div>
               <p>This effect appears to bend rather than fold the paper. Its curves can
 appear smoother with higher panel counts.</p>
@@ -3584,11 +3569,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-198">
+        <li id="section-197">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-198">&#182;</a>
+                <a class="pilcrow" href="#section-197">&#182;</a>
               </div>
               <p>Reduce the angle based on the number of panels in this axis.</p>
 
@@ -3603,11 +3588,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-199">
+        <li id="section-198">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-199">&#182;</a>
+                <a class="pilcrow" href="#section-198">&#182;</a>
               </div>
               <p>Lifts up all panels after the first one.</p>
 
@@ -3618,11 +3603,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-200">
+        <li id="section-199">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-200">&#182;</a>
+                <a class="pilcrow" href="#section-199">&#182;</a>
               </div>
               <p>Rotate the second panel for the lift up.</p>
 
@@ -3633,11 +3618,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-201">
+        <li id="section-200">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-201">&#182;</a>
+                <a class="pilcrow" href="#section-200">&#182;</a>
               </div>
               <p>For all but the second panel, set the angle to 0.</p>
 
@@ -3650,11 +3635,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-202">
+        <li id="section-201">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-202">&#182;</a>
+                <a class="pilcrow" href="#section-201">&#182;</a>
               </div>
               <p>Hides the element by folding each panel in a cascade of animations.</p>
 
@@ -3685,11 +3670,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-203">
+        <li id="section-202">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-203">&#182;</a>
+                <a class="pilcrow" href="#section-202">&#182;</a>
               </div>
               <p>This is the queued version of <code>_unfold</code>.</p>
 
@@ -3700,11 +3685,11 @@ appear smoother with higher panel counts.</p>
         </li>
         
         
-        <li id="section-204">
+        <li id="section-203">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-204">&#182;</a>
+                <a class="pilcrow" href="#section-203">&#182;</a>
               </div>
               <p>For custom folding behavior, you can pass a function to <code>map()</code> that will
 determine the folding angle applied to each panel. The passed function
@@ -3723,14 +3708,26 @@ the instance and the lambda, e.g. <code>oridomi.map(randomFn)(30).reveal(20)</co
         </li>
         
         
+        <li id="section-204">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-204">&#182;</a>
+              </div>
+              <h1 id="convenience-methods">Convenience Methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-205">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-205">&#182;</a>
               </div>
-              <h1 id="convenience-methods">Convenience Methods</h1>
-
+              
             </div>
             
         </li>
@@ -3742,18 +3739,6 @@ the instance and the lambda, e.g. <code>oridomi.map(randomFn)(30).reveal(20)</co
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-206">&#182;</a>
               </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-207">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-207">&#182;</a>
-              </div>
               <p>Resets all panels back to zero degrees.</p>
 
             </div>
@@ -3764,11 +3749,11 @@ the instance and the lambda, e.g. <code>oridomi.map(randomFn)(30).reveal(20)</co
         </li>
         
         
-        <li id="section-208">
+        <li id="section-207">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-208">&#182;</a>
+                <a class="pilcrow" href="#section-207">&#182;</a>
               </div>
               <p>Simply proxy for calling <code>accordion</code> with <code>sticky</code> enabled.
 Keeps first panel flat on page.</p>
@@ -3782,11 +3767,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-209">
+        <li id="section-208">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-209">&#182;</a>
+                <a class="pilcrow" href="#section-208">&#182;</a>
               </div>
               <p>Proxy to enable stairs mode on <code>accordion</code>.</p>
 
@@ -3799,11 +3784,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-210">
+        <li id="section-209">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-210">&#182;</a>
+                <a class="pilcrow" href="#section-209">&#182;</a>
               </div>
               <p>The composition is split apart by its panels rather than folded.</p>
 
@@ -3816,11 +3801,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-211">
+        <li id="section-210">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-211">&#182;</a>
+                <a class="pilcrow" href="#section-210">&#182;</a>
               </div>
               <p>Similar to <code>fracture</code>, but the panels are twisted as well.</p>
 
@@ -3833,11 +3818,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-212">
+        <li id="section-211">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-212">&#182;</a>
+                <a class="pilcrow" href="#section-211">&#182;</a>
               </div>
               <p>Convenience proxy to accordion-fold instance to maximum angle.</p>
 
@@ -3850,11 +3835,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-213">
+        <li id="section-212">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-213">&#182;</a>
+                <a class="pilcrow" href="#section-212">&#182;</a>
               </div>
               <p>Same as <code>collapse</code>, but uses positive angle for slightly different effect.</p>
 
@@ -3867,14 +3852,26 @@ Keeps first panel flat on page.</p>
         </li>
         
         
+        <li id="section-213">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-213">&#182;</a>
+              </div>
+              <h1 id="statics">Statics</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-214">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-214">&#182;</a>
               </div>
-              <h1 id="statics">Statics</h1>
-
+              
             </div>
             
         </li>
@@ -3886,8 +3883,11 @@ Keeps first panel flat on page.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-215">&#182;</a>
               </div>
-              
+              <p>Set a version flag for easy external retrieval.</p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.0'</span></pre></div></div>
             
         </li>
         
@@ -3898,21 +3898,6 @@ Keeps first panel flat on page.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-216">&#182;</a>
               </div>
-              <p>Set a version flag for easy external retrieval.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.0'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-217">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-217">&#182;</a>
-              </div>
               <p>Externally reveal if OriDomi is supported by the browser.</p>
 
             </div>
@@ -3922,11 +3907,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-218">
+        <li id="section-217">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-218">&#182;</a>
+                <a class="pilcrow" href="#section-217">&#182;</a>
               </div>
               <p>Expose the OriDomi constructor via CommonJS, AMD, or the window object.</p>
 
@@ -3942,14 +3927,26 @@ Keeps first panel flat on page.</p>
         </li>
         
         
+        <li id="section-218">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-218">&#182;</a>
+              </div>
+              <h1 id="plugin-bridge">Plugin Bridge</h1>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-219">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-219">&#182;</a>
               </div>
-              <h1 id="plugin-bridge">Plugin Bridge</h1>
-
+              
             </div>
             
         </li>
@@ -3961,8 +3958,11 @@ Keeps first panel flat on page.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-220">&#182;</a>
               </div>
-              
+              <p>Only create bridge if jQuery (or an imitation supporting <code>data()</code>) exists.</p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> $</pre></div></div>
             
         </li>
         
@@ -3973,21 +3973,6 @@ Keeps first panel flat on page.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-221">&#182;</a>
               </div>
-              <p>Only create bridge if jQuery (or an imitation supporting <code>data()</code>) exists.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> $</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-222">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-222">&#182;</a>
-              </div>
               <p>Attach an <code>OriDomi</code> method to <code>$</code>‘s prototype.</p>
 
             </div>
@@ -3997,11 +3982,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-223">
+        <li id="section-222">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-223">&#182;</a>
+                <a class="pilcrow" href="#section-222">&#182;</a>
               </div>
               <p>Return selection if OriDomi is unsupported by the browser.</p>
 
@@ -4013,11 +3998,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-224">
+        <li id="section-223">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-224">&#182;</a>
+                <a class="pilcrow" href="#section-223">&#182;</a>
               </div>
               <p>If <code>options</code> is a string, assume it’s a method call.</p>
 
@@ -4029,11 +4014,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-225">
+        <li id="section-224">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-225">&#182;</a>
+                <a class="pilcrow" href="#section-224">&#182;</a>
               </div>
               <p>Check if method exists and warn if it doesn’t.</p>
 
@@ -4051,11 +4036,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-226">
+        <li id="section-225">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-226">&#182;</a>
+                <a class="pilcrow" href="#section-225">&#182;</a>
               </div>
               <p>Call the requested method with arguments.</p>
 
@@ -4066,11 +4051,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-227">
+        <li id="section-226">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-227">&#182;</a>
+                <a class="pilcrow" href="#section-226">&#182;</a>
               </div>
               <p>If not calling a method, initialize OriDomi on the selection.</p>
 
@@ -4082,11 +4067,11 @@ Keeps first panel flat on page.</p>
         </li>
         
         
-        <li id="section-228">
+        <li id="section-227">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-228">&#182;</a>
+                <a class="pilcrow" href="#section-227">&#182;</a>
               </div>
               <p>If the element in the selection already has an instance of OriDomi
 attached to it, return the instance.</p>
@@ -4100,11 +4085,11 @@ attached to it, return the instance.</p>
         </li>
         
         
-        <li id="section-229">
+        <li id="section-228">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-229">&#182;</a>
+                <a class="pilcrow" href="#section-228">&#182;</a>
               </div>
               <p>Create an instance of OriDomi and attach it to the element.</p>
 
@@ -4115,11 +4100,11 @@ attached to it, return the instance.</p>
         </li>
         
         
-        <li id="section-230">
+        <li id="section-229">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-230">&#182;</a>
+                <a class="pilcrow" href="#section-229">&#182;</a>
               </div>
               <p>Return the selection.</p>
 
