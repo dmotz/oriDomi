@@ -14,7 +14,7 @@ Read the [annotated source](http://oridomi.com/docs/oridomi.html)
 for a detailed look.
 
 If you want to work on the source, run `npm install` after first cloning to
-install local pacakge dependencies.
+install local package dependencies.
 
 Run `cake watch` to automatically compile as you work.
 
