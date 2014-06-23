@@ -1,6 +1,6 @@
 # # OriDomi
 # ### Fold up the DOM like paper.
-# 1.1.0
+# 1.1.1
 
 # [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
@@ -594,6 +594,7 @@ class OriDomi
         @_stages[anchor].appendChild @_panels[anchor][0]
 
     @_stageHolder = createEl 'holder'
+    @_stageHolder.setAttribute 'aria-hidden', 'true'
     @_stageHolder.appendChild @_stages[anchor] for anchor in anchorList
 
     # Override default styling if original positioning is absolute.
@@ -1203,6 +1204,21 @@ class OriDomi
       @_setShader i, anchor, 0 if @_shading
 
 
+  foldIn: prep (angle, anchor, callback) ->
+    @_iterate anchor, (panel, i, len) =>
+      deg = angle
+      if i is 0 or i is len - 1
+        deg = 0
+      else
+        deg *= 1
+
+      deg = -deg if i % 2
+
+      console.log deg
+
+      @_transformPanel panel, deg, anchor
+
+
   # Hides the element by folding each panel in a cascade of animations.
   foldUp: prep (anchor, callback) ->
     return callback?() if @isFoldedUp
@@ -1294,7 +1310,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '1.1.0'
+  @VERSION = '1.1.1'
 
   # Externally reveal if OriDomi is supported by the browser.
   @isSupported = isSupported

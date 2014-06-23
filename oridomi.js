@@ -544,6 +544,7 @@
         }
       }
       this._stageHolder = createEl('holder');
+      this._stageHolder.setAttribute('aria-hidden', 'true');
       for (_q = 0, _len7 = anchorList.length; _q < _len7; _q++) {
         anchor = anchorList[_q];
         this._stageHolder.appendChild(this._stages[anchor]);
@@ -1217,6 +1218,25 @@
       })(this));
     });
 
+    OriDomi.prototype.foldIn = prep(function(angle, anchor, callback) {
+      return this._iterate(anchor, (function(_this) {
+        return function(panel, i, len) {
+          var deg;
+          deg = angle;
+          if (i === 0 || i === len - 1) {
+            deg = 0;
+          } else {
+            deg *= 1;
+          }
+          if (i % 2) {
+            deg = -deg;
+          }
+          console.log(deg);
+          return _this._transformPanel(panel, deg, anchor);
+        };
+      })(this));
+    });
+
     OriDomi.prototype.foldUp = prep(function(anchor, callback) {
       if (this.isFoldedUp) {
         return typeof callback === "function" ? callback() : void 0;
@@ -1317,7 +1337,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.1.0';
+    OriDomi.VERSION = '1.1.1';
 
     OriDomi.isSupported = isSupported;
 
