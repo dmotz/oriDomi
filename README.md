@@ -5,6 +5,7 @@
 [@dcmotz](http://twitter.com/dcmotz)
 
 #![oriDomi](http://oridomi.com/demo/images/readme/1.png)
+#![oriDomi](http://oridomi.com/demo/images/readme/4.gif)
 #![oriDomi](http://oridomi.com/demo/images/readme/2.png)
 #![oriDomi](http://oridomi.com/demo/images/readme/3.gif)
 
