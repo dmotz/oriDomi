@@ -1218,25 +1218,6 @@
       })(this));
     });
 
-    OriDomi.prototype.foldIn = prep(function(angle, anchor, callback) {
-      return this._iterate(anchor, (function(_this) {
-        return function(panel, i, len) {
-          var deg;
-          deg = angle;
-          if (i === 0 || i === len - 1) {
-            deg = 0;
-          } else {
-            deg *= 1;
-          }
-          if (i % 2) {
-            deg = -deg;
-          }
-          console.log(deg);
-          return _this._transformPanel(panel, deg, anchor);
-        };
-      })(this));
-    });
-
     OriDomi.prototype.foldUp = prep(function(anchor, callback) {
       if (this.isFoldedUp) {
         return typeof callback === "function" ? callback() : void 0;

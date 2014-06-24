@@ -1204,21 +1204,6 @@ class OriDomi
       @_setShader i, anchor, 0 if @_shading
 
 
-  foldIn: prep (angle, anchor, callback) ->
-    @_iterate anchor, (panel, i, len) =>
-      deg = angle
-      if i is 0 or i is len - 1
-        deg = 0
-      else
-        deg *= 1
-
-      deg = -deg if i % 2
-
-      console.log deg
-
-      @_transformPanel panel, deg, anchor
-
-
   # Hides the element by folding each panel in a cascade of animations.
   foldUp: prep (anchor, callback) ->
     return callback?() if @isFoldedUp

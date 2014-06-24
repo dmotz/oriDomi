@@ -3631,22 +3631,7 @@ appear smoother with higher panel counts.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
       <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, anchor <span class="hljs-keyword">if</span> i <span class="hljs-keyword">isnt</span> <span class="hljs-number">1</span>
-      <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
-
-
-  <span class="hljs-attribute">foldIn</span>: prep <span class="hljs-function"><span class="hljs-params">(angle, anchor, callback)</span> -&gt;</span>
-    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
-      deg = angle
-      <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> i <span class="hljs-keyword">is</span> len - <span class="hljs-number">1</span>
-        deg = <span class="hljs-number">0</span>
-      <span class="hljs-keyword">else</span>
-        deg *= <span class="hljs-number">1</span>
-
-      deg = -deg <span class="hljs-keyword">if</span> i % <span class="hljs-number">2</span>
-
-      <span class="hljs-built_in">console</span>.log deg
-
-      <span class="hljs-property">@_transformPanel</span> panel, deg, anchor</pre></div></div>
+      <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span></pre></div></div>
             
         </li>
         
