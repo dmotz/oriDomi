@@ -1,6 +1,6 @@
 # # OriDomi
 # ### Fold up the DOM like paper.
-# 1.1.1
+# 1.1.2
 
 # [oridomi.com](http://oridomi.com)
 # #### by [Dan Motzenbecker](http://oxism.com)
@@ -1300,7 +1300,7 @@ class OriDomi
 
 
   # Set a version flag for easy external retrieval.
-  @VERSION = '1.1.1'
+  @VERSION = '1.1.2'
 
   # Externally reveal if OriDomi is supported by the browser.
   @isSupported = isSupported
