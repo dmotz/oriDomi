@@ -1178,8 +1178,11 @@ class OriDomi
       # Set the CSS transformation.
       @_transformPanel panel, deg, anchor, options.fracture
 
-      if @_shading and !(i is 0 and options.sticky) and Math.abs(deg) isnt 180
-        @_setShader i, anchor, deg
+      if @_shading
+        if options.twist or options.fracture or (i is 0 and options.sticky)
+          @_setShader i, anchor, 0
+        else if Math.abs(deg) isnt 180
+          @_setShader i, anchor, deg
 
 
   # This effect appears to bend rather than fold the paper. Its curves can
