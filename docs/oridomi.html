@@ -23,7 +23,7 @@
               </div>
               <h1 id="oridomi">OriDomi</h1>
 <h3 id="fold-up-the-dom-like-paper-">Fold up the DOM like paper.</h3>
-<p>1.1.1</p>
+<p>1.1.2</p>
 
             </div>
             
@@ -53,6 +53,10 @@
               <p>Copyright 2014, MIT License</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+libName = <span class="hljs-string">'OriDomi'</span></pre></div></div>
             
         </li>
         
@@ -109,7 +113,7 @@ not support OriDomi.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">supportWarning</span> = <span class="hljs-params">(prop)</span> -&gt;</span>
-  <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"OriDomi: Missing support for `<span class="hljs-subst">#{ prop }</span>`."</span>
+  <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: Missing support for `<span class="hljs-subst">#{ prop }</span>`."</span>
   isSupported = <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
@@ -605,7 +609,7 @@ anchorListH = anchorList[<span class="hljs-number">2.</span>.]</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>prefixList = [<span class="hljs-string">'Webkit'</span>, <span class="hljs-string">'Moz'</span>, <span class="hljs-string">'ms'</span>]
-baseName   = <span class="hljs-string">'oridomi'</span></pre></div></div>
+baseName   = libName.toLowerCase()</pre></div></div>
             
         </li>
         
@@ -1247,7 +1251,7 @@ makes the element wrap around and pass through itself leading to some glitchy vi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">oriDomiClass</span>: <span class="hljs-string">'oridomi'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">oriDomiClass</span>: libName.toLowerCase()</pre></div></div>
             
         </li>
         
@@ -1452,7 +1456,7 @@ starting coordinate as first argument.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> <span class="hljs-property">@el</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@el</span>.nodeType <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
-      <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">'OriDomi: First argument must be a DOM element'</span>
+      <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: First argument must be a DOM element"</span>
       <span class="hljs-keyword">return</span></pre></div></div>
             
         </li>
@@ -1660,7 +1664,7 @@ an array is filled with equal percentages.</p>
       <span class="hljs-keyword">else</span>
         count = panelConfig.length
         <span class="hljs-keyword">unless</span> <span class="hljs-number">99</span> &lt;= panelConfig.reduce<span class="hljs-function"><span class="hljs-params">((p, c) -&gt; p + c)</span> &lt;= 100.1
-          <span class="hljs-title">throw</span> <span class="hljs-title">new</span> <span class="hljs-title">Error</span> '<span class="hljs-title">OriDomi</span>: <span class="hljs-title">Panel</span> <span class="hljs-title">percentages</span> <span class="hljs-title">do</span> <span class="hljs-title">not</span> <span class="hljs-title">sum</span> <span class="hljs-title">to</span> 100'
+          <span class="hljs-title">throw</span> <span class="hljs-title">new</span> <span class="hljs-title">Error</span> "#{ <span class="hljs-title">libName</span> }: <span class="hljs-title">Panel</span> <span class="hljs-title">percentages</span> <span class="hljs-title">do</span> <span class="hljs-title">not</span> <span class="hljs-title">sum</span> <span class="hljs-title">to</span> 100"
 
 </span></pre></div></div>
             
@@ -3548,8 +3552,11 @@ panel flat.</p>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_transformPanel</span> panel, deg, anchor, options.fracture
 
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span> <span class="hljs-keyword">and</span> !(i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> options.sticky) <span class="hljs-keyword">and</span> Math.abs(deg) <span class="hljs-keyword">isnt</span> <span class="hljs-number">180</span>
-        <span class="hljs-property">@_setShader</span> i, anchor, deg</pre></div></div>
+      <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+        <span class="hljs-keyword">if</span> options.twist <span class="hljs-keyword">or</span> options.fracture <span class="hljs-keyword">or</span> (i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> options.sticky)
+          <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> Math.abs(deg) <span class="hljs-keyword">isnt</span> <span class="hljs-number">180</span>
+          <span class="hljs-property">@_setShader</span> i, anchor, deg</pre></div></div>
             
         </li>
         
@@ -3888,7 +3895,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.1'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.2'</span></pre></div></div>
             
         </li>
         
@@ -3918,8 +3925,8 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> <span class="hljs-built_in">module</span>?.<span class="hljs-built_in">exports</span>
-  <span class="hljs-built_in">module</span>.<span class="hljs-built_in">exports</span> = OriDomi
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> <span class="hljs-built_in">module</span>?.exports
+  <span class="hljs-built_in">module</span>.exports = OriDomi
 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> define?.amd
   define<span class="hljs-function"> -&gt;</span> OriDomi
 <span class="hljs-keyword">else</span>
@@ -4026,7 +4033,7 @@ Keeps first panel flat on page.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> <span class="hljs-keyword">typeof</span> (method = <span class="hljs-attribute">OriDomi</span>::[methodName]) <span class="hljs-keyword">is</span> <span class="hljs-string">'function'</span>
-      <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"OriDomi: No such method `<span class="hljs-subst">#{ methodName }</span>`"</span>
+      <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: No such method `<span class="hljs-subst">#{ methodName }</span>`"</span>
       <span class="hljs-keyword">return</span> @
 
     <span class="hljs-keyword">for</span> el <span class="hljs-keyword">in</span> @
