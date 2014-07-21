@@ -8,6 +8,8 @@
 # Copyright 2014, MIT License
 
 
+libName = 'OriDomi'
+
 # This variable is set to true and negated later if the browser does
 # not support OriDomi.
 isSupported = true
@@ -17,7 +19,7 @@ isSupported = true
 
 # Used for informing the developer which required feature the browser lacks.
 supportWarning = (prop) ->
-  console?.warn "OriDomi: Missing support for `#{ prop }`."
+  console?.warn "#{ libName }: Missing support for `#{ prop }`."
   isSupported = false
 
 
@@ -171,7 +173,7 @@ styleBuffer = ''
 
 # List of browser prefixes for testing CSS3 properties.
 prefixList = ['Webkit', 'Moz', 'ms']
-baseName   = 'oridomi'
+baseName   = libName.toLowerCase()
 # CSS classes used by style rules.
 elClasses  =
   active:       'active'
@@ -403,7 +405,7 @@ defaults =
   # `1` indicates a forward cascade, `2` is backwards. It is disabled by default.
   ripple: 0
   # This CSS class is applied to OriDomi elements so they can be easily targeted later.
-  oriDomiClass: 'oridomi'
+  oriDomiClass: libName.toLowerCase()
   # This is a multiplier that determines the darkness of shading.
   # If you need subtler shading, set this to a value below 1.
   shadingIntensity: 1
@@ -443,7 +445,7 @@ class OriDomi
     @el = document.querySelector @el if typeof @el is 'string'
     # Make sure element is valid.
     unless @el and @el.nodeType is 1
-      console?.warn 'OriDomi: First argument must be a DOM element'
+      console?.warn "#{ libName }: First argument must be a DOM element"
       return
 
     # Fill in passed options with defaults.
@@ -527,7 +529,7 @@ class OriDomi
       else
         count = panelConfig.length
         unless 99 <= panelConfig.reduce((p, c) -> p + c) <= 100.1
-          throw new Error 'OriDomi: Panel percentages do not sum to 100'
+          throw new Error "#{ libName }: Panel percentages do not sum to 100"
 
       # Clone a new mask element and append it to a panel element prototype.
       mask = cloneEl maskProto, true, 'mask' + classSuffix
@@ -1331,7 +1333,7 @@ $::oriDomi = (options) ->
     methodName = options
     # Check if method exists and warn if it doesn't.
     unless typeof (method = OriDomi::[methodName]) is 'function'
-      console?.warn "OriDomi: No such method `#{ methodName }`"
+      console?.warn "#{ libName }: No such method `#{ methodName }`"
       return @
 
     for el in @
