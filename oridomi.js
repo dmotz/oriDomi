@@ -88,9 +88,6 @@
         switch (fn.length) {
           case 1:
             opt.callback = a0;
-            if (!this.isFoldedUp) {
-              return typeof opt.callback === "function" ? opt.callback() : void 0;
-            }
             break;
           case 2:
             if (typeof a0 === 'function') {
@@ -1324,7 +1321,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.1.2';
+    OriDomi.VERSION = '1.1.3';
 
     OriDomi.isSupported = isSupported;
 
