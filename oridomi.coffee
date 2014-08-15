@@ -105,9 +105,6 @@ prep = (fn) ->
       switch fn.length
         when 1
           opt.callback = a0
-          # If the composition is already folded up, skip the queueing process
-          # and invoke the supplied callback immediately.
-          return opt.callback?() unless @isFoldedUp
         when 2
           if typeof a0 is 'function'
             opt.callback = a0
@@ -1234,7 +1231,8 @@ class OriDomi
 
 
   # This is the queued version of `_unfold`.
-  unfold: prep (callback) -> @_unfold arguments...
+  unfold: prep (callback) ->
+    @_unfold arguments...
 
 
   # For custom folding behavior, you can pass a function to `map()` that will
