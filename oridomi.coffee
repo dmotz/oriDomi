@@ -1098,7 +1098,7 @@ class OriDomi
 
 
   # Pause in the midst of an animation sequence, in milliseconds.
-  # E.g.: el.reveal(20).wait()
+  # E.g.: el.reveal(20).wait(5000).accordion(-33)
   wait: (ms) ->
     fn = => setTimeout @_conclude, ms
     if @_inTrans
