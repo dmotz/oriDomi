@@ -188,7 +188,7 @@
   };
 
   (function() {
-    var anchor, key, p3d, prefix, styleEl, value, _i, _len, _ref1, _ref2;
+    var key, p3d, prefix, styleEl, value, _ref1;
     for (key in css) {
       value = css[key];
       css[key] = testProp(value);
@@ -243,99 +243,104 @@
           return 'msTransitionEnd';
       }
     })();
-    addStyle(elClasses.active, {
-      backgroundColor: 'transparent !important',
-      backgroundImage: 'none !important',
-      boxSizing: 'border-box !important',
-      border: 'none !important',
-      outline: 'none !important',
-      padding: '0 !important',
-      position: 'relative',
-      transformStyle: p3d + ' !important',
-      mask: 'none !important'
-    });
-    addStyle(elClasses.clone, {
-      margin: '0 !important',
-      boxSizing: 'border-box !important',
-      overflow: 'hidden !important',
-      display: 'block !important'
-    });
-    addStyle(elClasses.holder, {
-      width: '100%',
-      position: 'absolute',
-      top: '0',
-      bottom: '0',
-      transformStyle: p3d
-    });
-    addStyle(elClasses.stage, {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      transform: 'translate3d(-9999px, 0, 0)',
-      margin: '0',
-      padding: '0',
-      transformStyle: p3d
-    });
-    _ref2 = {
-      Left: '0% 50%',
-      Right: '100% 50%',
-      Top: '50% 0%',
-      Bottom: '50% 100%'
-    };
-    for (k in _ref2) {
-      v = _ref2[k];
-      addStyle(elClasses['stage' + k], {
-        perspectiveOrigin: v
+    (function(i) {
+      var anchor, _i, _len, _ref2;
+      addStyle(elClasses.active, {
+        backgroundColor: i('transparent'),
+        backgroundImage: i('none'),
+        boxSizing: i('border-box'),
+        border: i('none'),
+        outline: i('none'),
+        padding: i('0'),
+        transformStyle: i(p3d),
+        mask: i('none'),
+        position: 'relative'
       });
-    }
-    addStyle(elClasses.shader, {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      opacity: '0',
-      top: '0',
-      left: '0',
-      pointerEvents: 'none',
-      transitionProperty: 'opacity'
-    });
-    for (_i = 0, _len = anchorList.length; _i < _len; _i++) {
-      anchor = anchorList[_i];
-      addStyle(elClasses['shader' + capitalize(anchor)], {
-        background: getGradient(anchor)
+      addStyle(elClasses.clone, {
+        margin: i('0'),
+        boxSizing: i('border-box'),
+        overflow: i('hidden'),
+        display: i('block')
       });
-    }
-    addStyle(elClasses.content, {
-      margin: '0 !important',
-      position: 'relative !important',
-      float: 'none !important',
-      boxSizing: 'border-box !important',
-      overflow: 'hidden !important'
-    });
-    addStyle(elClasses.mask, {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      overflow: 'hidden',
-      transform: 'translate3d(0, 0, 0)',
-      outline: '1px solid transparent'
-    });
-    addStyle(elClasses.panel, {
-      width: '100%',
-      height: '100%',
-      padding: '0',
-      position: 'absolute',
-      transitionProperty: css.transformProp,
-      transformOrigin: 'left',
-      transformStyle: p3d
-    });
-    addStyle(elClasses.panelH, {
-      transformOrigin: 'top'
-    });
-    addStyle("" + elClasses.stageRight + " ." + elClasses.panel, {
-      transformOrigin: 'right'
-    });
-    addStyle("" + elClasses.stageBottom + " ." + elClasses.panel, {
-      transformOrigin: 'bottom'
+      addStyle(elClasses.holder, {
+        width: '100%',
+        position: 'absolute',
+        top: '0',
+        bottom: '0',
+        transformStyle: p3d
+      });
+      addStyle(elClasses.stage, {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        transform: 'translate3d(-9999px, 0, 0)',
+        margin: '0',
+        padding: '0',
+        transformStyle: p3d
+      });
+      _ref2 = {
+        Left: '0% 50%',
+        Right: '100% 50%',
+        Top: '50% 0%',
+        Bottom: '50% 100%'
+      };
+      for (k in _ref2) {
+        v = _ref2[k];
+        addStyle(elClasses['stage' + k], {
+          perspectiveOrigin: v
+        });
+      }
+      addStyle(elClasses.shader, {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        opacity: '0',
+        top: '0',
+        left: '0',
+        pointerEvents: 'none',
+        transitionProperty: 'opacity'
+      });
+      for (_i = 0, _len = anchorList.length; _i < _len; _i++) {
+        anchor = anchorList[_i];
+        addStyle(elClasses['shader' + capitalize(anchor)], {
+          background: getGradient(anchor)
+        });
+      }
+      addStyle(elClasses.content, {
+        margin: i('0'),
+        position: i('relative'),
+        float: i('none'),
+        boxSizing: i('border-box'),
+        overflow: i('hidden')
+      });
+      addStyle(elClasses.mask, {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        overflow: 'hidden',
+        transform: 'translate3d(0, 0, 0)',
+        outline: '1px solid transparent'
+      });
+      addStyle(elClasses.panel, {
+        width: '100%',
+        height: '100%',
+        padding: '0',
+        position: 'absolute',
+        transitionProperty: css.transformProp,
+        transformOrigin: 'left',
+        transformStyle: p3d
+      });
+      addStyle(elClasses.panelH, {
+        transformOrigin: 'top'
+      });
+      addStyle("" + elClasses.stageRight + " ." + elClasses.panel, {
+        transformOrigin: 'right'
+      });
+      return addStyle("" + elClasses.stageBottom + " ." + elClasses.panel, {
+        transformOrigin: 'bottom'
+      });
+    })(function(s) {
+      return s + ' !important';
     });
     styleEl = document.createElement('style');
     styleEl.type = 'text/css';
@@ -358,7 +363,7 @@
     oriDomiClass: libName.toLowerCase(),
     shadingIntensity: 1,
     easingMethod: '',
-    gapNudge: 1,
+    gapNudge: 1.5,
     touchEnabled: true,
     touchSensitivity: .25,
     touchStartCallback: noOp,
@@ -1321,7 +1326,7 @@
       return this.accordion(this._config.maxAngle, anchor, options);
     };
 
-    OriDomi.VERSION = '1.1.3';
+    OriDomi.VERSION = '1.1.4';
 
     OriDomi.isSupported = isSupported;
 
