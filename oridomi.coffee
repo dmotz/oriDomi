@@ -282,84 +282,85 @@ do ->
 
 
   # These calls generate OriDomi's stylesheet.
-  addStyle elClasses.active,
-    backgroundColor: 'transparent !important'
-    backgroundImage: 'none !important'
-    boxSizing:       'border-box !important'
-    border:          'none !important'
-    outline:         'none !important'
-    padding:         '0 !important'
-    position:        'relative'
-    transformStyle:  p3d + ' !important'
-    mask:            'none !important'
+  do (i = (s) -> s + ' !important') ->
+    addStyle elClasses.active,
+      backgroundColor: i 'transparent'
+      backgroundImage: i 'none'
+      boxSizing:       i 'border-box'
+      border:          i 'none'
+      outline:         i 'none'
+      padding:         i '0'
+      transformStyle:  i p3d
+      mask:            i 'none'
+      position:          'relative'
 
-  addStyle elClasses.clone,
-    margin:    '0 !important'
-    boxSizing: 'border-box !important'
-    overflow:  'hidden !important'
-    display:   'block !important'
+    addStyle elClasses.clone,
+      margin:    i '0'
+      boxSizing: i 'border-box'
+      overflow:  i 'hidden'
+      display:   i 'block'
 
-  addStyle elClasses.holder,
-    width:          '100%'
-    position:       'absolute'
-    top:            '0'
-    bottom:         '0'
-    transformStyle: p3d
+    addStyle elClasses.holder,
+      width:          '100%'
+      position:       'absolute'
+      top:            '0'
+      bottom:         '0'
+      transformStyle: p3d
 
-  addStyle elClasses.stage,
-    width:          '100%'
-    height:         '100%'
-    position:       'absolute'
-    transform:      'translate3d(-9999px, 0, 0)'
-    margin:         '0'
-    padding:        '0'
-    transformStyle: p3d
+    addStyle elClasses.stage,
+      width:          '100%'
+      height:         '100%'
+      position:       'absolute'
+      transform:      'translate3d(-9999px, 0, 0)'
+      margin:         '0'
+      padding:        '0'
+      transformStyle: p3d
 
-  # Each anchor needs a particular perspective origin.
-  for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
-    addStyle elClasses['stage' + k], perspectiveOrigin: v
+    # Each anchor needs a particular perspective origin.
+    for k, v of {Left: '0% 50%', Right: '100% 50%', Top: '50% 0%', Bottom: '50% 100%'}
+      addStyle elClasses['stage' + k], perspectiveOrigin: v
 
-  addStyle elClasses.shader,
-    width:              '100%'
-    height:             '100%'
-    position:           'absolute'
-    opacity:            '0'
-    top:                '0'
-    left:               '0'
-    pointerEvents:      'none'
-    transitionProperty: 'opacity'
+    addStyle elClasses.shader,
+      width:              '100%'
+      height:             '100%'
+      position:           'absolute'
+      opacity:            '0'
+      top:                '0'
+      left:               '0'
+      pointerEvents:      'none'
+      transitionProperty: 'opacity'
 
-  # Linear gradient directions depend on their anchor.
-  for anchor in anchorList
-    addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
+    # Linear gradient directions depend on their anchor.
+    for anchor in anchorList
+      addStyle elClasses['shader' + capitalize anchor], background: getGradient anchor
 
-  addStyle elClasses.content,
-    margin:    '0 !important'
-    position:  'relative !important'
-    float:     'none !important'
-    boxSizing: 'border-box !important'
-    overflow:  'hidden !important'
+    addStyle elClasses.content,
+      margin:    i '0'
+      position:  i 'relative'
+      float:     i 'none'
+      boxSizing: i 'border-box'
+      overflow:  i 'hidden'
 
-  addStyle elClasses.mask,
-    width:              '100%'
-    height:             '100%'
-    position:           'absolute'
-    overflow:           'hidden'
-    transform:          'translate3d(0, 0, 0)'
-    outline:            '1px solid transparent'
+    addStyle elClasses.mask,
+      width:              '100%'
+      height:             '100%'
+      position:           'absolute'
+      overflow:           'hidden'
+      transform:          'translate3d(0, 0, 0)'
+      outline:            '1px solid transparent'
 
-  addStyle elClasses.panel,
-    width:              '100%'
-    height:             '100%'
-    padding:            '0'
-    position:           'absolute'
-    transitionProperty: css.transformProp
-    transformOrigin:    'left'
-    transformStyle:     p3d
+    addStyle elClasses.panel,
+      width:              '100%'
+      height:             '100%'
+      padding:            '0'
+      position:           'absolute'
+      transitionProperty: css.transformProp
+      transformOrigin:    'left'
+      transformStyle:     p3d
 
-  addStyle elClasses.panelH, transformOrigin: 'top'
-  addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
-  addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
+    addStyle elClasses.panelH, transformOrigin: 'top'
+    addStyle "#{ elClasses.stageRight } .#{ elClasses.panel }", transformOrigin: 'right'
+    addStyle "#{ elClasses.stageBottom } .#{ elClasses.panel }", transformOrigin: 'bottom'
 
   styleEl      = document.createElement 'style'
   styleEl.type = 'text/css'
@@ -411,7 +412,7 @@ defaults =
   easingMethod: ''
   # Number of pixels to offset each panel to prevent small gaps from appearing
   # between them. This is configurable if you have a need for precision.
-  gapNudge: 1
+  gapNudge: 1.5
   # Allows the user to fold the element via touch or mouse.
   touchEnabled: true
   # Coefficient of touch/drag action's distance delta. Higher numbers cause more movement.
