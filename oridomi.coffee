@@ -1232,8 +1232,7 @@ class OriDomi
 
 
   # This is the queued version of `_unfold`.
-  unfold: prep (callback) ->
-    @_unfold arguments...
+  unfold: prep @::_unfold
 
 
   # For custom folding behavior, you can pass a function to `map()` that will
