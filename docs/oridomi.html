@@ -23,7 +23,7 @@
               </div>
               <h1 id="oridomi">OriDomi</h1>
 <h3 id="fold-up-the-dom-like-paper-">Fold up the DOM like paper.</h3>
-<p>1.1.4</p>
+<p>1.1.5</p>
 
             </div>
             
@@ -312,9 +312,9 @@ missing this property.</p>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">hideEl</span> = <span class="hljs-params">(el)</span> -&gt;</span>
   el.style[css.transform] = <span class="hljs-string">'translate3d(-99999px, 0, 0)'</span>
+<span class="hljs-function">
 
-
-<span class="hljs-function"><span class="hljs-title">showEl</span> = <span class="hljs-params">(el)</span> -&gt;</span>
+<span class="hljs-title">showEl</span> = <span class="hljs-params">(el)</span> -&gt;</span>
   el.style[css.transform] = <span class="hljs-string">'translate3d(0, 0, 0)'</span></pre></div></div>
             
         </li>
@@ -660,7 +660,7 @@ subsequently when necessary.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>css = <span class="hljs-keyword">new</span><span class="hljs-function"> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>css = <span class="hljs-keyword">new</span> <span class="hljs-function">-&gt;</span>
   @[key] = key <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> [
     <span class="hljs-string">'transform'</span>
     <span class="hljs-string">'transformOrigin'</span>
@@ -691,7 +691,7 @@ early when discovering a lack of browser support to prevent unnecessary work.</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">do</span><span class="hljs-function"> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">do</span> <span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
@@ -774,7 +774,7 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  css.gradientProp = <span class="hljs-keyword">do</span><span class="hljs-function"> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  css.gradientProp = <span class="hljs-keyword">do</span> <span class="hljs-function">-&gt;</span>
     <span class="hljs-keyword">for</span> prefix <span class="hljs-keyword">in</span> prefixList
       hyphenated = <span class="hljs-string">"-<span class="hljs-subst">#{ prefix.toLowerCase() }</span>-linear-gradient"</span>
       testEl.style.backgroundImage = <span class="hljs-string">"<span class="hljs-subst">#{ hyphenated }</span>(left, #000, #fff)"</span></pre></div></div>
@@ -823,7 +823,7 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  [css.grab, css.grabbing] = <span class="hljs-keyword">do</span><span class="hljs-function"> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  [css.grab, css.grabbing] = <span class="hljs-keyword">do</span> <span class="hljs-function">-&gt;</span>
     <span class="hljs-keyword">for</span> prefix <span class="hljs-keyword">in</span> prefixList
       plainGrab = <span class="hljs-string">'grab'</span>
       testEl.style.cursor = (grabValue = <span class="hljs-string">"-<span class="hljs-subst">#{ prefix.toLowerCase() }</span>-<span class="hljs-subst">#{ plainGrab }</span>"</span>)</pre></div></div>
@@ -1457,7 +1457,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span> = <span class="hljs-keyword">new</span><span class="hljs-function"> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span> = <span class="hljs-keyword">new</span> <span class="hljs-function">-&gt;</span>
       <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> defaults
         <span class="hljs-keyword">if</span> k <span class="hljs-keyword">of</span> options
           @[k] = options[k]
@@ -1648,10 +1648,8 @@ an array is filled with equal percentages.</p>
         panelConfig = <span class="hljs-property">@_config</span>[panelKey] = (percent <span class="hljs-keyword">for</span> [<span class="hljs-number">0.</span>..count])
       <span class="hljs-keyword">else</span>
         count = panelConfig.length
-        <span class="hljs-keyword">unless</span> <span class="hljs-number">99</span> &lt;= panelConfig.reduce<span class="hljs-function"><span class="hljs-params">((p, c) -&gt; p + c)</span> &lt;= 100.1
-          <span class="hljs-title">throw</span> <span class="hljs-title">new</span> <span class="hljs-title">Error</span> "#{ <span class="hljs-title">libName</span> }: <span class="hljs-title">Panel</span> <span class="hljs-title">percentages</span> <span class="hljs-title">do</span> <span class="hljs-title">not</span> <span class="hljs-title">sum</span> <span class="hljs-title">to</span> 100"
-
-</span></pre></div></div>
+        <span class="hljs-keyword">unless</span> <span class="hljs-number">99</span> &lt;= panelConfig.reduce(<span class="hljs-function"><span class="hljs-params">(p, c)</span> -&gt;</span> p + c) &lt;= <span class="hljs-number">100.1</span>
+          <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: Panel percentages do not sum to 100"</span></pre></div></div>
             
         </li>
         
@@ -2009,7 +2007,7 @@ deferred (if the stage is folded up or on the wrong anchor).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-title">next</span> = =&gt;</span>
+            <div class="content"><div class='highlight'><pre><span class="hljs-function">    <span class="hljs-title">next</span> = =&gt;</span>
       <span class="hljs-property">@_setCallback</span> {angle, anchor, options, fn}
       args = [angle, anchor, options]
       args.shift() <span class="hljs-keyword">if</span> fn.length &lt; <span class="hljs-number">3</span>
@@ -2156,7 +2154,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_conclude</span>: <span class="hljs-function"><span class="hljs-params">(cb, event)</span> =&gt;</span>
-    defer<span class="hljs-function"> =&gt;</span>
+    defer <span class="hljs-function">=&gt;</span>
       <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
       <span class="hljs-property">@_step</span>()
       cb? event, @</pre></div></div>
@@ -2432,7 +2430,7 @@ all panels to 0 degrees.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_stageReset</span>: <span class="hljs-function"><span class="hljs-params">(anchor, cb)</span> =&gt;</span>
-    <span class="hljs-function"><span class="hljs-title">fn</span> = <span class="hljs-params">(e)</span> =&gt;</span>
+<span class="hljs-function">    <span class="hljs-title">fn</span> = <span class="hljs-params">(e)</span> =&gt;</span>
       e.currentTarget.removeEventListener css.transitionEnd, fn, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> e
       <span class="hljs-property">@_showStage</span> anchor
       defer cb</pre></div></div>
@@ -2960,16 +2958,20 @@ and skips the queue. Its public counterpart is a queued alias.</p>
       delay = <span class="hljs-property">@_setPanelTrans</span> anchor, arguments..., <span class="hljs-property">@_config</span>.speed, <span class="hljs-number">1</span>
 
       <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(panel, i, delay)</span> =&gt;</span>
-        defer<span class="hljs-function"> =&gt;</span>
-          <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, <span class="hljs-property">@_lastOp</span>.anchor
-          setTimeout<span class="hljs-function"> =&gt;</span>
+        defer <span class="hljs-function">=&gt;</span>
+          <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, anchor
+          <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+
+          setTimeout <span class="hljs-function">=&gt;</span>
             showEl panel.children[<span class="hljs-number">0</span>]
             <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> len - <span class="hljs-number">1</span>
               <span class="hljs-property">@_inTrans</span> = <span class="hljs-property">@isFoldedUp</span> = <span class="hljs-literal">false</span>
               callback?()
               <span class="hljs-property">@_lastOp</span>.fn    = <span class="hljs-property">@accordion</span>
               <span class="hljs-property">@_lastOp</span>.angle = <span class="hljs-number">0</span>
-            defer<span class="hljs-function"> =&gt;</span> panel.style[css.transitionDuration] = <span class="hljs-property">@_config</span>.speed
+
+            defer <span class="hljs-function">=&gt;</span> panel.style[css.transitionDuration] = <span class="hljs-property">@_config</span>.speed
+
           , delay + <span class="hljs-property">@_config</span>.speed * <span class="hljs-number">.25</span></pre></div></div>
             
         </li>
@@ -3223,7 +3225,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@freeze</span><span class="hljs-function"> =&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@freeze</span> <span class="hljs-function">=&gt;</span></pre></div></div>
             
         </li>
         
@@ -3302,7 +3304,7 @@ This is useful for certain user interactions on the inner content.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">emptyQueue</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@_queue</span> = []
-    defer<span class="hljs-function"> =&gt;</span> <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
+    defer <span class="hljs-function">=&gt;</span> <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
     @</pre></div></div>
             
         </li>
@@ -3355,7 +3357,7 @@ E.g.: el.reveal(20).wait(5000).accordion(-33)</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">wait</span>: <span class="hljs-function"><span class="hljs-params">(ms)</span> -&gt;</span>
-    <span class="hljs-function"><span class="hljs-title">fn</span> = =&gt;</span> setTimeout <span class="hljs-property">@_conclude</span>, ms
+<span class="hljs-function">    <span class="hljs-title">fn</span> = =&gt;</span> setTimeout <span class="hljs-property">@_conclude</span>, ms
     <span class="hljs-keyword">if</span> <span class="hljs-property">@_inTrans</span>
       <span class="hljs-property">@_queue</span>.push [fn, <span class="hljs-property">@_lastOp</span>.angle, <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-property">@_lastOp</span>.options]
     <span class="hljs-keyword">else</span>
@@ -3383,14 +3385,14 @@ literals with camel-cased CSS properties as keys.</p>
             <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modifyContent</span>: <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> fn <span class="hljs-keyword">isnt</span> <span class="hljs-string">'function'</span>
       selectors = fn
-
-      <span class="hljs-function"><span class="hljs-title">set</span> = <span class="hljs-params">(el, content, style)</span> -&gt;</span>
+<span class="hljs-function">
+      <span class="hljs-title">set</span> = <span class="hljs-params">(el, content, style)</span> -&gt;</span>
         el.innerHTML = content <span class="hljs-keyword">if</span> content
         <span class="hljs-keyword">if</span> style
           el.style[key] = value <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">of</span> style
           <span class="hljs-literal">null</span>
-
-      <span class="hljs-function"><span class="hljs-title">fn</span> = <span class="hljs-params">(el)</span> -&gt;</span>
+<span class="hljs-function">
+      <span class="hljs-title">fn</span> = <span class="hljs-params">(el)</span> -&gt;</span>
         <span class="hljs-keyword">for</span> selector, value <span class="hljs-keyword">of</span> selectors
           content = style = <span class="hljs-literal">null</span>
           <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> value <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span>
@@ -3649,9 +3651,9 @@ appear smoother with higher panel counts.</p>
         delay     = <span class="hljs-property">@_setPanelTrans</span> anchor, arguments..., duration, <span class="hljs-number">2</span>
 
         <span class="hljs-keyword">do</span> <span class="hljs-function"><span class="hljs-params">(panel, i, delay)</span> =&gt;</span>
-          defer<span class="hljs-function"> =&gt;</span>
+          defer <span class="hljs-function">=&gt;</span>
             <span class="hljs-property">@_transformPanel</span> panel, (<span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-number">90</span> <span class="hljs-keyword">else</span> <span class="hljs-number">170</span>), anchor
-            setTimeout<span class="hljs-function"> =&gt;</span>
+            setTimeout <span class="hljs-function">=&gt;</span>
               <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
                 <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
                 callback?()
@@ -3673,8 +3675,7 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">unfold</span>: prep <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    <span class="hljs-property">@_unfold</span> arguments...</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">unfold</span>: prep @::_unfold</pre></div></div>
             
         </li>
         
@@ -3881,7 +3882,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.4'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.5'</span></pre></div></div>
             
         </li>
         
@@ -3914,7 +3915,7 @@ Keeps first panel flat on page.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">if</span> <span class="hljs-built_in">module</span>?.exports
   <span class="hljs-built_in">module</span>.exports = OriDomi
 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> define?.amd
-  define<span class="hljs-function"> -&gt;</span> OriDomi
+  define <span class="hljs-function">-&gt;</span> OriDomi
 <span class="hljs-keyword">else</span>
   <span class="hljs-built_in">window</span>.OriDomi = OriDomi</pre></div></div>
             
@@ -3971,7 +3972,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-attribute">$</span>::<span class="hljs-function"><span class="hljs-title">oriDomi</span> = <span class="hljs-params">(options)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-attribute">$</span>::o<span class="hljs-function"><span class="hljs-title">riDomi</span> = <span class="hljs-params">(options)</span> -&gt;</span></pre></div></div>
             
         </li>
         
