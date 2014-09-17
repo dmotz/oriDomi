@@ -992,7 +992,9 @@ class OriDomi
 
       do (panel, i, delay) =>
         defer =>
-          @_transformPanel panel, 0, @_lastOp.anchor
+          @_transformPanel panel, 0, anchor
+          @_setShader i, anchor, 0 if @_shading
+
           setTimeout =>
             showEl panel.children[0]
             if i is len - 1
@@ -1000,7 +1002,9 @@ class OriDomi
               callback?()
               @_lastOp.fn    = @accordion
               @_lastOp.angle = 0
+
             defer => panel.style[css.transitionDuration] = @_config.speed
+
           , delay + @_config.speed * .25
 
 
