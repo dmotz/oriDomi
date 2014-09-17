@@ -22,9 +22,9 @@
     "frontend"
   ],
   "devDependencies": {
-    "coffee-script": "1.7.x",
+    "coffee-script": "1.8.x",
     "uglify-js": "2.4.x",
-    "stylus": "0.46.x",
+    "stylus": "0.48.x",
     "nib": "1.0.x",
     "docco": "0.6.x"
   },
