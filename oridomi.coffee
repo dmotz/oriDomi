@@ -1269,7 +1269,7 @@ class OriDomi
 
   # Proxy to enable stairs mode on `accordion`.
   stairs: (angle, anchor, options = {}) ->
-    options.stairs = options.sticky =  true
+    options.stairs = options.sticky = true
     @accordion angle, anchor, options
 
 
