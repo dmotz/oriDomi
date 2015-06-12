@@ -1,7 +1,6 @@
 {
   "name": "oridomi",
   "description": "Origami for the web. Fold up the DOM like paper.",
-  "version": "1.1.5",
   "main": "oridomi.js",
   "ignore": [
     "demo/",
