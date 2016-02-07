@@ -22,13 +22,13 @@
     "frontend"
   ],
   "devDependencies": {
-    "coffee-script": "1.8.x",
-    "uglify-js": "2.4.x",
-    "stylus": "0.49.x",
-    "nib": "1.0.x",
-    "docco": "0.6.x"
+    "coffee-script": "^1.10.0",
+    "docco": "^0.7.0",
+    "nib": "^1.1.0",
+    "stylus": "^0.53.x",
+    "uglify-js": "^2.6.1"
   },
   "bugs": {
-    "url" : "http://github.com/dmotz/oriDomi/issues"
+    "url": "http://github.com/dmotz/oriDomi/issues"
   }
 }
