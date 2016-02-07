@@ -347,7 +347,7 @@ before the effect is applied.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@_touchStarted</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @_touchStarted
       fn.apply @, arguments
     <span class="hljs-keyword">else</span>
       [a0, a1, a2] = arguments
@@ -408,8 +408,8 @@ of the individual methods.</p>
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> a2 <span class="hljs-keyword">is</span> <span class="hljs-string">'function'</span>
               opt.callback = a2
 
-      angle   ?= <span class="hljs-property">@_lastOp</span>.angle <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
-      anchor <span class="hljs-keyword">or</span>= <span class="hljs-property">@_lastOp</span>.anchor</pre></div></div>
+      angle   ?= @_lastOp.angle <span class="hljs-keyword">or</span> <span class="hljs-number">0</span>
+      anchor <span class="hljs-keyword">or</span>= @_lastOp.anchor</pre></div></div>
             
         </li>
         
@@ -425,7 +425,7 @@ instance’s queue.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_queue</span>.push [fn, <span class="hljs-property">@_normalizeAngle</span>(angle), <span class="hljs-property">@_getLonghandAnchor</span>(anchor), opt]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      @_queue.push [fn, @_normalizeAngle(angle), @_getLonghandAnchor(anchor), opt]</pre></div></div>
             
         </li>
         
@@ -441,7 +441,7 @@ or be deferred.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_step</span>()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      @_step()</pre></div></div>
             
         </li>
         
@@ -609,26 +609,26 @@ baseName   = libName.toLowerCase()</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>elClasses  =
-  <span class="hljs-attribute">active</span>:       <span class="hljs-string">'active'</span>
-  <span class="hljs-attribute">clone</span>:        <span class="hljs-string">'clone'</span>
-  <span class="hljs-attribute">holder</span>:       <span class="hljs-string">'holder'</span>
-  <span class="hljs-attribute">stage</span>:        <span class="hljs-string">'stage'</span>
-  <span class="hljs-attribute">stageLeft</span>:    <span class="hljs-string">'stage-left'</span>
-  <span class="hljs-attribute">stageRight</span>:   <span class="hljs-string">'stage-right'</span>
-  <span class="hljs-attribute">stageTop</span>:     <span class="hljs-string">'stage-top'</span>
-  <span class="hljs-attribute">stageBottom</span>:  <span class="hljs-string">'stage-bottom'</span>
-  <span class="hljs-attribute">content</span>:      <span class="hljs-string">'content'</span>
-  <span class="hljs-attribute">mask</span>:         <span class="hljs-string">'mask'</span>
-  <span class="hljs-attribute">maskH</span>:        <span class="hljs-string">'mask-h'</span>
-  <span class="hljs-attribute">maskV</span>:        <span class="hljs-string">'mask-v'</span>
-  <span class="hljs-attribute">panel</span>:        <span class="hljs-string">'panel'</span>
-  <span class="hljs-attribute">panelH</span>:       <span class="hljs-string">'panel-h'</span>
-  <span class="hljs-attribute">panelV</span>:       <span class="hljs-string">'panel-v'</span>
-  <span class="hljs-attribute">shader</span>:       <span class="hljs-string">'shader'</span>
-  <span class="hljs-attribute">shaderLeft</span>:   <span class="hljs-string">'shader-left'</span>
-  <span class="hljs-attribute">shaderRight</span>:  <span class="hljs-string">'shader-right'</span>
-  <span class="hljs-attribute">shaderTop</span>:    <span class="hljs-string">'shader-top'</span>
-  <span class="hljs-attribute">shaderBottom</span>: <span class="hljs-string">'shader-bottom'</span></pre></div></div>
+  active:       <span class="hljs-string">'active'</span>
+  clone:        <span class="hljs-string">'clone'</span>
+  holder:       <span class="hljs-string">'holder'</span>
+  stage:        <span class="hljs-string">'stage'</span>
+  stageLeft:    <span class="hljs-string">'stage-left'</span>
+  stageRight:   <span class="hljs-string">'stage-right'</span>
+  stageTop:     <span class="hljs-string">'stage-top'</span>
+  stageBottom:  <span class="hljs-string">'stage-bottom'</span>
+  content:      <span class="hljs-string">'content'</span>
+  mask:         <span class="hljs-string">'mask'</span>
+  maskH:        <span class="hljs-string">'mask-h'</span>
+  maskV:        <span class="hljs-string">'mask-v'</span>
+  panel:        <span class="hljs-string">'panel'</span>
+  panelH:       <span class="hljs-string">'panel-h'</span>
+  panelV:       <span class="hljs-string">'panel-v'</span>
+  shader:       <span class="hljs-string">'shader'</span>
+  shaderLeft:   <span class="hljs-string">'shader-left'</span>
+  shaderRight:  <span class="hljs-string">'shader-right'</span>
+  shaderTop:    <span class="hljs-string">'shader-top'</span>
+  shaderBottom: <span class="hljs-string">'shader-bottom'</span></pre></div></div>
             
         </li>
         
@@ -792,7 +792,7 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> hyphenated <span class="hljs-keyword">unless</span> testEl.style.backgroundImage.indexOf(<span class="hljs-string">'gradient'</span>) <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> hyphenated <span class="hljs-keyword">unless</span> testEl.style.backgroundImage.indexOf(<span class="hljs-string">'gradient'</span>) <span class="hljs-keyword">is</span> <span class="hljs-number">-1</span></pre></div></div>
             
         </li>
         
@@ -944,37 +944,37 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">do</span> (i = <span class="hljs-function"><span class="hljs-params">(s)</span> -&gt;</span> s + <span class="hljs-string">' !important'</span>) -&gt;
     addStyle elClasses.active,
-      <span class="hljs-attribute">backgroundColor</span>: i <span class="hljs-string">'transparent'</span>
-      <span class="hljs-attribute">backgroundImage</span>: i <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">boxSizing</span>:       i <span class="hljs-string">'border-box'</span>
-      <span class="hljs-attribute">border</span>:          i <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">outline</span>:         i <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">padding</span>:         i <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">transformStyle</span>:  i p3d
-      <span class="hljs-attribute">mask</span>:            i <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">position</span>:          <span class="hljs-string">'relative'</span>
+      backgroundColor: i <span class="hljs-string">'transparent'</span>
+      backgroundImage: i <span class="hljs-string">'none'</span>
+      boxSizing:       i <span class="hljs-string">'border-box'</span>
+      border:          i <span class="hljs-string">'none'</span>
+      outline:         i <span class="hljs-string">'none'</span>
+      padding:         i <span class="hljs-string">'0'</span>
+      transformStyle:  i p3d
+      mask:            i <span class="hljs-string">'none'</span>
+      position:          <span class="hljs-string">'relative'</span>
 
     addStyle elClasses.clone,
-      <span class="hljs-attribute">margin</span>:    i <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">boxSizing</span>: i <span class="hljs-string">'border-box'</span>
-      <span class="hljs-attribute">overflow</span>:  i <span class="hljs-string">'hidden'</span>
-      <span class="hljs-attribute">display</span>:   i <span class="hljs-string">'block'</span>
+      margin:    i <span class="hljs-string">'0'</span>
+      boxSizing: i <span class="hljs-string">'border-box'</span>
+      overflow:  i <span class="hljs-string">'hidden'</span>
+      display:   i <span class="hljs-string">'block'</span>
 
     addStyle elClasses.holder,
-      <span class="hljs-attribute">width</span>:          <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">position</span>:       <span class="hljs-string">'absolute'</span>
-      <span class="hljs-attribute">top</span>:            <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">bottom</span>:         <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">transformStyle</span>: p3d
+      width:          <span class="hljs-string">'100%'</span>
+      position:       <span class="hljs-string">'absolute'</span>
+      top:            <span class="hljs-string">'0'</span>
+      bottom:         <span class="hljs-string">'0'</span>
+      transformStyle: p3d
 
     addStyle elClasses.stage,
-      <span class="hljs-attribute">width</span>:          <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">height</span>:         <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">position</span>:       <span class="hljs-string">'absolute'</span>
-      <span class="hljs-attribute">transform</span>:      <span class="hljs-string">'translate3d(-9999px, 0, 0)'</span>
-      <span class="hljs-attribute">margin</span>:         <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">padding</span>:        <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">transformStyle</span>: p3d</pre></div></div>
+      width:          <span class="hljs-string">'100%'</span>
+      height:         <span class="hljs-string">'100%'</span>
+      position:       <span class="hljs-string">'absolute'</span>
+      transform:      <span class="hljs-string">'translate3d(-9999px, 0, 0)'</span>
+      margin:         <span class="hljs-string">'0'</span>
+      padding:        <span class="hljs-string">'0'</span>
+      transformStyle: p3d</pre></div></div>
             
         </li>
         
@@ -989,18 +989,18 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> {<span class="hljs-attribute">Left</span>: <span class="hljs-string">'0% 50%'</span>, <span class="hljs-attribute">Right</span>: <span class="hljs-string">'100% 50%'</span>, <span class="hljs-attribute">Top</span>: <span class="hljs-string">'50% 0%'</span>, <span class="hljs-attribute">Bottom</span>: <span class="hljs-string">'50% 100%'</span>}
-      addStyle elClasses[<span class="hljs-string">'stage'</span> + k], <span class="hljs-attribute">perspectiveOrigin</span>: v
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> {Left: <span class="hljs-string">'0% 50%'</span>, Right: <span class="hljs-string">'100% 50%'</span>, Top: <span class="hljs-string">'50% 0%'</span>, Bottom: <span class="hljs-string">'50% 100%'</span>}
+      addStyle elClasses[<span class="hljs-string">'stage'</span> + k], perspectiveOrigin: v
 
     addStyle elClasses.shader,
-      <span class="hljs-attribute">width</span>:              <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">height</span>:             <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">position</span>:           <span class="hljs-string">'absolute'</span>
-      <span class="hljs-attribute">opacity</span>:            <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">top</span>:                <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">left</span>:               <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">pointerEvents</span>:      <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">transitionProperty</span>: <span class="hljs-string">'opacity'</span></pre></div></div>
+      width:              <span class="hljs-string">'100%'</span>
+      height:             <span class="hljs-string">'100%'</span>
+      position:           <span class="hljs-string">'absolute'</span>
+      opacity:            <span class="hljs-string">'0'</span>
+      top:                <span class="hljs-string">'0'</span>
+      left:               <span class="hljs-string">'0'</span>
+      pointerEvents:      <span class="hljs-string">'none'</span>
+      transitionProperty: <span class="hljs-string">'opacity'</span></pre></div></div>
             
         </li>
         
@@ -1016,35 +1016,35 @@ This invokes an anonymous function to loop through vendor-prefixed linear gradie
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList
-      addStyle elClasses[<span class="hljs-string">'shader'</span> + capitalize anchor], <span class="hljs-attribute">background</span>: getGradient anchor
+      addStyle elClasses[<span class="hljs-string">'shader'</span> + capitalize anchor], background: getGradient anchor
 
     addStyle elClasses.content,
-      <span class="hljs-attribute">margin</span>:    i <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">position</span>:  i <span class="hljs-string">'relative'</span>
-      <span class="hljs-attribute">float</span>:     i <span class="hljs-string">'none'</span>
-      <span class="hljs-attribute">boxSizing</span>: i <span class="hljs-string">'border-box'</span>
-      <span class="hljs-attribute">overflow</span>:  i <span class="hljs-string">'hidden'</span>
+      margin:    i <span class="hljs-string">'0'</span>
+      position:  i <span class="hljs-string">'relative'</span>
+      float:     i <span class="hljs-string">'none'</span>
+      boxSizing: i <span class="hljs-string">'border-box'</span>
+      overflow:  i <span class="hljs-string">'hidden'</span>
 
     addStyle elClasses.mask,
-      <span class="hljs-attribute">width</span>:              <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">height</span>:             <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">position</span>:           <span class="hljs-string">'absolute'</span>
-      <span class="hljs-attribute">overflow</span>:           <span class="hljs-string">'hidden'</span>
-      <span class="hljs-attribute">transform</span>:          <span class="hljs-string">'translate3d(0, 0, 0)'</span>
-      <span class="hljs-attribute">outline</span>:            <span class="hljs-string">'1px solid transparent'</span>
+      width:              <span class="hljs-string">'100%'</span>
+      height:             <span class="hljs-string">'100%'</span>
+      position:           <span class="hljs-string">'absolute'</span>
+      overflow:           <span class="hljs-string">'hidden'</span>
+      transform:          <span class="hljs-string">'translate3d(0, 0, 0)'</span>
+      outline:            <span class="hljs-string">'1px solid transparent'</span>
 
     addStyle elClasses.panel,
-      <span class="hljs-attribute">width</span>:              <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">height</span>:             <span class="hljs-string">'100%'</span>
-      <span class="hljs-attribute">padding</span>:            <span class="hljs-string">'0'</span>
-      <span class="hljs-attribute">position</span>:           <span class="hljs-string">'absolute'</span>
-      <span class="hljs-attribute">transitionProperty</span>: css.transformProp
-      <span class="hljs-attribute">transformOrigin</span>:    <span class="hljs-string">'left'</span>
-      <span class="hljs-attribute">transformStyle</span>:     p3d
+      width:              <span class="hljs-string">'100%'</span>
+      height:             <span class="hljs-string">'100%'</span>
+      padding:            <span class="hljs-string">'0'</span>
+      position:           <span class="hljs-string">'absolute'</span>
+      transitionProperty: css.transformProp
+      transformOrigin:    <span class="hljs-string">'left'</span>
+      transformStyle:     p3d
 
-    addStyle elClasses.panelH, <span class="hljs-attribute">transformOrigin</span>: <span class="hljs-string">'top'</span>
-    addStyle <span class="hljs-string">"<span class="hljs-subst">#{ elClasses.stageRight }</span> .<span class="hljs-subst">#{ elClasses.panel }</span>"</span>, <span class="hljs-attribute">transformOrigin</span>: <span class="hljs-string">'right'</span>
-    addStyle <span class="hljs-string">"<span class="hljs-subst">#{ elClasses.stageBottom }</span> .<span class="hljs-subst">#{ elClasses.panel }</span>"</span>, <span class="hljs-attribute">transformOrigin</span>: <span class="hljs-string">'bottom'</span>
+    addStyle elClasses.panelH, transformOrigin: <span class="hljs-string">'top'</span>
+    addStyle <span class="hljs-string">"<span class="hljs-subst">#{ elClasses.stageRight }</span> .<span class="hljs-subst">#{ elClasses.panel }</span>"</span>, transformOrigin: <span class="hljs-string">'right'</span>
+    addStyle <span class="hljs-string">"<span class="hljs-subst">#{ elClasses.stageBottom }</span> .<span class="hljs-subst">#{ elClasses.panel }</span>"</span>, transformOrigin: <span class="hljs-string">'bottom'</span>
 
   styleEl      = <span class="hljs-built_in">document</span>.createElement <span class="hljs-string">'style'</span>
   styleEl.type = <span class="hljs-string">'text/css'</span></pre></div></div>
@@ -1126,7 +1126,7 @@ The numbers must add up to 100 (or near it, so you can use values like
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">vPanels</span>: <span class="hljs-number">3</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  vPanels: <span class="hljs-number">3</span></pre></div></div>
             
         </li>
         
@@ -1141,7 +1141,7 @@ The numbers must add up to 100 (or near it, so you can use values like
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">hPanels</span>: <span class="hljs-number">3</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  hPanels: <span class="hljs-number">3</span></pre></div></div>
             
         </li>
         
@@ -1157,7 +1157,7 @@ The smaller the value, the more distorted and exaggerated the effects will appea
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">perspective</span>: <span class="hljs-number">1000</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  perspective: <span class="hljs-number">1000</span></pre></div></div>
             
         </li>
         
@@ -1169,12 +1169,12 @@ The smaller the value, the more distorted and exaggerated the effects will appea
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>The default shading style is hard, which shows distinct creases in the paper.
-Other options include <code>&#39;soft&#39;</code> — for a smoother, more rounded look — or <code>false</code>
+Other options include <code>&#39;soft&#39;</code> – for a smoother, more rounded look – or <code>false</code>
 to disable shading altogether for a flat look.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">shading</span>: <span class="hljs-string">'hard'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  shading: <span class="hljs-string">'hard'</span></pre></div></div>
             
         </li>
         
@@ -1189,7 +1189,7 @@ to disable shading altogether for a flat look.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">speed</span>: <span class="hljs-number">700</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  speed: <span class="hljs-number">700</span></pre></div></div>
             
         </li>
         
@@ -1205,7 +1205,7 @@ makes the element wrap around and pass through itself leading to some glitchy vi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">maxAngle</span>: <span class="hljs-number">90</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  maxAngle: <span class="hljs-number">90</span></pre></div></div>
             
         </li>
         
@@ -1221,7 +1221,7 @@ makes the element wrap around and pass through itself leading to some glitchy vi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">ripple</span>: <span class="hljs-number">0</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  ripple: <span class="hljs-number">0</span></pre></div></div>
             
         </li>
         
@@ -1236,7 +1236,7 @@ makes the element wrap around and pass through itself leading to some glitchy vi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">oriDomiClass</span>: libName.toLowerCase()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  oriDomiClass: libName.toLowerCase()</pre></div></div>
             
         </li>
         
@@ -1252,7 +1252,7 @@ If you need subtler shading, set this to a value below 1.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">shadingIntensity</span>: <span class="hljs-number">1</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  shadingIntensity: <span class="hljs-number">1</span></pre></div></div>
             
         </li>
         
@@ -1268,7 +1268,7 @@ cubic bezier formula for customized animation easing.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">easingMethod</span>: <span class="hljs-string">''</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  easingMethod: <span class="hljs-string">''</span></pre></div></div>
             
         </li>
         
@@ -1284,7 +1284,7 @@ between them. This is configurable if you have a need for precision.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">gapNudge</span>: <span class="hljs-number">1.5</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  gapNudge: <span class="hljs-number">1.5</span></pre></div></div>
             
         </li>
         
@@ -1299,7 +1299,7 @@ between them. This is configurable if you have a need for precision.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">touchEnabled</span>: <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  touchEnabled: <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -1314,7 +1314,7 @@ between them. This is configurable if you have a need for precision.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">touchSensitivity</span>: <span class="hljs-number">.25</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  touchSensitivity: <span class="hljs-number">.25</span></pre></div></div>
             
         </li>
         
@@ -1334,7 +1334,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">touchStartCallback</span>: noOp</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  touchStartCallback: noOp</pre></div></div>
             
         </li>
         
@@ -1349,7 +1349,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">touchMoveCallback</span>: noOp</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  touchMoveCallback: noOp</pre></div></div>
             
         </li>
         
@@ -1364,7 +1364,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">touchEndCallback</span>: noOp</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  touchEndCallback: noOp</pre></div></div>
             
         </li>
         
@@ -1394,7 +1394,7 @@ starting coordinate as first argument.</p>
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OriDomi</span></span>
 
-  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(<span class="hljs-property">@el</span>, options = {})</span> -&gt;</span>
+  constructor: <span class="hljs-function"><span class="hljs-params">(@el, options = {})</span> -&gt;</span>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> isSupported</pre></div></div>
             
         </li>
@@ -1410,7 +1410,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> OriDomi <span class="hljs-property">@el</span>, options <span class="hljs-keyword">unless</span> @ <span class="hljs-keyword">instanceof</span> OriDomi</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> OriDomi @el, options <span class="hljs-keyword">unless</span> @ <span class="hljs-keyword">instanceof</span> OriDomi</pre></div></div>
             
         </li>
         
@@ -1425,7 +1425,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@el</span> = <span class="hljs-built_in">document</span>.querySelector <span class="hljs-property">@el</span> <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> <span class="hljs-property">@el</span> <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @el = <span class="hljs-built_in">document</span>.querySelector @el <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> @el <span class="hljs-keyword">is</span> <span class="hljs-string">'string'</span></pre></div></div>
             
         </li>
         
@@ -1440,7 +1440,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> <span class="hljs-property">@el</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@el</span>.nodeType <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> @el <span class="hljs-keyword">and</span> @el.nodeType <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
       <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: First argument must be a DOM element"</span>
       <span class="hljs-keyword">return</span></pre></div></div>
             
@@ -1457,7 +1457,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span> = <span class="hljs-keyword">new</span> -&gt;
+            <div class="content"><div class='highlight'><pre>    @_config = <span class="hljs-keyword">new</span> -&gt;
       <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> defaults
         <span class="hljs-keyword">if</span> k <span class="hljs-keyword">of</span> options
           @[k] = options[k]
@@ -1478,7 +1478,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span>.ripple = Number <span class="hljs-property">@_config</span>.ripple</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_config.ripple = Number @_config.ripple</pre></div></div>
             
         </li>
         
@@ -1493,9 +1493,9 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_queue</span>   = []
-    <span class="hljs-property">@_panels</span>  = {}
-    <span class="hljs-property">@_stages</span>  = {}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_queue   = []
+    @_panels  = {}
+    @_stages  = {}</pre></div></div>
             
         </li>
         
@@ -1510,8 +1510,8 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_lastOp</span>  = <span class="hljs-attribute">anchor</span>: anchorList[<span class="hljs-number">0</span>]
-    <span class="hljs-property">@_shading</span> = <span class="hljs-property">@_config</span>.shading</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_lastOp  = anchor: anchorList[<span class="hljs-number">0</span>]
+    @_shading = @_config.shading</pre></div></div>
             
         </li>
         
@@ -1526,7 +1526,7 @@ starting coordinate as first argument.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_shading</span> = <span class="hljs-string">'hard'</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_shading = <span class="hljs-string">'hard'</span> <span class="hljs-keyword">if</span> @_shading <span class="hljs-keyword">is</span> <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -1542,15 +1542,15 @@ skipped if shading is disabled.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
-      <span class="hljs-property">@_shaders</span>    = {}
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @_shading
+      @_shaders    = {}
       shaderProtos = {}
       shaderProto  = createEl <span class="hljs-string">'shader'</span>
-      shaderProto.style[css.transitionDuration]       = <span class="hljs-property">@_config</span>.speed + <span class="hljs-string">'ms'</span>
-      shaderProto.style[css.transitionTimingFunction] = <span class="hljs-property">@_config</span>.easingMethod
+      shaderProto.style[css.transitionDuration]       = @_config.speed + <span class="hljs-string">'ms'</span>
+      shaderProto.style[css.transitionTimingFunction] = @_config.easingMethod
 
     stageProto = createEl <span class="hljs-string">'stage'</span>
-    stageProto.style[css.perspective] = <span class="hljs-property">@_config</span>.perspective + <span class="hljs-string">'px'</span>
+    stageProto.style[css.perspective] = @_config.perspective + <span class="hljs-string">'px'</span>
 
     <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList</pre></div></div>
             
@@ -1567,25 +1567,25 @@ skipped if shading is disabled.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_panels</span>[anchor] = []
-      <span class="hljs-property">@_stages</span>[anchor] = cloneEl stageProto, <span class="hljs-literal">false</span>, <span class="hljs-string">'stage'</span> + capitalize anchor
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
-        <span class="hljs-property">@_shaders</span>[anchor] = {}
+            <div class="content"><div class='highlight'><pre>      @_panels[anchor] = []
+      @_stages[anchor] = cloneEl stageProto, <span class="hljs-literal">false</span>, <span class="hljs-string">'stage'</span> + capitalize anchor
+      <span class="hljs-keyword">if</span> @_shading
+        @_shaders[anchor] = {}
         <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">in</span> anchorListV
-          <span class="hljs-property">@_shaders</span>[anchor][side] = [] <span class="hljs-keyword">for</span> side <span class="hljs-keyword">in</span> anchorListV
+          @_shaders[anchor][side] = [] <span class="hljs-keyword">for</span> side <span class="hljs-keyword">in</span> anchorListV
         <span class="hljs-keyword">else</span>
-          <span class="hljs-property">@_shaders</span>[anchor][side] = [] <span class="hljs-keyword">for</span> side <span class="hljs-keyword">in</span> anchorListH
+          @_shaders[anchor][side] = [] <span class="hljs-keyword">for</span> side <span class="hljs-keyword">in</span> anchorListH
 
         shaderProtos[anchor] = cloneEl shaderProto, <span class="hljs-literal">false</span>, <span class="hljs-string">'shader'</span> + capitalize anchor
 
-    contentHolder = cloneEl <span class="hljs-property">@el</span>, <span class="hljs-literal">true</span>, <span class="hljs-string">'content'</span>
+    contentHolder = cloneEl @el, <span class="hljs-literal">true</span>, <span class="hljs-string">'content'</span>
 
     maskProto = createEl <span class="hljs-string">'mask'</span>
     maskProto.appendChild contentHolder
 
     panelProto = createEl <span class="hljs-string">'panel'</span>
-    panelProto.style[css.transitionDuration]       = <span class="hljs-property">@_config</span>.speed + <span class="hljs-string">'ms'</span>
-    panelProto.style[css.transitionTimingFunction] = <span class="hljs-property">@_config</span>.easingMethod</pre></div></div>
+    panelProto.style[css.transitionDuration]       = @_config.speed + <span class="hljs-string">'ms'</span>
+    panelProto.style[css.transitionTimingFunction] = @_config.easingMethod</pre></div></div>
             
         </li>
         
@@ -1601,7 +1601,7 @@ for each axis.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    offsets = <span class="hljs-attribute">left</span>: [], <span class="hljs-attribute">top</span>: []</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    offsets = left: [], top: []</pre></div></div>
             
         </li>
         
@@ -1626,7 +1626,7 @@ for each axis.</p>
         metric      = <span class="hljs-string">'height'</span>
         classSuffix = <span class="hljs-string">'H'</span>
 
-      panelConfig = <span class="hljs-property">@_config</span>[panelKey = classSuffix.toLowerCase() + <span class="hljs-string">'Panels'</span>]</pre></div></div>
+      panelConfig = @_config[panelKey = classSuffix.toLowerCase() + <span class="hljs-string">'Panels'</span>]</pre></div></div>
             
         </li>
         
@@ -1645,7 +1645,7 @@ an array is filled with equal percentages.</p>
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> panelConfig <span class="hljs-keyword">is</span> <span class="hljs-string">'number'</span>
         count       = Math.abs parseInt panelConfig, <span class="hljs-number">10</span>
         percent     = <span class="hljs-number">100</span> / count
-        panelConfig = <span class="hljs-property">@_config</span>[panelKey] = (percent <span class="hljs-keyword">for</span> [<span class="hljs-number">0.</span>..count])
+        panelConfig = @_config[panelKey] = (percent <span class="hljs-keyword">for</span> [<span class="hljs-number">0.</span>..count])
       <span class="hljs-keyword">else</span>
         count = panelConfig.length
         <span class="hljs-keyword">unless</span> <span class="hljs-number">99</span> &lt;= panelConfig.reduce(<span class="hljs-function"><span class="hljs-params">(p, c)</span> -&gt;</span> p + c) &lt;= <span class="hljs-number">100.1</span>
@@ -1666,7 +1666,7 @@ an array is filled with equal percentages.</p>
             
             <div class="content"><div class='highlight'><pre>      mask = cloneEl maskProto, <span class="hljs-literal">true</span>, <span class="hljs-string">'mask'</span> + classSuffix
 
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+      <span class="hljs-keyword">if</span> @_shading
         mask.appendChild shaderProtos[anchor] <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorSet
 
       proto = cloneEl panelProto, <span class="hljs-literal">false</span>, <span class="hljs-string">'panel'</span> + classSuffix
@@ -1769,9 +1769,9 @@ parent panel’s percentage to counteract it in an absolute sense.</p>
             
             <div class="content"><div class='highlight'><pre>            panel.style[metric] = panelConfig[index] / panelConfig[prev] * <span class="hljs-number">100</span> + <span class="hljs-string">'%'</span>
 
-          <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+          <span class="hljs-keyword">if</span> @_shading
             <span class="hljs-keyword">for</span> a, i <span class="hljs-keyword">in</span> anchorSet
-              <span class="hljs-property">@_shaders</span>[anchor][a][panelN] = panel.children[<span class="hljs-number">0</span>].children[i + <span class="hljs-number">1</span>]</pre></div></div>
+              @_shaders[anchor][a][panelN] = panel.children[<span class="hljs-number">0</span>].children[i + <span class="hljs-number">1</span>]</pre></div></div>
             
         </li>
         
@@ -1795,8 +1795,8 @@ reduction of the parent is undone and sizing flexibility is achieved.</p>
 
           content.style[anchorSet[<span class="hljs-number">0</span>]] = offsets[anchorSet[<span class="hljs-number">0</span>]][index] + <span class="hljs-string">'%'</span>
 
-          <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, anchor
-          <span class="hljs-property">@_panels</span>[anchor][panelN] = panel</pre></div></div>
+          @_transformPanel panel, <span class="hljs-number">0</span>, anchor
+          @_panels[anchor][panelN] = panel</pre></div></div>
             
         </li>
         
@@ -1811,7 +1811,7 @@ reduction of the parent is undone and sizing flexibility is achieved.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-property">@_panels</span>[anchor][panelN - <span class="hljs-number">1</span>].appendChild panel <span class="hljs-keyword">unless</span> panelN <span class="hljs-keyword">is</span> <span class="hljs-number">0</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>          @_panels[anchor][panelN - <span class="hljs-number">1</span>].appendChild panel <span class="hljs-keyword">unless</span> panelN <span class="hljs-keyword">is</span> <span class="hljs-number">0</span></pre></div></div>
             
         </li>
         
@@ -1826,11 +1826,11 @@ reduction of the parent is undone and sizing flexibility is achieved.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-property">@_stages</span>[anchor].appendChild <span class="hljs-property">@_panels</span>[anchor][<span class="hljs-number">0</span>]
+            <div class="content"><div class='highlight'><pre>        @_stages[anchor].appendChild @_panels[anchor][<span class="hljs-number">0</span>]
 
-    <span class="hljs-property">@_stageHolder</span> = createEl <span class="hljs-string">'holder'</span>
-    <span class="hljs-property">@_stageHolder</span>.setAttribute <span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'true'</span>
-    <span class="hljs-property">@_stageHolder</span>.appendChild <span class="hljs-property">@_stages</span>[anchor] <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList</pre></div></div>
+    @_stageHolder = createEl <span class="hljs-string">'holder'</span>
+    @_stageHolder.setAttribute <span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'true'</span>
+    @_stageHolder.appendChild @_stages[anchor] <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList</pre></div></div>
             
         </li>
         
@@ -1845,11 +1845,11 @@ reduction of the parent is undone and sizing flexibility is achieved.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">window</span>.getComputedStyle(<span class="hljs-property">@el</span>).position <span class="hljs-keyword">is</span> <span class="hljs-string">'absolute'</span>
-      <span class="hljs-property">@el</span>.style.position = <span class="hljs-string">'absolute'</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">window</span>.getComputedStyle(@el).position <span class="hljs-keyword">is</span> <span class="hljs-string">'absolute'</span>
+      @el.style.position = <span class="hljs-string">'absolute'</span>
 
-    <span class="hljs-property">@el</span>.classList.add elClasses.active
-    showEl <span class="hljs-property">@_stages</span>.left</pre></div></div>
+    @el.classList.add elClasses.active
+    showEl @_stages.left</pre></div></div>
             
         </li>
         
@@ -1865,9 +1865,9 @@ of the OriDomi content are maintained by it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_cloneEl</span> = cloneEl <span class="hljs-property">@el</span>, <span class="hljs-literal">true</span>, <span class="hljs-string">'clone'</span>
-    <span class="hljs-property">@_cloneEl</span>.classList.remove elClasses.active
-    hideEl <span class="hljs-property">@_cloneEl</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_cloneEl = cloneEl @el, <span class="hljs-literal">true</span>, <span class="hljs-string">'clone'</span>
+    @_cloneEl.classList.remove elClasses.active
+    hideEl @_cloneEl</pre></div></div>
             
         </li>
         
@@ -1883,9 +1883,9 @@ the clone and the OriDomi content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@el</span>.innerHTML = <span class="hljs-string">''</span>
-    <span class="hljs-property">@el</span>.appendChild <span class="hljs-property">@_cloneEl</span>
-    <span class="hljs-property">@el</span>.appendChild <span class="hljs-property">@_stageHolder</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @el.innerHTML = <span class="hljs-string">''</span>
+    @el.appendChild @_cloneEl
+    @el.appendChild @_stageHolder</pre></div></div>
             
         </li>
         
@@ -1901,7 +1901,7 @@ away from the viewer.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@el</span>.parentNode.style[css.transformStyle] = <span class="hljs-string">'preserve-3d'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @el.parentNode.style[css.transformStyle] = <span class="hljs-string">'preserve-3d'</span></pre></div></div>
             
         </li>
         
@@ -1917,9 +1917,9 @@ method called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@accordion</span> <span class="hljs-number">0</span>
-    <span class="hljs-property">@setRipple</span> <span class="hljs-property">@_config</span>.ripple <span class="hljs-keyword">if</span> <span class="hljs-property">@_config</span>.ripple
-    <span class="hljs-property">@enableTouch</span>() <span class="hljs-keyword">if</span> <span class="hljs-property">@_config</span>.touchEnabled</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @accordion <span class="hljs-number">0</span>
+    @setRipple @_config.ripple <span class="hljs-keyword">if</span> @_config.ripple
+    @enableTouch() <span class="hljs-keyword">if</span> @_config.touchEnabled</pre></div></div>
             
         </li>
         
@@ -1959,7 +1959,7 @@ method called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_step</span>: <span class="hljs-function">=&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _step: <span class="hljs-function">=&gt;</span></pre></div></div>
             
         </li>
         
@@ -1974,8 +1974,8 @@ method called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_inTrans</span> <span class="hljs-keyword">or</span> !<span class="hljs-property">@_queue</span>.length
-    <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> @_inTrans <span class="hljs-keyword">or</span> !@_queue.length
+    @_inTrans = <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -1990,8 +1990,8 @@ method called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    [fn, angle, anchor, options] = <span class="hljs-property">@_queue</span>.shift()
-    <span class="hljs-property">@unfreeze</span>() <span class="hljs-keyword">if</span> <span class="hljs-property">@isFrozen</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    [fn, angle, anchor, options] = @_queue.shift()
+    @unfreeze() <span class="hljs-keyword">if</span> @isFrozen</pre></div></div>
             
         </li>
         
@@ -2008,18 +2008,18 @@ deferred (if the stage is folded up or on the wrong anchor).</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-function">    <span class="hljs-title">next</span> = =&gt;</span>
-      <span class="hljs-property">@_setCallback</span> {angle, anchor, options, fn}
+      @_setCallback {angle, anchor, options, fn}
       args = [angle, anchor, options]
       args.shift() <span class="hljs-keyword">if</span> fn.length &lt; <span class="hljs-number">3</span>
       fn.apply @, args
 
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@isFoldedUp</span>
+    <span class="hljs-keyword">if</span> @isFoldedUp
       <span class="hljs-keyword">if</span> fn.length <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
         next()
       <span class="hljs-keyword">else</span>
-        <span class="hljs-property">@_unfold</span> next
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">isnt</span> <span class="hljs-property">@_lastOp</span>.anchor
-      <span class="hljs-property">@_stageReset</span> anchor, next
+        @_unfold next
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">isnt</span> @_lastOp.anchor
+      @_stageReset anchor, next
     <span class="hljs-keyword">else</span>
       next()</pre></div></div>
             
@@ -2039,11 +2039,11 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_isIdenticalOperation</span>: <span class="hljs-function"><span class="hljs-params">(op)</span> -&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_lastOp</span>.fn
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.reset
-    (<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>[key] <span class="hljs-keyword">isnt</span> op[key]) <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> [<span class="hljs-string">'angle'</span>, <span class="hljs-string">'anchor'</span>, <span class="hljs-string">'fn'</span>]
-    (<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> v <span class="hljs-keyword">isnt</span> <span class="hljs-property">@_lastOp</span>.options[k] <span class="hljs-keyword">and</span> k <span class="hljs-keyword">isnt</span> <span class="hljs-string">'callback'</span>) <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> op.options
+            <div class="content"><div class='highlight'><pre>  _isIdenticalOperation: <span class="hljs-function"><span class="hljs-params">(op)</span> -&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span> <span class="hljs-keyword">unless</span> @_lastOp.fn
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> @_lastOp.reset
+    (<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> @_lastOp[key] <span class="hljs-keyword">isnt</span> op[key]) <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> [<span class="hljs-string">'angle'</span>, <span class="hljs-string">'anchor'</span>, <span class="hljs-string">'fn'</span>]
+    (<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> v <span class="hljs-keyword">isnt</span> @_lastOp.options[k] <span class="hljs-keyword">and</span> k <span class="hljs-keyword">isnt</span> <span class="hljs-string">'callback'</span>) <span class="hljs-keyword">for</span> k, v <span class="hljs-keyword">of</span> op.options
     <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
@@ -2059,7 +2059,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setCallback</span>: <span class="hljs-function"><span class="hljs-params">(operation)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _setCallback: <span class="hljs-function"><span class="hljs-params">(operation)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -2074,8 +2074,8 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> !<span class="hljs-property">@_config</span>.speed <span class="hljs-keyword">or</span> <span class="hljs-property">@_isIdenticalOperation</span> operation
-      <span class="hljs-property">@_conclude</span> operation.options.callback</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> !@_config.speed <span class="hljs-keyword">or</span> @_isIdenticalOperation operation
+      @_conclude operation.options.callback</pre></div></div>
             
         </li>
         
@@ -2091,9 +2091,9 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@_panels</span>[<span class="hljs-property">@_lastOp</span>.anchor][<span class="hljs-number">0</span>].addEventListener css.transitionEnd, <span class="hljs-property">@_onTransitionEnd</span>, <span class="hljs-literal">false</span>
+      @_panels[@_lastOp.anchor][<span class="hljs-number">0</span>].addEventListener css.transitionEnd, @_onTransitionEnd, <span class="hljs-literal">false</span>
 
-    (<span class="hljs-property">@_lastOp</span> = operation).reset = <span class="hljs-literal">false</span></pre></div></div>
+    (@_lastOp = operation).reset = <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -2108,7 +2108,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onTransitionEnd</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _onTransitionEnd: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span></pre></div></div>
             
         </li>
         
@@ -2123,7 +2123,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    e.currentTarget.removeEventListener css.transitionEnd, <span class="hljs-property">@_onTransitionEnd</span>, <span class="hljs-literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    e.currentTarget.removeEventListener css.transitionEnd, @_onTransitionEnd, <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -2138,7 +2138,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_conclude</span> <span class="hljs-property">@_lastOp</span>.options.callback, e</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_conclude @_lastOp.options.callback, e</pre></div></div>
             
         </li>
         
@@ -2153,10 +2153,10 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_conclude</span>: <span class="hljs-function"><span class="hljs-params">(cb, event)</span> =&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _conclude: <span class="hljs-function"><span class="hljs-params">(cb, event)</span> =&gt;</span>
     defer =&gt;
-      <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
-      <span class="hljs-property">@_step</span>()
+      @_inTrans = <span class="hljs-literal">false</span>
+      @_step()
       cb? event, @</pre></div></div>
             
         </li>
@@ -2172,7 +2172,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_transformPanel</span>: <span class="hljs-function"><span class="hljs-params">(el, angle, anchor, fracture)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _transformPanel: <span class="hljs-function"><span class="hljs-params">(el, angle, anchor, fracture)</span> -&gt;</span>
     x = y = z = <span class="hljs-number">0</span>
     <span class="hljs-keyword">switch</span> anchor
       <span class="hljs-keyword">when</span> <span class="hljs-string">'left'</span>
@@ -2207,7 +2207,7 @@ movement has taken place, avoiding this pitfall of transition listeners.</p>
                               rotateX(<span class="hljs-subst">#{ x }</span>deg)
                               rotateY(<span class="hljs-subst">#{ y }</span>deg)
                               rotateZ(<span class="hljs-subst">#{ z }</span>deg)
-                              translate<span class="hljs-subst">#{ transPrefix }</span><span class="hljs-subst">#{ <span class="hljs-property">@_config</span>.gapNudge }</span>px)
+                              translate<span class="hljs-subst">#{ transPrefix }</span><span class="hljs-subst">#{ @_config.gapNudge }</span>px)
                               "</span></pre></div></div>
             
         </li>
@@ -2224,9 +2224,9 @@ keeping it within the maximum range specified in the instance settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_normalizeAngle</span>: <span class="hljs-function"><span class="hljs-params">(angle)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _normalizeAngle: <span class="hljs-function"><span class="hljs-params">(angle)</span> -&gt;</span>
     angle = parseFloat angle, <span class="hljs-number">10</span>
-    max   = <span class="hljs-property">@_config</span>.maxAngle
+    max   = @_config.maxAngle
     <span class="hljs-keyword">if</span> isNaN angle
       <span class="hljs-number">0</span>
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> angle &gt; max
@@ -2249,8 +2249,8 @@ keeping it within the maximum range specified in the instance settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setTrans</span>: <span class="hljs-function"><span class="hljs-params">(duration, delay, anchor = <span class="hljs-property">@_lastOp</span>.anchor)</span> -&gt;</span>
-    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span> <span class="hljs-property">@_setPanelTrans</span> anchor, arguments..., duration, delay</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _setTrans: <span class="hljs-function"><span class="hljs-params">(duration, delay, anchor = @_lastOp.anchor)</span> -&gt;</span>
+    @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span> @_setPanelTrans anchor, arguments..., duration, delay</pre></div></div>
             
         </li>
         
@@ -2265,7 +2265,7 @@ keeping it within the maximum range specified in the instance settings.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setPanelTrans</span>: <span class="hljs-function"><span class="hljs-params">(anchor, panel, i, len, duration, delay)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _setPanelTrans: <span class="hljs-function"><span class="hljs-params">(anchor, panel, i, len, duration, delay)</span> -&gt;</span>
     delayMs =</pre></div></div>
             
         </li>
@@ -2284,14 +2284,14 @@ speed setting and the number of panels.</p>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">switch</span> delay
         <span class="hljs-keyword">when</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-number">0</span>
-        <span class="hljs-keyword">when</span> <span class="hljs-number">1</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@_config</span>.speed / len * i
-        <span class="hljs-keyword">when</span> <span class="hljs-number">2</span> <span class="hljs-keyword">then</span> <span class="hljs-property">@_config</span>.speed / len * (len - i - <span class="hljs-number">1</span>)
+        <span class="hljs-keyword">when</span> <span class="hljs-number">1</span> <span class="hljs-keyword">then</span> @_config.speed / len * i
+        <span class="hljs-keyword">when</span> <span class="hljs-number">2</span> <span class="hljs-keyword">then</span> @_config.speed / len * (len - i - <span class="hljs-number">1</span>)
 
     panel.style[css.transitionDuration] = duration + <span class="hljs-string">'ms'</span>
     panel.style[css.transitionDelay]    = delayMs  + <span class="hljs-string">'ms'</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+    <span class="hljs-keyword">if</span> @_shading
       <span class="hljs-keyword">for</span> side <span class="hljs-keyword">in</span> (<span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">in</span> anchorListV <span class="hljs-keyword">then</span> anchorListV <span class="hljs-keyword">else</span> anchorListH)
-        shader = <span class="hljs-property">@_shaders</span>[anchor][side][i]
+        shader = @_shaders[anchor][side][i]
         shader.style[css.transitionDuration] = duration + <span class="hljs-string">'ms'</span>
         shader.style[css.transitionDelay]    = delayMs  + <span class="hljs-string">'ms'</span>
 
@@ -2310,7 +2310,7 @@ speed setting and the number of panels.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setShader</span>: <span class="hljs-function"><span class="hljs-params">(n, anchor, angle)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _setShader: <span class="hljs-function"><span class="hljs-params">(n, anchor, angle)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -2326,7 +2326,7 @@ speed setting and the number of panels.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    abs     = Math.abs angle
-    opacity = abs / <span class="hljs-number">90</span> * <span class="hljs-property">@_config</span>.shadingIntensity</pre></div></div>
+    opacity = abs / <span class="hljs-number">90</span> * @_config.shadingIntensity</pre></div></div>
             
         </li>
         
@@ -2343,9 +2343,9 @@ have alternating directions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span> <span class="hljs-keyword">is</span> <span class="hljs-string">'hard'</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @_shading <span class="hljs-keyword">is</span> <span class="hljs-string">'hard'</span>
       opacity *= <span class="hljs-number">.15</span>
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.angle &lt; <span class="hljs-number">0</span>
+      <span class="hljs-keyword">if</span> @_lastOp.angle &lt; <span class="hljs-number">0</span>
         angle = abs
       <span class="hljs-keyword">else</span>
         angle = -abs
@@ -2373,8 +2373,8 @@ and bottom shaders appear for positive ones.</p>
       <span class="hljs-keyword">else</span>
         a = <span class="hljs-number">0</span>
         b = opacity
-      <span class="hljs-property">@_shaders</span>[anchor].left[n].style.opacity  = a
-      <span class="hljs-property">@_shaders</span>[anchor].right[n].style.opacity = b
+      @_shaders[anchor].left[n].style.opacity  = a
+      @_shaders[anchor].right[n].style.opacity = b
     <span class="hljs-keyword">else</span>
       <span class="hljs-keyword">if</span> angle &lt; <span class="hljs-number">0</span>
         a = <span class="hljs-number">0</span>
@@ -2382,8 +2382,8 @@ and bottom shaders appear for positive ones.</p>
       <span class="hljs-keyword">else</span>
         a = opacity
         b = <span class="hljs-number">0</span>
-      <span class="hljs-property">@_shaders</span>[anchor].top[n].style.opacity    = a
-      <span class="hljs-property">@_shaders</span>[anchor].bottom[n].style.opacity = b</pre></div></div>
+      @_shaders[anchor].top[n].style.opacity    = a
+      @_shaders[anchor].bottom[n].style.opacity = b</pre></div></div>
             
         </li>
         
@@ -2399,21 +2399,21 @@ the current stage.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_showStage</span>: <span class="hljs-function"><span class="hljs-params">(anchor)</span> -&gt;</span>
-    <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">isnt</span> <span class="hljs-property">@_lastOp</span>.anchor
-      hideEl <span class="hljs-property">@_stages</span>[<span class="hljs-property">@_lastOp</span>.anchor]
-      <span class="hljs-property">@_lastOp</span>.anchor = anchor
-      <span class="hljs-property">@_lastOp</span>.reset  = <span class="hljs-literal">true</span>
-      <span class="hljs-property">@_stages</span>[anchor].style[css.transform] = <span class="hljs-string">'translate3d('</span> +
+            <div class="content"><div class='highlight'><pre>  _showStage: <span class="hljs-function"><span class="hljs-params">(anchor)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">isnt</span> @_lastOp.anchor
+      hideEl @_stages[@_lastOp.anchor]
+      @_lastOp.anchor = anchor
+      @_lastOp.reset  = <span class="hljs-literal">true</span>
+      @_stages[anchor].style[css.transform] = <span class="hljs-string">'translate3d('</span> +
         <span class="hljs-keyword">switch</span> anchor
           <span class="hljs-keyword">when</span> <span class="hljs-string">'left'</span>
             <span class="hljs-string">'0, 0, 0)'</span>
           <span class="hljs-keyword">when</span> <span class="hljs-string">'right'</span>
-            <span class="hljs-string">"-<span class="hljs-subst">#{ <span class="hljs-property">@_config</span>.vPanels.length }</span>px, 0, 0)"</span>
+            <span class="hljs-string">"-<span class="hljs-subst">#{ @_config.vPanels.length }</span>px, 0, 0)"</span>
           <span class="hljs-keyword">when</span> <span class="hljs-string">'top'</span>
             <span class="hljs-string">'0, 0, 0)'</span>
           <span class="hljs-keyword">when</span> <span class="hljs-string">'bottom'</span>
-            <span class="hljs-string">"0, -<span class="hljs-subst">#{ <span class="hljs-property">@_config</span>.hPanels.length }</span>px, 0)"</span></pre></div></div>
+            <span class="hljs-string">"0, -<span class="hljs-subst">#{ @_config.hPanels.length }</span>px, 0)"</span></pre></div></div>
             
         </li>
         
@@ -2429,10 +2429,10 @@ all panels to 0 degrees.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_stageReset</span>: <span class="hljs-function"><span class="hljs-params">(anchor, cb)</span> =&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _stageReset: <span class="hljs-function"><span class="hljs-params">(anchor, cb)</span> =&gt;</span>
 <span class="hljs-function">    <span class="hljs-title">fn</span> = <span class="hljs-params">(e)</span> =&gt;</span>
       e.currentTarget.removeEventListener css.transitionEnd, fn, <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> e
-      <span class="hljs-property">@_showStage</span> anchor
+      @_showStage anchor
       defer cb</pre></div></div>
             
         </li>
@@ -2448,12 +2448,12 @@ all panels to 0 degrees.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> fn() <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.angle <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
-    <span class="hljs-property">@_panels</span>[<span class="hljs-property">@_lastOp</span>.anchor][<span class="hljs-number">0</span>].addEventListener css.transitionEnd, fn, <span class="hljs-literal">false</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> fn() <span class="hljs-keyword">if</span> @_lastOp.angle <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+    @_panels[@_lastOp.anchor][<span class="hljs-number">0</span>].addEventListener css.transitionEnd, fn, <span class="hljs-literal">false</span>
 
-    <span class="hljs-property">@_iterate</span> <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
-      <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, <span class="hljs-property">@_lastOp</span>.anchor
-      <span class="hljs-property">@_setShader</span> i, <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span></pre></div></div>
+    @_iterate @_lastOp.anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
+      @_transformPanel panel, <span class="hljs-number">0</span>, @_lastOp.anchor
+      @_setShader i, @_lastOp.anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> @_shading</pre></div></div>
             
         </li>
         
@@ -2469,7 +2469,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_getLonghandAnchor</span>: <span class="hljs-function"><span class="hljs-params">(shorthand)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _getLonghandAnchor: <span class="hljs-function"><span class="hljs-params">(shorthand)</span> -&gt;</span>
     <span class="hljs-keyword">switch</span> shorthand.toString()
       <span class="hljs-keyword">when</span> <span class="hljs-string">'left'</span>,   <span class="hljs-string">'l'</span>, <span class="hljs-string">'4'</span>
         <span class="hljs-string">'left'</span>
@@ -2509,11 +2509,11 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setCursor</span>: <span class="hljs-function"><span class="hljs-params">(bool = <span class="hljs-property">@_touchEnabled</span>)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _setCursor: <span class="hljs-function"><span class="hljs-params">(bool = @_touchEnabled)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> bool
-      <span class="hljs-property">@el</span>.style.cursor = css.grab
+      @el.style.cursor = css.grab
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@el</span>.style.cursor = <span class="hljs-string">'default'</span></pre></div></div>
+      @el.style.cursor = <span class="hljs-string">'default'</span></pre></div></div>
             
         </li>
         
@@ -2553,16 +2553,16 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_setTouch</span>: <span class="hljs-function"><span class="hljs-params">(toggle)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  _setTouch: <span class="hljs-function"><span class="hljs-params">(toggle)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> toggle
-      <span class="hljs-keyword">return</span> @ <span class="hljs-keyword">if</span> <span class="hljs-property">@_touchEnabled</span>
+      <span class="hljs-keyword">return</span> @ <span class="hljs-keyword">if</span> @_touchEnabled
       listenFn = <span class="hljs-string">'addEventListener'</span>
     <span class="hljs-keyword">else</span>
-      <span class="hljs-keyword">return</span> @ <span class="hljs-keyword">unless</span> <span class="hljs-property">@_touchEnabled</span>
+      <span class="hljs-keyword">return</span> @ <span class="hljs-keyword">unless</span> @_touchEnabled
       listenFn = <span class="hljs-string">'removeEventListener'</span>
 
-    <span class="hljs-property">@_touchEnabled</span> = toggle
-    <span class="hljs-property">@_setCursor</span>()</pre></div></div>
+    @_touchEnabled = toggle
+    @_setCursor()</pre></div></div>
             
         </li>
         
@@ -2611,9 +2611,9 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> eventPair <span class="hljs-keyword">in</span> eventPairs
       <span class="hljs-keyword">for</span> eString <span class="hljs-keyword">in</span> eventPair
         <span class="hljs-keyword">unless</span> eString <span class="hljs-keyword">is</span> <span class="hljs-string">'TouchLeave'</span> <span class="hljs-keyword">and</span> !mouseLeaveSupport
-          <span class="hljs-property">@el</span>[listenFn] eString.toLowerCase(), @[<span class="hljs-string">'_on'</span> + eventPair[<span class="hljs-number">0</span>]], <span class="hljs-literal">false</span>
+          @el[listenFn] eString.toLowerCase(), @[<span class="hljs-string">'_on'</span> + eventPair[<span class="hljs-number">0</span>]], <span class="hljs-literal">false</span>
         <span class="hljs-keyword">else</span>
-          <span class="hljs-property">@el</span>[listenFn] <span class="hljs-string">'mouseout'</span>, <span class="hljs-property">@_onMouseOut</span>, <span class="hljs-literal">false</span>
+          @el[listenFn] <span class="hljs-string">'mouseout'</span>, @_onMouseOut, <span class="hljs-literal">false</span>
           <span class="hljs-keyword">break</span>
     @</pre></div></div>
             
@@ -2630,8 +2630,8 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onTouchStart</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> !<span class="hljs-property">@_touchEnabled</span> <span class="hljs-keyword">or</span> <span class="hljs-property">@isFoldedUp</span>
+            <div class="content"><div class='highlight'><pre>  _onTouchStart: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> !@_touchEnabled <span class="hljs-keyword">or</span> @isFoldedUp
     e.preventDefault()</pre></div></div>
             
         </li>
@@ -2647,7 +2647,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@emptyQueue</span>()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @emptyQueue()</pre></div></div>
             
         </li>
         
@@ -2662,7 +2662,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_touchStarted</span> = <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_touchStarted = <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -2677,7 +2677,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@el</span>.style.cursor = css.grabbing</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @el.style.cursor = css.grabbing</pre></div></div>
             
         </li>
         
@@ -2692,7 +2692,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_setTrans</span> <span class="hljs-number">0</span>, <span class="hljs-number">0</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_setTrans <span class="hljs-number">0</span>, <span class="hljs-number">0</span></pre></div></div>
             
         </li>
         
@@ -2707,7 +2707,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_touchAxis</span> = <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.anchor <span class="hljs-keyword">in</span> anchorListV <span class="hljs-keyword">then</span> <span class="hljs-string">'x'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'y'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_touchAxis = <span class="hljs-keyword">if</span> @_lastOp.anchor <span class="hljs-keyword">in</span> anchorListV <span class="hljs-keyword">then</span> <span class="hljs-string">'x'</span> <span class="hljs-keyword">else</span> <span class="hljs-string">'y'</span></pre></div></div>
             
         </li>
         
@@ -2722,8 +2722,8 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>] = <span class="hljs-property">@_lastOp</span>.angle
-    axis1 = <span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>1"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>] = @_lastOp.angle
+    axis1 = <span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>1"</span></pre></div></div>
             
         </li>
         
@@ -2739,9 +2739,9 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> e.type <span class="hljs-keyword">is</span> <span class="hljs-string">'mousedown'</span>
-      @[axis1] = e[<span class="hljs-string">"page<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span>.toUpperCase() }</span>"</span>]
+      @[axis1] = e[<span class="hljs-string">"page<span class="hljs-subst">#{ @_touchAxis.toUpperCase() }</span>"</span>]
     <span class="hljs-keyword">else</span>
-      @[axis1] = e.targetTouches[<span class="hljs-number">0</span>][<span class="hljs-string">"page<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span>.toUpperCase() }</span>"</span>]</pre></div></div>
+      @[axis1] = e.targetTouches[<span class="hljs-number">0</span>][<span class="hljs-string">"page<span class="hljs-subst">#{ @_touchAxis.toUpperCase() }</span>"</span>]</pre></div></div>
             
         </li>
         
@@ -2756,7 +2756,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span>.touchStartCallback @[axis1], e</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_config.touchStartCallback @[axis1], e</pre></div></div>
             
         </li>
         
@@ -2771,8 +2771,8 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onTouchMove</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_touchEnabled</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@_touchStarted</span>
+            <div class="content"><div class='highlight'><pre>  _onTouchMove: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> @_touchEnabled <span class="hljs-keyword">and</span> @_touchStarted
     e.preventDefault()</pre></div></div>
             
         </li>
@@ -2789,9 +2789,9 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> e.type <span class="hljs-keyword">is</span> <span class="hljs-string">'mousemove'</span>
-      current = e[<span class="hljs-string">"page<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span>.toUpperCase() }</span>"</span>]
+      current = e[<span class="hljs-string">"page<span class="hljs-subst">#{ @_touchAxis.toUpperCase() }</span>"</span>]
     <span class="hljs-keyword">else</span>
-      current = e.targetTouches[<span class="hljs-number">0</span>][<span class="hljs-string">"page<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span>.toUpperCase() }</span>"</span>]</pre></div></div>
+      current = e.targetTouches[<span class="hljs-number">0</span>][<span class="hljs-string">"page<span class="hljs-subst">#{ @_touchAxis.toUpperCase() }</span>"</span>]</pre></div></div>
             
         </li>
         
@@ -2806,7 +2806,7 @@ Numerical shorthands are based on CSS shorthand ordering.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    distance = (current - @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>1"</span>]) * <span class="hljs-property">@_config</span>.touchSensitivity</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    distance = (current - @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>1"</span>]) * @_config.touchSensitivity</pre></div></div>
             
         </li>
         
@@ -2822,23 +2822,23 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.angle &lt; <span class="hljs-number">0</span>
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'right'</span> <span class="hljs-keyword">or</span> <span class="hljs-property">@_lastOp</span>.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'bottom'</span>
-        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>] - distance
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @_lastOp.angle &lt; <span class="hljs-number">0</span>
+      <span class="hljs-keyword">if</span> @_lastOp.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'right'</span> <span class="hljs-keyword">or</span> @_lastOp.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'bottom'</span>
+        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>] - distance
       <span class="hljs-keyword">else</span>
-        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>] + distance
+        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>] + distance
       delta = <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> delta &gt; <span class="hljs-number">0</span>
     <span class="hljs-keyword">else</span>
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_lastOp</span>.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'right'</span> <span class="hljs-keyword">or</span> <span class="hljs-property">@_lastOp</span>.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'bottom'</span>
-        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>] + distance
+      <span class="hljs-keyword">if</span> @_lastOp.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'right'</span> <span class="hljs-keyword">or</span> @_lastOp.anchor <span class="hljs-keyword">is</span> <span class="hljs-string">'bottom'</span>
+        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>] + distance
       <span class="hljs-keyword">else</span>
-        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>] - distance
+        delta = @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>] - distance
       delta = <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> delta &lt; <span class="hljs-number">0</span>
 
 
-    <span class="hljs-property">@_lastOp</span>.angle = delta = <span class="hljs-property">@_normalizeAngle</span> delta
-    <span class="hljs-property">@_lastOp</span>.fn.call @, delta, <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-property">@_lastOp</span>.options
-    <span class="hljs-property">@_config</span>.touchMoveCallback delta, e</pre></div></div>
+    @_lastOp.angle = delta = @_normalizeAngle delta
+    @_lastOp.fn.call @, delta, @_lastOp.anchor, @_lastOp.options
+    @_config.touchMoveCallback delta, e</pre></div></div>
             
         </li>
         
@@ -2853,8 +2853,8 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onTouchEnd</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_touchEnabled</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _onTouchEnd: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> @_touchEnabled</pre></div></div>
             
         </li>
         
@@ -2869,8 +2869,8 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_touchStarted</span> = <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
-    <span class="hljs-property">@el</span>.style.cursor = css.grab</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_touchStarted = @_inTrans = <span class="hljs-literal">false</span>
+    @el.style.cursor = css.grab</pre></div></div>
             
         </li>
         
@@ -2885,7 +2885,7 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_setTrans</span> <span class="hljs-property">@_config</span>.speed, <span class="hljs-property">@_config</span>.ripple</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_setTrans @_config.speed, @_config.ripple</pre></div></div>
             
         </li>
         
@@ -2900,7 +2900,7 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_config</span>.touchEndCallback @[<span class="hljs-string">"_<span class="hljs-subst">#{ <span class="hljs-property">@_touchAxis</span> }</span>Last"</span>], e</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_config.touchEndCallback @[<span class="hljs-string">"_<span class="hljs-subst">#{ @_touchAxis }</span>Last"</span>], e</pre></div></div>
             
         </li>
         
@@ -2915,9 +2915,9 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onTouchLeave</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_touchEnabled</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@_touchStarted</span>
-    <span class="hljs-property">@_onTouchEnd</span> e</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _onTouchLeave: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> @_touchEnabled <span class="hljs-keyword">and</span> @_touchStarted
+    @_onTouchEnd e</pre></div></div>
             
         </li>
         
@@ -2932,9 +2932,9 @@ the last operation was on.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_onMouseOut</span>: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@_touchEnabled</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@_touchStarted</span>
-    <span class="hljs-property">@_onTouchEnd</span> e <span class="hljs-keyword">if</span> e.toElement <span class="hljs-keyword">and</span> !<span class="hljs-property">@el</span>.contains e.toElement</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _onMouseOut: <span class="hljs-function"><span class="hljs-params">(e)</span> =&gt;</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">unless</span> @_touchEnabled <span class="hljs-keyword">and</span> @_touchStarted
+    @_onTouchEnd e <span class="hljs-keyword">if</span> e.toElement <span class="hljs-keyword">and</span> !@el.contains e.toElement</pre></div></div>
             
         </li>
         
@@ -2951,28 +2951,28 @@ and skips the queue. Its public counterpart is a queued alias.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_unfold</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">true</span>
-    {anchor}  = <span class="hljs-property">@_lastOp</span>
-    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
-      delay = <span class="hljs-property">@_setPanelTrans</span> anchor, arguments..., <span class="hljs-property">@_config</span>.speed, <span class="hljs-number">1</span>
+            <div class="content"><div class='highlight'><pre>  _unfold: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    @_inTrans = <span class="hljs-literal">true</span>
+    {anchor}  = @_lastOp
+    @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
+      delay = @_setPanelTrans anchor, arguments..., @_config.speed, <span class="hljs-number">1</span>
 
       <span class="hljs-keyword">do</span> (panel, i, delay) =&gt;
         defer =&gt;
-          <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, anchor
-          <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+          @_transformPanel panel, <span class="hljs-number">0</span>, anchor
+          @_setShader i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> @_shading
 
           setTimeout =&gt;
             showEl panel.children[<span class="hljs-number">0</span>]
             <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> len - <span class="hljs-number">1</span>
-              <span class="hljs-property">@_inTrans</span> = <span class="hljs-property">@isFoldedUp</span> = <span class="hljs-literal">false</span>
+              @_inTrans = @isFoldedUp = <span class="hljs-literal">false</span>
               callback?()
-              <span class="hljs-property">@_lastOp</span>.fn    = <span class="hljs-property">@accordion</span>
-              <span class="hljs-property">@_lastOp</span>.angle = <span class="hljs-number">0</span>
+              @_lastOp.fn    = @accordion
+              @_lastOp.angle = <span class="hljs-number">0</span>
 
-            defer =&gt; panel.style[css.transitionDuration] = <span class="hljs-property">@_config</span>.speed
+            defer =&gt; panel.style[css.transitionDuration] = @_config.speed
 
-          , delay + <span class="hljs-property">@_config</span>.speed * <span class="hljs-number">.25</span></pre></div></div>
+          , delay + @_config.speed * <span class="hljs-number">.25</span></pre></div></div>
             
         </li>
         
@@ -2987,8 +2987,8 @@ and skips the queue. Its public counterpart is a queued alias.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">_iterate</span>: <span class="hljs-function"><span class="hljs-params">(anchor, fn)</span> -&gt;</span>
-    fn.call @, panel, i, panels.length <span class="hljs-keyword">for</span> panel, i <span class="hljs-keyword">in</span> panels = <span class="hljs-property">@_panels</span>[anchor]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  _iterate: <span class="hljs-function"><span class="hljs-params">(anchor, fn)</span> -&gt;</span>
+    fn.call @, panel, i, panels.length <span class="hljs-keyword">for</span> panel, i <span class="hljs-keyword">in</span> panels = @_panels[anchor]</pre></div></div>
             
         </li>
         
@@ -3028,8 +3028,8 @@ and skips the queue. Its public counterpart is a queued alias.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">enableTouch</span>: <span class="hljs-function">-&gt;</span>
-    <span class="hljs-property">@_setTouch</span> <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  enableTouch: <span class="hljs-function">-&gt;</span>
+    @_setTouch <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -3044,8 +3044,8 @@ and skips the queue. Its public counterpart is a queued alias.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">disableTouch</span>: <span class="hljs-function">-&gt;</span>
-    <span class="hljs-property">@_setTouch</span> <span class="hljs-literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  disableTouch: <span class="hljs-function">-&gt;</span>
+    @_setTouch <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -3060,9 +3060,9 @@ and skips the queue. Its public counterpart is a queued alias.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">setSpeed</span>: <span class="hljs-function"><span class="hljs-params">(speed)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  setSpeed: <span class="hljs-function"><span class="hljs-params">(speed)</span> -&gt;</span>
     <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList
-      <span class="hljs-property">@_setTrans</span> (<span class="hljs-property">@_config</span>.speed = speed), <span class="hljs-property">@_config</span>.ripple, anchor
+      @_setTrans (@_config.speed = speed), @_config.ripple, anchor
     @</pre></div></div>
             
         </li>
@@ -3079,7 +3079,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">freeze</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  freeze: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -3094,7 +3094,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@isFrozen</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @isFrozen
       callback?()
     <span class="hljs-keyword">else</span></pre></div></div>
             
@@ -3111,8 +3111,8 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_stageReset</span> <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-function">=&gt;</span>
-        <span class="hljs-property">@isFrozen</span> = <span class="hljs-literal">true</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      @_stageReset @_lastOp.anchor, <span class="hljs-function">=&gt;</span>
+        @isFrozen = <span class="hljs-literal">true</span></pre></div></div>
             
         </li>
         
@@ -3127,9 +3127,9 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        hideEl <span class="hljs-property">@_stageHolder</span>
-        showEl <span class="hljs-property">@_cloneEl</span>
-        <span class="hljs-property">@_setCursor</span> <span class="hljs-literal">false</span>
+            <div class="content"><div class='highlight'><pre>        hideEl @_stageHolder
+        showEl @_cloneEl
+        @_setCursor <span class="hljs-literal">false</span>
         callback?()
     @</pre></div></div>
             
@@ -3146,7 +3146,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">unfreeze</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  unfreeze: <span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
@@ -3161,8 +3161,8 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@isFrozen</span>
-      <span class="hljs-property">@isFrozen</span> = <span class="hljs-literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> @isFrozen
+      @isFrozen = <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -3177,9 +3177,9 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      hideEl <span class="hljs-property">@_cloneEl</span>
-      showEl <span class="hljs-property">@_stageHolder</span>
-      <span class="hljs-property">@_setCursor</span>()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      hideEl @_cloneEl
+      showEl @_stageHolder
+      @_setCursor()</pre></div></div>
             
         </li>
         
@@ -3194,7 +3194,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_lastOp</span>.angle = <span class="hljs-number">0</span>
+            <div class="content"><div class='highlight'><pre>      @_lastOp.angle = <span class="hljs-number">0</span>
     @</pre></div></div>
             
         </li>
@@ -3210,7 +3210,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">destroy</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  destroy: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -3225,7 +3225,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@freeze</span> =&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @freeze =&gt;</pre></div></div>
             
         </li>
         
@@ -3240,7 +3240,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_setTouch</span> <span class="hljs-literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      @_setTouch <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -3255,7 +3255,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      $.data <span class="hljs-property">@el</span>, baseName, <span class="hljs-literal">null</span> <span class="hljs-keyword">if</span> $</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      $.data @el, baseName, <span class="hljs-literal">null</span> <span class="hljs-keyword">if</span> $</pre></div></div>
             
         </li>
         
@@ -3270,7 +3270,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@el</span>.innerHTML = <span class="hljs-property">@_cloneEl</span>.innerHTML</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      @el.innerHTML = @_cloneEl.innerHTML</pre></div></div>
             
         </li>
         
@@ -3285,7 +3285,7 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@el</span>.classList.remove elClasses.active
+            <div class="content"><div class='highlight'><pre>      @el.classList.remove elClasses.active
       callback?()
     <span class="hljs-literal">null</span></pre></div></div>
             
@@ -3302,9 +3302,9 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">emptyQueue</span>: <span class="hljs-function">-&gt;</span>
-    <span class="hljs-property">@_queue</span> = []
-    defer =&gt; <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
+            <div class="content"><div class='highlight'><pre>  emptyQueue: <span class="hljs-function">-&gt;</span>
+    @_queue = []
+    defer =&gt; @_inTrans = <span class="hljs-literal">false</span>
     @</pre></div></div>
             
         </li>
@@ -3320,9 +3320,9 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">setRipple</span>: <span class="hljs-function"><span class="hljs-params">(dir = <span class="hljs-number">1</span>)</span> -&gt;</span>
-    <span class="hljs-property">@_config</span>.ripple = Number dir
-    <span class="hljs-property">@setSpeed</span> <span class="hljs-property">@_config</span>.speed
+            <div class="content"><div class='highlight'><pre>  setRipple: <span class="hljs-function"><span class="hljs-params">(dir = <span class="hljs-number">1</span>)</span> -&gt;</span>
+    @_config.ripple = Number dir
+    @setSpeed @_config.speed
     @</pre></div></div>
             
         </li>
@@ -3338,8 +3338,8 @@ This is useful for certain user interactions on the inner content.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">constrainAngle</span>: <span class="hljs-function"><span class="hljs-params">(angle)</span> -&gt;</span>
-    <span class="hljs-property">@_config</span>.maxAngle = parseFloat(angle, <span class="hljs-number">10</span>) <span class="hljs-keyword">or</span> defaults.maxAngle
+            <div class="content"><div class='highlight'><pre>  constrainAngle: <span class="hljs-function"><span class="hljs-params">(angle)</span> -&gt;</span>
+    @_config.maxAngle = parseFloat(angle, <span class="hljs-number">10</span>) <span class="hljs-keyword">or</span> defaults.maxAngle
     @</pre></div></div>
             
         </li>
@@ -3356,10 +3356,10 @@ E.g.: el.reveal(20).wait(5000).accordion(-33)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">wait</span>: <span class="hljs-function"><span class="hljs-params">(ms)</span> -&gt;</span>
-<span class="hljs-function">    <span class="hljs-title">fn</span> = =&gt;</span> setTimeout <span class="hljs-property">@_conclude</span>, ms
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@_inTrans</span>
-      <span class="hljs-property">@_queue</span>.push [fn, <span class="hljs-property">@_lastOp</span>.angle, <span class="hljs-property">@_lastOp</span>.anchor, <span class="hljs-property">@_lastOp</span>.options]
+            <div class="content"><div class='highlight'><pre>  wait: <span class="hljs-function"><span class="hljs-params">(ms)</span> -&gt;</span>
+<span class="hljs-function">    <span class="hljs-title">fn</span> = =&gt;</span> setTimeout @_conclude, ms
+    <span class="hljs-keyword">if</span> @_inTrans
+      @_queue.push [fn, @_lastOp.angle, @_lastOp.anchor, @_lastOp.options]
     <span class="hljs-keyword">else</span>
       fn()
     @</pre></div></div>
@@ -3382,7 +3382,7 @@ literals with camel-cased CSS properties as keys.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">modifyContent</span>: <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  modifyContent: <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> fn <span class="hljs-keyword">isnt</span> <span class="hljs-string">'function'</span>
       selectors = fn
 <span class="hljs-function">
@@ -3409,7 +3409,7 @@ literals with camel-cased CSS properties as keys.</p>
         <span class="hljs-literal">null</span>
 
     <span class="hljs-keyword">for</span> anchor <span class="hljs-keyword">in</span> anchorList
-      <span class="hljs-keyword">for</span> panel, i <span class="hljs-keyword">in</span> <span class="hljs-property">@_panels</span>[anchor]
+      <span class="hljs-keyword">for</span> panel, i <span class="hljs-keyword">in</span> @_panels[anchor]
         fn panel.children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>], i, anchor
     @</pre></div></div>
             
@@ -3453,8 +3453,8 @@ panel flat.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">accordion</span>: prep (angle, anchor, options) -&gt;
-    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  accordion: prep (angle, anchor, options) -&gt;
+    @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span></pre></div></div>
             
         </li>
         
@@ -3522,7 +3522,7 @@ panel flat.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      deg *= -<span class="hljs-number">1</span> <span class="hljs-keyword">if</span> options.stairs</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      deg *= <span class="hljs-number">-1</span> <span class="hljs-keyword">if</span> options.stairs</pre></div></div>
             
         </li>
         
@@ -3537,13 +3537,13 @@ panel flat.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-property">@_transformPanel</span> panel, deg, anchor, options.fracture
+            <div class="content"><div class='highlight'><pre>      @_transformPanel panel, deg, anchor, options.fracture
 
-      <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span>
+      <span class="hljs-keyword">if</span> @_shading
         <span class="hljs-keyword">if</span> options.twist <span class="hljs-keyword">or</span> options.fracture <span class="hljs-keyword">or</span> (i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> options.sticky)
-          <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span>
+          @_setShader i, anchor, <span class="hljs-number">0</span>
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> Math.abs(deg) <span class="hljs-keyword">isnt</span> <span class="hljs-number">180</span>
-          <span class="hljs-property">@_setShader</span> i, anchor, deg</pre></div></div>
+          @_setShader i, anchor, deg</pre></div></div>
             
         </li>
         
@@ -3559,7 +3559,7 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">curl</span>: prep (angle, anchor, options) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  curl: prep (angle, anchor, options) -&gt;</pre></div></div>
             
         </li>
         
@@ -3574,11 +3574,11 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    angle /= <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">in</span> anchorListV <span class="hljs-keyword">then</span> <span class="hljs-property">@_config</span>.vPanels.length <span class="hljs-keyword">else</span> <span class="hljs-property">@_config</span>.hPanels.length
+            <div class="content"><div class='highlight'><pre>    angle /= <span class="hljs-keyword">if</span> anchor <span class="hljs-keyword">in</span> anchorListV <span class="hljs-keyword">then</span> @_config.vPanels.length <span class="hljs-keyword">else</span> @_config.hPanels.length
 
-    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
-      <span class="hljs-property">@_transformPanel</span> panel, angle, anchor
-      <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span></pre></div></div>
+    @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
+      @_transformPanel panel, angle, anchor
+      @_setShader i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> @_shading</pre></div></div>
             
         </li>
         
@@ -3593,7 +3593,7 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">ramp</span>: prep (angle, anchor, options) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  ramp: prep (angle, anchor, options) -&gt;</pre></div></div>
             
         </li>
         
@@ -3608,7 +3608,7 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_transformPanel</span> <span class="hljs-property">@_panels</span>[anchor][<span class="hljs-number">1</span>], angle, anchor</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_transformPanel @_panels[anchor][<span class="hljs-number">1</span>], angle, anchor</pre></div></div>
             
         </li>
         
@@ -3623,9 +3623,9 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
-      <span class="hljs-property">@_transformPanel</span> panel, <span class="hljs-number">0</span>, anchor <span class="hljs-keyword">if</span> i <span class="hljs-keyword">isnt</span> <span class="hljs-number">1</span>
-      <span class="hljs-property">@_setShader</span> i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@_shading</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i)</span> =&gt;</span>
+      @_transformPanel panel, <span class="hljs-number">0</span>, anchor <span class="hljs-keyword">if</span> i <span class="hljs-keyword">isnt</span> <span class="hljs-number">1</span>
+      @_setShader i, anchor, <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> @_shading</pre></div></div>
             
         </li>
         
@@ -3640,27 +3640,27 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">foldUp</span>: prep (anchor, callback) -&gt;
-    <span class="hljs-keyword">return</span> callback?() <span class="hljs-keyword">if</span> <span class="hljs-property">@isFoldedUp</span>
-    <span class="hljs-property">@_stageReset</span> anchor, <span class="hljs-function">=&gt;</span>
-      <span class="hljs-property">@_inTrans</span> = <span class="hljs-property">@isFoldedUp</span> = <span class="hljs-literal">true</span>
+            <div class="content"><div class='highlight'><pre>  foldUp: prep (anchor, callback) -&gt;
+    <span class="hljs-keyword">return</span> callback?() <span class="hljs-keyword">if</span> @isFoldedUp
+    @_stageReset anchor, <span class="hljs-function">=&gt;</span>
+      @_inTrans = @isFoldedUp = <span class="hljs-literal">true</span>
 
-      <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
-        duration  = <span class="hljs-property">@_config</span>.speed
+      @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
+        duration  = @_config.speed
         duration /= <span class="hljs-number">2</span> <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
-        delay     = <span class="hljs-property">@_setPanelTrans</span> anchor, arguments..., duration, <span class="hljs-number">2</span>
+        delay     = @_setPanelTrans anchor, arguments..., duration, <span class="hljs-number">2</span>
 
         <span class="hljs-keyword">do</span> (panel, i, delay) =&gt;
           defer =&gt;
-            <span class="hljs-property">@_transformPanel</span> panel, (<span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-number">90</span> <span class="hljs-keyword">else</span> <span class="hljs-number">170</span>), anchor
+            @_transformPanel panel, (<span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span> <span class="hljs-keyword">then</span> <span class="hljs-number">90</span> <span class="hljs-keyword">else</span> <span class="hljs-number">170</span>), anchor
             setTimeout =&gt;
               <span class="hljs-keyword">if</span> i <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
-                <span class="hljs-property">@_inTrans</span> = <span class="hljs-literal">false</span>
+                @_inTrans = <span class="hljs-literal">false</span>
                 callback?()
               <span class="hljs-keyword">else</span>
                 hideEl panel.children[<span class="hljs-number">0</span>]
 
-            , delay + <span class="hljs-property">@_config</span>.speed * <span class="hljs-number">.25</span></pre></div></div>
+            , delay + @_config.speed * <span class="hljs-number">.25</span></pre></div></div>
             
         </li>
         
@@ -3675,7 +3675,7 @@ appear smoother with higher panel counts.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">unfold</span>: prep @::_unfold</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  unfold: prep @::_unfold</pre></div></div>
             
         </li>
         
@@ -3694,10 +3694,10 @@ the instance and the lambda, e.g. <code>oridomi.map(randomFn)(30).reveal(20)</co
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">map</span>: <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  map: <span class="hljs-function"><span class="hljs-params">(fn)</span> -&gt;</span>
     prep (angle, anchor, options) =&gt;
-      <span class="hljs-property">@_iterate</span> anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
-        <span class="hljs-property">@_transformPanel</span> panel, fn(angle, i, len), anchor, options.fracture
+      @_iterate anchor, <span class="hljs-function"><span class="hljs-params">(panel, i, len)</span> =&gt;</span>
+        @_transformPanel panel, fn(angle, i, len), anchor, options.fracture
     .bind @</pre></div></div>
             
         </li>
@@ -3738,8 +3738,8 @@ the instance and the lambda, e.g. <code>oridomi.map(randomFn)(30).reveal(20)</co
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">reset</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    <span class="hljs-property">@accordion</span> <span class="hljs-number">0</span>, {callback}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  reset: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+    @accordion <span class="hljs-number">0</span>, {callback}</pre></div></div>
             
         </li>
         
@@ -3755,9 +3755,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">reveal</span>: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  reveal: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
     options.sticky = <span class="hljs-literal">true</span>
-    <span class="hljs-property">@accordion</span> angle, anchor, options</pre></div></div>
+    @accordion angle, anchor, options</pre></div></div>
             
         </li>
         
@@ -3772,9 +3772,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">stairs</span>: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  stairs: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
     options.stairs = options.sticky = <span class="hljs-literal">true</span>
-    <span class="hljs-property">@accordion</span> angle, anchor, options</pre></div></div>
+    @accordion angle, anchor, options</pre></div></div>
             
         </li>
         
@@ -3789,9 +3789,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">fracture</span>: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  fracture: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
     options.fracture = <span class="hljs-literal">true</span>
-    <span class="hljs-property">@accordion</span> angle, anchor, options</pre></div></div>
+    @accordion angle, anchor, options</pre></div></div>
             
         </li>
         
@@ -3806,9 +3806,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">twist</span>: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  twist: <span class="hljs-function"><span class="hljs-params">(angle, anchor, options = {})</span> -&gt;</span>
     options.fracture = options.twist = <span class="hljs-literal">true</span>
-    <span class="hljs-property">@accordion</span> angle / <span class="hljs-number">10</span>, anchor, options</pre></div></div>
+    @accordion angle / <span class="hljs-number">10</span>, anchor, options</pre></div></div>
             
         </li>
         
@@ -3823,9 +3823,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">collapse</span>: <span class="hljs-function"><span class="hljs-params">(anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  collapse: <span class="hljs-function"><span class="hljs-params">(anchor, options = {})</span> -&gt;</span>
     options.sticky = <span class="hljs-literal">false</span>
-    <span class="hljs-property">@accordion</span> -<span class="hljs-property">@_config</span>.maxAngle, anchor, options</pre></div></div>
+    @accordion -@_config.maxAngle, anchor, options</pre></div></div>
             
         </li>
         
@@ -3840,9 +3840,9 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">collapseAlt</span>: <span class="hljs-function"><span class="hljs-params">(anchor, options = {})</span> -&gt;</span>
+            <div class="content"><div class='highlight'><pre>  collapseAlt: <span class="hljs-function"><span class="hljs-params">(anchor, options = {})</span> -&gt;</span>
     options.sticky = <span class="hljs-literal">false</span>
-    <span class="hljs-property">@accordion</span> <span class="hljs-property">@_config</span>.maxAngle, anchor, options</pre></div></div>
+    @accordion @_config.maxAngle, anchor, options</pre></div></div>
             
         </li>
         
@@ -3882,7 +3882,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@VERSION</span> = <span class="hljs-string">'1.1.5'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  @VERSION = <span class="hljs-string">'1.1.5'</span></pre></div></div>
             
         </li>
         
@@ -3897,7 +3897,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-property">@isSupported</span> = isSupported</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  @isSupported = isSupported</pre></div></div>
             
         </li>
         
@@ -3972,7 +3972,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-attribute">$</span>::oriDomi = <span class="hljs-function"><span class="hljs-params">(options)</span> -&gt;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>$::oriDomi = <span class="hljs-function"><span class="hljs-params">(options)</span> -&gt;</span></pre></div></div>
             
         </li>
         
@@ -4019,7 +4019,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> <span class="hljs-keyword">typeof</span> (method = <span class="hljs-attribute">OriDomi</span>::[methodName]) <span class="hljs-keyword">is</span> <span class="hljs-string">'function'</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">unless</span> <span class="hljs-keyword">typeof</span> (method = OriDomi::[methodName]) <span class="hljs-keyword">is</span> <span class="hljs-string">'function'</span>
       <span class="hljs-built_in">console</span>?.warn <span class="hljs-string">"<span class="hljs-subst">#{ libName }</span>: No such method `<span class="hljs-subst">#{ methodName }</span>`"</span>
       <span class="hljs-keyword">return</span> @
 
@@ -4041,7 +4041,7 @@ Keeps first panel flat on page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      method.apply instance, <span class="hljs-attribute">Array</span>::slice.call(arguments)[<span class="hljs-number">1.</span>..]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      method.apply instance, Array::slice.call(arguments)[<span class="hljs-number">1.</span>..]</pre></div></div>
             
         </li>
         
