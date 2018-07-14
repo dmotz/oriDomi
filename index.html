@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.6">
   <title>OriDomi - origami for the web</title>
   <link href="demo/demo.css" rel="stylesheet" type="text/css">
-  <link href="http://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet" type="text/css">
   <link href="favicon.png" rel="icon" type="image/png" >
 </head>
 <body>
@@ -15,7 +15,7 @@
   <header>
     <h1 class="logo">OriDomi<sup>1.1</sup></h1>
     <h2>The web is flat, but now you can fold it up.</h2>
-    <h5>open source JavaScript library by <a href="http://oxism.com">Dan Motzenbecker</a></h5>
+    <h5>open source JavaScript library by <a href="https://oxism.com">Dan Motzenbecker</a></h5>
     <div>
       <a class="button" href="https://github.com/dmotz/oriDomi">download on github</a>
       <a class="button" href="docs/oridomi.html">read annotated source</a>
@@ -50,7 +50,7 @@
     <div class="warning">
       Your browser has JavaScript disabled. OriDomi needs JavaScript turned on
       to work. Otherwise, all you&rsquo;ll see here are some flat text and images.
-      Visit <a href="http://www.enable-javascript.com">this site</a> if you need
+      Visit <a href="https://www.enable-javascript.com">this site</a> if you need
       help turning it on.
     </div>
   </noscript>
@@ -60,14 +60,14 @@
     see below are some flat images and text. To get the most out of the web,
     consider upgrading to a browser that supports modern standards. Try
     <a href="https://www.google.com/chrome">Chrome</a>,
-    <a href="http://www.apple.com/safari">Safari</a>, or
-    <a href="http://www.firefox.com">Firefox</a>.
+    <a href="https://www.apple.com/safari">Safari</a>, or
+    <a href="https://www.firefox.com">Firefox</a>.
   </div>
 
   <section id="demos">
     <h2>
       Fold the
-      <a href="http://en.wikipedia.org/wiki/Document_Object_Model" target="_blank">DOM</a>
+      <a href="https://en.wikipedia.org/wiki/Document_Object_Model" target="_blank">DOM</a>
       like paper.
     </h2>
     <h3>
@@ -624,13 +624,13 @@ folded.map(function(angle, index, length){ return angle * index * Math.random() 
 
     <p>
       I usually tweet about updates and other projects I&rsquo;m working on.
-      <a href="http://twitter.com/dcmotz">Follow me</a> if that sounds like it
+      <a href="https://twitter.com/dcmotz">Follow me</a> if that sounds like it
       might interest you.
     </p>
 
     <p>
       For similar open-source projects, take a look at my
-      <a href="http://oxism.com">personal site</a>.
+      <a href="https://oxism.com">personal site</a>.
     </p>
 
     <p>And remember, <i>the DOM is your oyster.</i></p>
@@ -639,20 +639,25 @@ folded.map(function(angle, index, length){ return angle * index * Math.random() 
 
 
   <footer>
-    &infin; <a href="http://oxism.com">oxism.com</a>
+    &infin; <a href="https://oxism.com">oxism.com</a>
   </footer>
 
   <script src="oridomi.min.js"></script>
   <script src="demo/demo.js"></script>
   <script>
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-33974399-1']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+  var _gaq = _gaq || []
+_gaq.push(['_setAccount', 'UA-33974399-1'])
+_gaq.push(['_trackPageview'])
+;(function() {
+  var ga = document.createElement('script')
+  ga.type = 'text/javascript'
+  ga.async = true
+  ga.src =
+    ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') +
+    '.google-analytics.com/ga.js'
+  var s = document.getElementsByTagName('script')[0]
+  s.parentNode.insertBefore(ga, s)
+})()
+</script>
 </body>
 </html>
