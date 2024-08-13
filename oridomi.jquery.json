@@ -13,7 +13,7 @@
   "version": "1.1.5",
   "author": {
     "name": "Dan Motzenbecker",
-    "url": "http://oxism.com"
+    "url": "https://oxism.com"
   },
   "licenses": [
     {
@@ -22,8 +22,8 @@
     }
   ],
   "bugs": "https://github.com/dmotz/oriDomi/issues",
-  "homepage": "http://oridomi.com",
-  "docs": "http://oridomi.com",
+  "homepage": "https://oxism.com/oriDomi",
+  "docs": "https://oxism.com/oriDomi",
   "dependencies": {
     "jquery": ">=1.5"
   }

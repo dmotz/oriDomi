@@ -1,22 +1,23 @@
-# [OriDomi](http://oridomi.com)
+# [OriDomi](https://oxism.com/oriDomi)
+
 #### Fold up DOM elements like paper
-[Dan Motzenbecker](http://oxism.com), MIT License
 
-[@dcmotz](http://twitter.com/dcmotz)
+[Dan Motzenbecker](https://oxism.com), MIT License
 
-![oriDomi](http://oridomi.com/demo/images/readme/1.png)
+[@dcmotz](https://twitter.com/dcmotz)
 
-![oriDomi](http://oridomi.com/demo/images/readme/4.gif)
+![oriDomi](https://oxism.com/oriDomi/demo/images/readme/1.png)
 
-![oriDomi](http://oridomi.com/demo/images/readme/2.png)
+![oriDomi](https://oxism.com/oriDomi/demo/images/readme/4.gif)
 
-![oriDomi](http://oridomi.com/demo/images/readme/3.gif)
+![oriDomi](https://oxism.com/oriDomi/demo/images/readme/2.png)
 
+![oriDomi](https://oxism.com/oriDomi/demo/images/readme/3.gif)
 
-Visit [oridomi.com](http://oridomi.com) for examples, documentation and notes.
+[Click here](https://oxism.com/oriDomi) for examples, documentation and notes.
 
-Read the [annotated source](http://oridomi.com/docs/oridomi.html)
-for a detailed look.
+Read the [annotated source](https://oxism.com/oriDomi/docs/oridomi.html) for a
+detailed look.
 
 If you want to work on the source, run `npm install` after first cloning to
 install local package dependencies.
@@ -30,8 +31,8 @@ file and I'll update the build when it's merged.
 
 The DOM is your oyster.
 
-
 #### Integration Projects
-* [Bespoke OriDomi](https://github.com/ebow/bespoke-oridomi)
-* [Ruby on Rails Gem](https://rubygems.org/gems/oridomi-rails)
-* [app-UI](https://github.com/triceam/app-UI)
+
+- [Bespoke OriDomi](https://github.com/ebow/bespoke-oridomi)
+- [Ruby on Rails Gem](https://rubygems.org/gems/oridomi-rails)
+- [app-UI](https://github.com/triceam/app-UI)

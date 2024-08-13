@@ -2,8 +2,8 @@
 # ### Fold up the DOM like paper.
 # 1.1.5
 
-# [oridomi.com](http://oridomi.com)
-# #### by [Dan Motzenbecker](http://oxism.com)
+# [Demos / docs](https://oxism.com/oriDomi)
+# #### by [Dan Motzenbecker](https://oxism.com)
 
 # Copyright 2014, MIT License
 

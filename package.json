@@ -4,9 +4,9 @@
   "author": {
     "name": "Dan Motzenbecker",
     "email": "dan@oxism.com",
-    "url": "http://oxism.com"
+    "url": "https://oxism.com"
   },
-  "homepage": "http://oridomi.com",
+  "homepage": "https://oxism.com/oriDomi",
   "version": "1.1.5",
   "license": "MIT",
   "repository": {
@@ -29,6 +29,6 @@
     "uglify-js": "^2.6.1"
   },
   "bugs": {
-    "url": "http://github.com/dmotz/oriDomi/issues"
+    "url": "https://github.com/dmotz/oriDomi/issues"
   }
 }
