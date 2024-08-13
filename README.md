@@ -26,13 +26,4 @@ Run `cake watch` to automatically compile as you work.
 
 `cake build` will update the annotated source and the minified version as well.
 
-Pull requests are welcome. When contributing, please commit just the `.coffee`
-file and I'll update the build when it's merged.
-
 The DOM is your oyster.
-
-#### Integration Projects
-
-- [Bespoke OriDomi](https://github.com/ebow/bespoke-oridomi)
-- [Ruby on Rails Gem](https://rubygems.org/gems/oridomi-rails)
-- [app-UI](https://github.com/triceam/app-UI)
