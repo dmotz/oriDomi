@@ -26,4 +26,4 @@ Run `cake watch` to automatically compile as you work.
 
 `cake build` will update the annotated source and the minified version as well.
 
-The DOM is your oyster.
+_The DOM is your oyster._
