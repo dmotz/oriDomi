@@ -2,14 +2,7 @@
   "name": "oridomi",
   "title": "oriDomi",
   "description": "Fold up the DOM like paper.",
-  "keywords": [
-    "paper",
-    "animation",
-    "origami",
-    "UI",
-    "mobile",
-    "effect"
-  ],
+  "keywords": ["paper", "animation", "origami", "UI", "mobile", "effect"],
   "version": "1.1.5",
   "author": {
     "name": "Dan Motzenbecker",
@@ -18,7 +11,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://opensource.org/licenses/MIT"
+      "url": "https://opensource.org/licenses/MIT"
     }
   ],
   "bugs": "https://github.com/dmotz/oriDomi/issues",
